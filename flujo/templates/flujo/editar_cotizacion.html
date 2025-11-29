@@ -1,0 +1,16 @@
+{% extends "BoutiqueApp/index.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'flujo/css/flujo.css' %}">
+<div class="container py-5">
+    <h2 class="text-pink fw-bold mb-4 text-center">Editar Cotización del {{ cotizacion.fecha|date:"d/m/Y" }}</h2>
+    <form method="POST" class="mx-auto" style="max-width: 500px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-editar px-4 py-2 me-2">Actualizar</button>
+            <a href="{% url 'listar_cotizaciones' %}" class="btn btn-volver px-4 py-2">Volver</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reporte de Citas | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
+    <style>
+      /* Estilos adicionales específicos para citas si son necesarios */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 12px;
+      }
+      th {
+        background-color: #fdebf2;
+        color: #8a556b;
+      }
+      h1 {
+        color: #b76e79;
+        text-align: center;
+      }
+      p.subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Reporte de Citas Programadas
+        {% if fecha_inicio and fecha_fin %}
+            <br>Del {{ fecha_inicio|date:"d/m/Y" }} al {{ fecha_fin|date:"d/m/Y" }}
+        {% elif fecha_inicio %}
+            <br>Desde {{ fecha_inicio|date:"d/m/Y" }}
+        {% elif fecha_fin %}
+            <br>Hasta {{ fecha_fin|date:"d/m/Y" }}
+        {% endif %}
+      </p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Teléfono</th>
+          <th>Fecha Cita</th>
+          <th>Hora</th>
+          <th>Tipo</th>
+          <th>Fecha Entrega</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in citas %}
+        <tr>
+          <td>{{ cita.cliente }}</td>
+          <td>{{ cita.telefono }}</td>
+          <td>{{ cita.fecha|date:"d/m/Y" }}</td>
+          <td>{{ cita.hora|time:"h:i A" }}</td>
+          <td>{{ cita.get_accion_display }}</td>
+          <td>{{ cita.fecha_entrega|date:"d/m/Y"|default:"-" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <footer>
+      <p>Generado el: {% now "d/m/Y H:i" %} | Amanda Mateo Boutique</p>
+    </footer>
+  </body>
+</html>

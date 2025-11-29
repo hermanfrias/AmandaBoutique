@@ -18,6 +18,6 @@ class CotizacionDolarForm(forms.ModelForm):
         model = CotizacionDolar
         fields = ['fecha','valor']
         widgets = {
-            'fecha': forms.DateInput(attrs={'type':'date','class':'form-control'}),
+            'fecha': forms.DateInput(format='%Y-%m-%d', attrs={'type':'date','class':'form-control'}),
             'valor': forms.NumberInput(attrs={'class':'form-control'}),
         }

@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Amanda Mateo Boutique{% endblock %}</title>
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Estilos personalizados unificados -->
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}" />
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}"
+          >Inicio | Amanda Mateo Boutique</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#menu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="menu">
+          <ul class="navbar-nav align-items-lg-center">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}#showroom">Showroom</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}#acerca"
+                >Sobre Amanda</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}#contacto">Contacto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}#admin">Admin</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'perfil' %}">Perfil</a>
+            </li>
+            <li class="nav-item">
+              <form action="{% url 'logout' %}" method="POST" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Logout</button>
+              </form>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'registrar' %}">Registrarse</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %} {% endblock %}
+
+    <!-- ADMIN -->
+    <section id="admin" class="py-5" style="background: #fdebf2;">
+      <div class="container text-center">
+        <h2 class="mb-3" style="color: #8a556bff;">Panel de Administración</h2>
+        <p class="lead mb-4" style="color: #4b2c35;">Actualiza la información de tu base de datos con un solo clic</p>
+    
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="/admin/" class="btn btn-listar" style="min-width: 150px;">Administración</a>
+          <a href="{% url 'listar_citas' %}" class="btn btn-listar" style="min-width: 150px;">Citas</a>
+          <a href="{% url 'listar_catalogo' %}" class="btn btn-listar" style="min-width: 150px;">Catálogo</a>
+          <a href="{% url 'clientes_list' %}" class="btn btn-listar" style="min-width: 150px;">Clientes</a>
+          <a href="{% url 'proveedores_list' %}" class="btn btn-listar" style="min-width: 150px;">Proveedores</a>
+          <a href="{% url 'listar_movimientos' %}" class="btn btn-listar" style="min-width: 150px;">Flujo de Caja</a>
+          <a href="{% url 'listar_cotizaciones' %}" class="btn btn-listar" style="min-width: 150px;">Cotizacion</a>
+          <a href="{% url 'dashboard_flujo' %}" class="btn btn-listar" style="min-width: 150px;">Resumen</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>
+        © 2025 Amanda Mateo Boutique | Diseños de ensueño para tus quince años
+      </p>
+      <p><a href="{% url 'index' %}">Volver al Inicio</a></p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -10,13 +10,33 @@ class Catalogo(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.codigo:  # Si no tiene código, lo generamos
-            ultimo = Catalogo.objects.all().order_by('codigo').last()
-            if not ultimo:
-                self.codigo = 'CAT00001'
-            else:
-                num = int(ultimo.codigo.replace('CAT', '')) + 1
-                self.codigo = "CAT" + f"{num:05d}"
-        super().save(*args, **kwargs)
+            # Intentamos generar un código único
+            while True:
+                try:
+                    ultimo = Catalogo.objects.all().order_by('codigo').last()
+                    if not ultimo:
+                        nuevo_codigo = 'CAT00001'
+                    else:
+                        # Extraemos el número, manejando posibles errores de formato
+                        try:
+                            num = int(ultimo.codigo.replace('CAT', '')) + 1
+                        except ValueError:
+                            # Si el último código no tiene el formato esperado, forzamos uno nuevo o usamos timestamp
+                            # Para mantener consistencia simple:
+                            num = 1 
+                        nuevo_codigo = "CAT" + f"{num:05d}"
+                    
+                    self.codigo = nuevo_codigo
+                    super().save(*args, **kwargs)
+                    break # Éxito, salimos del loop
+                except Exception as e:
+                    # Si hay error de integridad (código duplicado por carrera), reintentamos
+                    # Nota: En un entorno de alta concurrencia, esto debería mejorarse.
+                    if 'unique constraint' in str(e).lower() or 'integrity' in str(e).lower():
+                        continue
+                    raise e
+        else:
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.codigo}: {self.modelo} - {self.estilo}"

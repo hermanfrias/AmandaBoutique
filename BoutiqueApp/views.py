@@ -1,12 +1,12 @@
+import os
+from django.conf import settings
 from django.shortcuts import render, redirect
-from BoutiqueApp.forms import CatalogoForm
-from BoutiqueApp.models import Catalogo
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 from weasyprint import HTML, CSS
-from django.conf import settings
-import os
+from BoutiqueApp.forms import CatalogoForm
+from BoutiqueApp.models import Catalogo
 
 
 def index(request):

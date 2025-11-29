@@ -41,7 +41,7 @@ class Cita(models.Model):
         ordering = ['fecha', 'hora']
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido} - {self.fecha} {self.hora} ({self.get_accion_display()})"
+        return f"{self.cliente} - {self.fecha} {self.hora} ({self.get_accion_display()})"
    
 
 

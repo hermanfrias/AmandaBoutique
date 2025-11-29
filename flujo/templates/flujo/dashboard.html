@@ -6,10 +6,44 @@
 <link rel="stylesheet" href="{% static 'flujo/css/flujo.css' %}">
 <div class="container py-5">
     <h2 class="text-pink fw-bold mb-4">Dashboard Flujo de Caja</h2>
+    
+    <!-- Filtros -->
+    <form method="GET" class="row mb-4 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Mes</label>
+            <select name="mes" class="form-select">
+                <option value="1" {% if mes_filtro == 1 %}selected{% endif %}>Enero</option>
+                <option value="2" {% if mes_filtro == 2 %}selected{% endif %}>Febrero</option>
+                <option value="3" {% if mes_filtro == 3 %}selected{% endif %}>Marzo</option>
+                <option value="4" {% if mes_filtro == 4 %}selected{% endif %}>Abril</option>
+                <option value="5" {% if mes_filtro == 5 %}selected{% endif %}>Mayo</option>
+                <option value="6" {% if mes_filtro == 6 %}selected{% endif %}>Junio</option>
+                <option value="7" {% if mes_filtro == 7 %}selected{% endif %}>Julio</option>
+                <option value="8" {% if mes_filtro == 8 %}selected{% endif %}>Agosto</option>
+                <option value="9" {% if mes_filtro == 9 %}selected{% endif %}>Septiembre</option>
+                <option value="10" {% if mes_filtro == 10 %}selected{% endif %}>Octubre</option>
+                <option value="11" {% if mes_filtro == 11 %}selected{% endif %}>Noviembre</option>
+                <option value="12" {% if mes_filtro == 12 %}selected{% endif %}>Diciembre</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Año</label>
+            <select name="anio" class="form-select">
+                {% for fecha in anios_disponibles %}
+                <option value="{{ fecha.year|unlocalize }}" {% if anio_filtro == fecha.year %}selected{% endif %}>{{ fecha.year|unlocalize }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-pink w-100">Filtrar</button>
+        </div>
+    </form>
+
     <div class="row mb-4">
-        <div class="col"><div class="card p-3 text-center" style="background:#fdebf2;"><h4>Total Ingresos USD</h4><h3>${{ total_ingresos_usd|localize }}</h3></div></div>
-        <div class="col"><div class="card p-3 text-center" style="background:#fdebf2;"><h4>Total Gastos USD</h4><h3>${{ total_gastos_usd|localize }}</h3></div></div>
+        <div class="col"><div class="card p-3 text-center" style="background:#fdebf2;"><h4>Total Ingresos USD</h4><h3>${{ total_ingresos_usd|localize }}</h3><small>{{ cant_ingresos }} transacciones</small></div></div>
+        <div class="col"><div class="card p-3 text-center" style="background:#fdebf2;"><h4>Total Gastos USD</h4><h3>${{ total_gastos_usd|localize }}</h3><small>{{ cant_gastos }} transacciones</small></div></div>
         <div class="col"><div class="card p-3 text-center" style="background:#fdebf2;"><h4>Saldo USD</h4><h3>${{ saldo_usd|localize }}</h3></div></div>
+        <div class="col"><div class="card p-3 text-center" style="background:{% if rentabilidad > 0 %}#d4edda{% else %}#f8d7da{% endif %};"><h4>Rentabilidad</h4><h3>{{ rentabilidad }}%</h3></div></div>
     </div>
     <div class="row mb-4">
         <div class="col"><div class="card p-3 text-center" style="background:#fdebf2;"><h4>Total Ingresos Bs</h4><h3>{{ total_ingresos_bs|localize}} Bs</h3></div></div>
@@ -17,7 +51,7 @@
         <div class="col"><div class="card p-3 text-center" style="background:#fdebf2;"><h4>Saldo Bs</h4><h3>{{ saldo_bs|localize }} Bs</h3></div></div>
     </div>
     <hr>
-<h3 class="text-pink fw-bold mb-4 text-center">Ingresos y Gastos Mensuales (USD)</h3>
+<h3 class="text-pink fw-bold mb-4 text-center">Comportamiento Anual ({{ anio_filtro }})</h3>
 
 <canvas id="graficoFlujo"></canvas>
 

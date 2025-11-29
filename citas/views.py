@@ -102,3 +102,55 @@ def eventos_citas(request):
             })
 
     return JsonResponse(eventos, safe=False)
+
+@login_required
+def citas_pdf(request):
+    from django.template.loader import render_to_string
+    from django.http import HttpResponse
+    from weasyprint import HTML, CSS
+    from django.conf import settings
+    import os
+
+    from django.utils.dateparse import parse_date
+    from django.db.models import Q
+
+    citas = Cita.objects.all().order_by('fecha_entrega', 'fecha')
+
+    fecha_inicio_str = request.GET.get('fecha_inicio')
+    fecha_fin_str = request.GET.get('fecha_fin')
+
+    fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
+    fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
+
+    if fecha_inicio and fecha_fin:
+        citas = citas.filter(
+            Q(fecha__range=[fecha_inicio, fecha_fin]) |
+            Q(fecha_entrega__range=[fecha_inicio, fecha_fin])
+        )
+    elif fecha_inicio:
+        citas = citas.filter(
+            Q(fecha__gte=fecha_inicio) |
+            Q(fecha_entrega__gte=fecha_inicio)
+        )
+    elif fecha_fin:
+        citas = citas.filter(
+            Q(fecha__lte=fecha_fin) |
+            Q(fecha_entrega__lte=fecha_fin)
+        )
+    
+    html_string = render_to_string('citas/citas_pdf.html', {
+        'citas': citas,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin
+    })
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="reporte_citas.pdf"'
+
+    # Ruta del CSS para estilos PDF (reutilizamos el de BoutiqueApp o uno específico si se creó)
+    css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
+
+    HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        response, stylesheets=[CSS(css_path)]
+    )
+    return response

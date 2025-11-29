@@ -1,9 +1,0 @@
-/* Estilo Amanda Boutique */
-body { background: #fdebf2; color: #4b2c35; }
-h2, h3, h4 { color: #c4296a; }
-.btn-pink { background-color: #c4296a; color: white; border-radius: 0.5rem; }
-.btn-pink:hover { background-color: #f55ea1; color: white; }
-.table { border-radius: 0.5rem; overflow: hidden; }
-.table th { background-color: #c4296a; color: white; }
-.table-striped tbody tr:nth-of-type(odd) { background-color: #fdebf2; }
-.text-center { text-align: center; }

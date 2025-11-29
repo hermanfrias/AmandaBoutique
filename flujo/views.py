@@ -46,52 +46,284 @@ def crear_cotizacion(request):
     return render(request,'flujo/crear_cotizacion.html',{'form':form})
 
 @login_required
+def editar_cotizacion(request, id):
+    cotizacion = CotizacionDolar.objects.get(id=id)
+    if request.method == 'POST':
+        form = CotizacionDolarForm(request.POST, instance=cotizacion)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cotización actualizada correctamente')
+            return redirect('listar_cotizaciones')
+    else:
+        form = CotizacionDolarForm(instance=cotizacion)
+    return render(request, 'flujo/editar_cotizacion.html', {'form': form, 'cotizacion': cotizacion})
+
+@login_required
+def eliminar_cotizacion(request, id):
+    cotizacion = CotizacionDolar.objects.get(id=id)
+    cotizacion.delete()
+    messages.success(request, 'Cotización eliminada correctamente')
+    return redirect('listar_cotizaciones')
+
+@login_required
 def dashboard_flujo(request):
-    movimientos = MovimientoCaja.objects.all()
+    import datetime
+    import json
+    import traceback
+    
+    try:
+        # Obtener filtros
+        mes_actual = datetime.date.today().month
+        anio_actual = datetime.date.today().year
+        
+        # Verificar si hay años disponibles
+        anios_disponibles = MovimientoCaja.objects.dates('fecha', 'year')
+        if not anios_disponibles:
+            # Si no hay movimientos, usar año actual
+            anios_disponibles = [datetime.date.today()]
+        
+        mes_filtro = request.GET.get('mes', str(mes_actual))
+        anio_filtro = request.GET.get('anio', str(anio_actual))
+        
+        # Limpiar el año (remover separadores de miles como 2.025 -> 2025)
+        anio_filtro = anio_filtro.replace('.', '').replace(',', '')
+        
+        movimientos = MovimientoCaja.objects.all()
+        
+        # Filtrar por mes y año si se seleccionan
+        if mes_filtro and anio_filtro:
+            movimientos = movimientos.filter(fecha__month=mes_filtro, fecha__year=anio_filtro)
+        
+        # Totales USD
+        total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        saldo_usd = total_ingresos_usd - total_gastos_usd
+        
+        # Cantidades
+        cant_ingresos = movimientos.filter(tipo='Ingreso').count()
+        cant_gastos = movimientos.filter(tipo='Gasto').count()
+        
+        # Rentabilidad
+        rentabilidad = 0
+        if total_ingresos_usd > 0:
+            rentabilidad = (saldo_usd / total_ingresos_usd) * 100
+
+        # Totales Bs (Estimado)
+        total_ingresos_bs = 0
+        total_gastos_bs = 0
+        for m in movimientos:
+            if m.moneda == 'Bs':
+                factor = 1
+            else:
+                try:
+                    cot = CotizacionDolar.objects.get(fecha=m.fecha)
+                    factor = cot.valor
+                except CotizacionDolar.DoesNotExist:
+                    factor = 1
+            if m.tipo == 'Ingreso':
+                total_ingresos_bs += m.monto_usd * factor
+            else:
+                total_gastos_bs += m.monto_usd * factor
+        saldo_bs = total_ingresos_bs - total_gastos_bs
+
+        # Gráfico (Mantenemos la lógica global para el gráfico o la ajustamos al año seleccionado?)
+        # Para el gráfico es mejor mostrar el año seleccionado completo
+        movimientos_anio = MovimientoCaja.objects.filter(fecha__year=anio_filtro)
+        
+        meses=[]
+        ingresos_mes=[]
+        gastos_mes=[]
+        queryset = movimientos_anio.annotate(mes=TruncMonth('fecha')).values('mes').distinct().order_by('mes')
+
+        for q in queryset:
+            mes=q['mes'].strftime('%B')
+            meses.append(mes)
+            ingresos_mes.append(round(movimientos_anio.filter(tipo='Ingreso',fecha__month=q['mes'].month).aggregate(total=Sum('monto_usd'))['total'] or 0,2))
+            gastos_mes.append(round(movimientos_anio.filter(tipo='Gasto',fecha__month=q['mes'].month).aggregate(total=Sum('monto_usd'))['total'] or 0,2))
+
+        # Serializar para JavaScript
+        meses_json = json.dumps(meses)
+        ingresos_mes_json = json.dumps([float(x) for x in ingresos_mes])
+        gastos_mes_json = json.dumps([float(x) for x in gastos_mes])
+        
+        context={
+            'total_ingresos_usd': round(total_ingresos_usd,2),
+            'total_gastos_usd': round(total_gastos_usd,2),
+            'saldo_usd': round(saldo_usd,2),
+            'rentabilidad': round(rentabilidad, 2),
+            'cant_ingresos': cant_ingresos,
+            'cant_gastos': cant_gastos,
+            'total_ingresos_bs': round(total_ingresos_bs,2),
+            'total_gastos_bs': round(total_gastos_bs,2),
+            'saldo_bs': round(saldo_bs,2),
+            'meses': meses_json,
+            'ingresos_mes': ingresos_mes_json,
+            'gastos_mes': gastos_mes_json,
+            'mes_filtro': int(mes_filtro),
+            'anio_filtro': int(anio_filtro),
+            'anios_disponibles': anios_disponibles
+        }
+
+        return render(request,'flujo/dashboard.html',context)
+    except Exception as e:
+        # Imprimir el error completo en la consola
+        print("=" * 80)
+        print("ERROR EN DASHBOARD:")
+        print(traceback.format_exc())
+        print("=" * 80)
+        from django.http import HttpResponse
+        return HttpResponse(f"Error: {str(e)}<br><br><pre>{traceback.format_exc()}</pre>", status=500)
+
+@login_required
+def movimientos_pdf(request):
+    from django.template.loader import render_to_string
+    from django.http import HttpResponse
+    from weasyprint import HTML, CSS
+    from django.conf import settings
+    from django.utils.dateparse import parse_date
+    from django.db.models import Q
+    import os
+
+    movimientos = MovimientoCaja.objects.all().order_by('-fecha')
+
+    fecha_inicio_str = request.GET.get('fecha_inicio')
+    fecha_fin_str = request.GET.get('fecha_fin')
+
+    fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
+    fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
+
+    if fecha_inicio and fecha_fin:
+        movimientos = movimientos.filter(fecha__range=[fecha_inicio, fecha_fin])
+    elif fecha_inicio:
+        movimientos = movimientos.filter(fecha__gte=fecha_inicio)
+    elif fecha_fin:
+        movimientos = movimientos.filter(fecha__lte=fecha_fin)
+    
+    # Calcular totales
     total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
     total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
     saldo_usd = total_ingresos_usd - total_gastos_usd
 
-    total_ingresos_bs = 0
-    total_gastos_bs = 0
-    for m in movimientos:
-        if m.moneda == 'Bs':
-            factor = 1
-        else:
-            try:
-                cot = CotizacionDolar.objects.get(fecha=m.fecha)
-                factor = cot.valor
-            except CotizacionDolar.DoesNotExist:
-                factor = 1
-        if m.tipo == 'Ingreso':
-            total_ingresos_bs += m.monto_usd * factor
-        else:
-            total_gastos_bs += m.monto_usd * factor
-    saldo_bs = total_ingresos_bs - total_gastos_bs
+    html_string = render_to_string('flujo/movimientos_pdf.html', {
+        'movimientos': movimientos,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+        'total_ingresos_usd': round(total_ingresos_usd, 2),
+        'total_gastos_usd': round(total_gastos_usd, 2),
+        'saldo_usd': round(saldo_usd, 2),
+    })
 
-    meses=[]
-    ingresos_mes=[]
-    gastos_mes=[]
-    queryset = movimientos.annotate(mes=TruncMonth('fecha')).values('mes').distinct().order_by('mes')
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="movimientos_caja.pdf"'
 
-    for q in queryset:
-        mes=q['mes'].strftime('%B %Y')
-        meses.append(mes)
-        ingresos_mes.append(round(movimientos.filter(tipo='Ingreso',fecha__month=q['mes'].month,fecha__year=q['mes'].year).aggregate(total=Sum('monto_usd'))['total'] or 0,2))
-        gastos_mes.append(round(movimientos.filter(tipo='Gasto',fecha__month=q['mes'].month,fecha__year=q['mes'].year).aggregate(total=Sum('monto_usd'))['total'] or 0,2))
+    css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
 
-    context={
-        'total_ingresos_usd': round(total_ingresos_usd,2),
-        'total_gastos_usd': round(total_gastos_usd,2),
-        'saldo_usd': round(saldo_usd,2),
-        'total_ingresos_bs': round(total_ingresos_bs,2),
-        'total_gastos_bs': round(total_gastos_bs,2),
-        'saldo_bs': round(saldo_bs,2),
-        'meses': meses,
-        'ingresos_mes': ingresos_mes,
-        'gastos_mes': gastos_mes
-    }
+    HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        response, stylesheets=[CSS(css_path)]
+    )
+    return response
 
-    return render(request,'flujo/dashboard.html',context)
+@login_required
+def movimientos_excel(request):
+    from django.http import HttpResponse
+    from django.utils.dateparse import parse_date
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, Alignment, PatternFill
+    from openpyxl.utils import get_column_letter
 
+    movimientos = MovimientoCaja.objects.all().order_by('-fecha')
 
+    fecha_inicio_str = request.GET.get('fecha_inicio')
+    fecha_fin_str = request.GET.get('fecha_fin')
+
+    fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
+    fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
+
+    if fecha_inicio and fecha_fin:
+        movimientos = movimientos.filter(fecha__range=[fecha_inicio, fecha_fin])
+    elif fecha_inicio:
+        movimientos = movimientos.filter(fecha__gte=fecha_inicio)
+    elif fecha_fin:
+        movimientos = movimientos.filter(fecha__lte=fecha_fin)
+
+    # Calcular totales
+    total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
+    total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+    saldo_usd = total_ingresos_usd - total_gastos_usd
+
+    # Crear workbook
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Movimientos de Caja"
+
+    # Estilos
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill(start_color="E91E63", end_color="E91E63", fill_type="solid")
+    header_alignment = Alignment(horizontal="center", vertical="center")
+
+    # Título
+    ws.merge_cells('A1:F1')
+    ws['A1'] = 'Amanda Mateo Boutique - Movimientos de Caja'
+    ws['A1'].font = Font(bold=True, size=14)
+    ws['A1'].alignment = Alignment(horizontal="center")
+
+    # Rango de fechas
+    if fecha_inicio or fecha_fin:
+        ws.merge_cells('A2:F2')
+        if fecha_inicio and fecha_fin:
+            ws['A2'] = f'Del {fecha_inicio.strftime("%d/%m/%Y")} al {fecha_fin.strftime("%d/%m/%Y")}'
+        elif fecha_inicio:
+            ws['A2'] = f'Desde {fecha_inicio.strftime("%d/%m/%Y")}'
+        elif fecha_fin:
+            ws['A2'] = f'Hasta {fecha_fin.strftime("%d/%m/%Y")}'
+        ws['A2'].alignment = Alignment(horizontal="center")
+
+    # Encabezados
+    start_row = 4 if (fecha_inicio or fecha_fin) else 3
+    headers = ['Fecha', 'Descripción', 'Tipo', 'Moneda', 'Monto', 'Monto USD']
+    for col, header in enumerate(headers, 1):
+        cell = ws.cell(row=start_row, column=col)
+        cell.value = header
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = header_alignment
+
+    # Datos
+    row = start_row + 1
+    for mov in movimientos:
+        ws.cell(row=row, column=1, value=mov.fecha.strftime("%d/%m/%Y"))
+        ws.cell(row=row, column=2, value=mov.descripcion)
+        ws.cell(row=row, column=3, value=mov.tipo)
+        ws.cell(row=row, column=4, value=mov.moneda)
+        ws.cell(row=row, column=5, value=float(mov.monto))
+        ws.cell(row=row, column=6, value=float(mov.monto_usd))
+        row += 1
+
+    # Totales
+    row += 1
+    ws.cell(row=row, column=1, value="TOTALES").font = Font(bold=True)
+    row += 1
+    ws.cell(row=row, column=1, value="Total Ingresos USD:")
+    ws.cell(row=row, column=2, value=f"${round(total_ingresos_usd, 2)}")
+    row += 1
+    ws.cell(row=row, column=1, value="Total Gastos USD:")
+    ws.cell(row=row, column=2, value=f"${round(total_gastos_usd, 2)}")
+    row += 1
+    ws.cell(row=row, column=1, value="Saldo USD:").font = Font(bold=True)
+    ws.cell(row=row, column=2, value=f"${round(saldo_usd, 2)}").font = Font(bold=True)
+
+    # Ajustar anchos de columna
+    ws.column_dimensions['A'].width = 12
+    ws.column_dimensions['B'].width = 40
+    ws.column_dimensions['C'].width = 10
+    ws.column_dimensions['D'].width = 10
+    ws.column_dimensions['E'].width = 15
+    ws.column_dimensions['F'].width = 15
+
+    # Preparar respuesta
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="movimientos_caja.xlsx"'
+    wb.save(response)
+    return response

@@ -1,43 +1,150 @@
-{% extends "BoutiqueApp/index.html" %}
-{% load static %}
-{% block content %}
-<link rel="stylesheet" href="{% static 'flujo/css/flujo.css' %}">
+{% extends "BoutiqueApp/base.html" %} {% load static %} {% block title %}Flujo
+de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
+<link rel="stylesheet" href="{% static 'flujo/css/flujo.css' %}" />
 <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-pink fw-bold">Movimientos de Caja</h2>
-        <a href="{% url 'crear_movimiento' %}" class="btn btn-listar">Agregar</a>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">Movimientos de Caja</h2>
+    <div class="btn-group-catalogo">
+      <a href="{% url 'crear_movimiento' %}" class="btn btn-listar">Agregar</a>
+      <button
+        type="button"
+        class="btn btn-pink"
+        data-bs-toggle="modal"
+        data-bs-target="#modalExportar"
+      >
+        Exportar
+      </button>
     </div>
-    <div class="mb-3 d-flex justify-content-end gap-2">
-        {% comment %} <a href="{% url 'exportar_movimientos_excel' %}" class="btn btn-pink btn-sm">Exportar Excel</a> {% endcomment %}
-        {% comment %} <a href="{% url 'exportar_movimientos_pdf' %}" class="btn btn-pink btn-sm">Exportar PDF</a> {% endcomment %}
-    </div>
-    <div class="table-responsive shadow-sm rounded">
-        <table class="table table-striped table-bordered text-center">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Descripción</th>
-                    <th>Tipo</th>
-                    <th>Moneda</th>
-                    <th>Monto</th>
-                    <th>Monto USD</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for m in movimientos %}
-                <tr>
-                    <td>{{ m.fecha|date:"d/m/Y" }}</td>
-                    <td>{{ m.descripcion }}</td>
-                    <td>{{ m.tipo }}</td>
-                    <td>{{ m.moneda }}</td>
-                    <td>{{ m.monto }}</td>
-                    <td>{{ m.monto_usd }}</td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="7" class="text-center">No hay movimientos</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  </div>
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-striped table-bordered text-center">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Tipo</th>
+          <th>Moneda</th>
+          <th>Monto</th>
+          <th>Monto USD</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in movimientos %}
+        <tr>
+          <td>{{ m.fecha|date:"d/m/Y" }}</td>
+          <td>{{ m.descripcion }}</td>
+          <td>{{ m.tipo }}</td>
+          <td>{{ m.moneda }}</td>
+          <td>{{ m.monto }}</td>
+          <td>{{ m.monto_usd }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">No hay movimientos</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<!-- Modal para Exportar -->
+<div
+  class="modal fade"
+  id="modalExportar"
+  tabindex="-1"
+  aria-labelledby="modalExportarLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-pink text-white">
+        <h5 class="modal-title" id="modalExportarLabel">
+          Exportar Movimientos
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <strong
+            >Seleccione el rango de fechas para filtrar (opcional):</strong
+          >
+        </p>
+        <p class="text-muted small">
+          Si deja las fechas vacías, se exportarán todos los movimientos.
+        </p>
+        <div class="mb-3">
+          <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
+          <input
+            type="date"
+            class="form-control"
+            id="fecha_inicio_export"
+            name="fecha_inicio"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="fecha_fin" class="form-label">Fecha Fin</label>
+          <input
+            type="date"
+            class="form-control"
+            id="fecha_fin_export"
+            name="fecha_fin"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-success" onclick="exportarExcel()">
+          Exportar Excel
+        </button>
+        <button type="button" class="btn btn-pink" onclick="exportarPDF()">
+          Imprimir PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function exportarPDF() {
+    const fechaInicio = document.getElementById("fecha_inicio_export").value;
+    const fechaFin = document.getElementById("fecha_fin_export").value;
+
+    let url = "{% url 'movimientos_pdf' %}";
+    const params = new URLSearchParams();
+
+    if (fechaInicio) params.append("fecha_inicio", fechaInicio);
+    if (fechaFin) params.append("fecha_fin", fechaFin);
+
+    if (params.toString()) {
+      url += "?" + params.toString();
+    }
+
+    window.open(url, "_blank");
+  }
+
+  function exportarExcel() {
+    const fechaInicio = document.getElementById("fecha_inicio_export").value;
+    const fechaFin = document.getElementById("fecha_fin_export").value;
+
+    let url = "{% url 'movimientos_excel' %}";
+    const params = new URLSearchParams();
+
+    if (fechaInicio) params.append("fecha_inicio", fechaInicio);
+    if (fechaFin) params.append("fecha_fin", fechaFin);
+
+    if (params.toString()) {
+      url += "?" + params.toString();
+    }
+
+    window.location.href = url;
+  }
+</script>
 {% endblock %}

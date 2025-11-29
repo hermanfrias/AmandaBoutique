@@ -1,59 +1,163 @@
-{% extends "BoutiqueApp/index.html" %}
-{% block content %}
+{% extends "BoutiqueApp/base.html" %} {% block title %}Citas | Amanda Mateo
+Boutique{% endblock %} {% block content %}
 <div class="container py-5">
-    <!-- Encabezado -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-pink fw-bold">Lista de Citas</h2>
-            <div class="btn-group-catalogo">
-            <a href="{% url 'crear_cita' %}" class="btn btn-listar">Agregar</a>
-            <a href="{% url 'calendario_citas' %}" class="btn btn-listar">Calendario</a>
-            </div>
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">Lista de Citas</h2>
+    <div class="btn-group-catalogo">
+      <a href="{% url 'crear_cita' %}" class="btn btn-listar">Agregar</a>
+      <a href="{% url 'calendario_citas' %}" class="btn btn-listar"
+        >Calendario</a
+      >
+      <button
+        type="button"
+        class="btn btn-pink"
+        data-bs-toggle="modal"
+        data-bs-target="#modalImprimir"
+      >
+        Imprimir Citas
+      </button>
     </div>
-    <!-- Búsqueda -->
-    <form method="GET" action="{% url 'listar_citas' %}" class="d-flex align-items-center mb-4">
-        <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar por nombre..." value="{{ request.GET.buscar }}">
-        <button type="submit" class="btn btn-pink btn-sm">Buscar</button>
-    </form>
-    <div class="table-responsive shadow-sm rounded">
-        <table class="table table-striped table-bordered align-middle text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>Cliente</th>
-                    <th>Teléfono</th>
-                    <th>
-                        <a href="?orden=fecha" style="color:white; text-decoration:none;">Fecha Cita</a>
-                    </th>
-                    <th>Hora</th>
-                    <th>Cita</th>
-                    <th>
-                        <a href="?orden=entrega" style="color:white; text-decoration:none;">Fecha de Entrega</a>
-                    </th>
-                    <th>Acciones</th>
-                    <th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cita in citas %}
-                    <tr>
-                        <td>{{ cita.cliente }}</td>
-                        <td>{{ cita.telefono }}</td>
-                        <td>{{ cita.fecha|date:"l d/m/Y"|capfirst }}</td>
-                        <td>{{ cita.hora|time:"h:i A" }}</td>
-                        <td>{{ cita.accion }}</td>
-                        <td>{{ cita.fecha_entrega|date:"l d/m/Y"|capfirst }}</td>
-                        <td class="acciones-cell">
-                            <a href="{% url 'ver_cita' cita.pk %}" class="btn btn-ver btn-sm">Ver</a>
-                            <a href="{% url 'editar_cita' cita.pk %}" class="btn btn-editar btn-sm">Editar</a>
-                            <a href="{% url 'eliminar_cita' cita.pk %}" class="btn btn-eliminar btn-sm">Eliminar</a>
-                        </td>
-                    </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="11" class="text-center">No hay citas agendadas</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+  </div>
+  <!-- Búsqueda -->
+  <form
+    method="GET"
+    action="{% url 'listar_citas' %}"
+    class="d-flex align-items-center mb-4"
+  >
+    <input
+      type="text"
+      name="buscar"
+      class="form-control me-2"
+      placeholder="Buscar por nombre..."
+      value="{{ request.GET.buscar }}"
+    />
+    <button type="submit" class="btn btn-pink btn-sm">Buscar</button>
+  </form>
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-striped table-bordered align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Cliente</th>
+          <th>Teléfono</th>
+          <th>
+            <a href="?orden=fecha" style="color: white; text-decoration: none"
+              >Fecha Cita</a
+            >
+          </th>
+          <th>Hora</th>
+          <th>Cita</th>
+          <th>
+            <a href="?orden=entrega" style="color: white; text-decoration: none"
+              >Fecha de Entrega</a
+            >
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in citas %}
+        <tr>
+          <td>{{ cita.cliente }}</td>
+          <td>{{ cita.telefono }}</td>
+          <td>{{ cita.fecha|date:"l d/m/Y"|capfirst }}</td>
+          <td>{{ cita.hora|time:"h:i A" }}</td>
+          <td>{{ cita.accion }}</td>
+          <td>{{ cita.fecha_entrega|date:"l d/m/Y"|capfirst }}</td>
+          <td class="acciones-cell">
+            <a href="{% url 'ver_cita' cita.pk %}" class="btn btn-ver btn-sm"
+              >Ver</a
+            >
+            <a
+              href="{% url 'editar_cita' cita.pk %}"
+              class="btn btn-editar btn-sm"
+              >Editar</a
+            >
+            <a
+              href="{% url 'eliminar_cita' cita.pk %}"
+              class="btn btn-eliminar btn-sm"
+              >Eliminar</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center">No hay citas agendadas</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal para Imprimir Reporte -->
+<div
+  class="modal fade"
+  id="modalImprimir"
+  tabindex="-1"
+  aria-labelledby="modalImprimirLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-pink text-white">
+        <h5 class="modal-title" id="modalImprimirLabel">
+          Imprimir Reporte de Citas
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form action="{% url 'citas_pdf' %}" method="GET" target="_blank">
+        <div class="modal-body">
+          <p>
+            <strong
+              >Seleccione el rango de fechas para filtrar (opcional):</strong
+            >
+          </p>
+          <p class="text-muted small">
+            Si deja las fechas vacías, se imprimirán todas las citas.
+          </p>
+          <div class="mb-3">
+            <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fecha_inicio"
+              name="fecha_inicio"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="fecha_fin" class="form-label">Fecha Fin</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fecha_fin"
+              name="fecha_fin"
+            />
+          </div>
+          <p class="text-muted small">
+            <em
+              >Nota: Se incluirán citas cuya fecha de cita o fecha de entrega
+              esté dentro del rango seleccionado.</em
+            >
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-pink">Generar PDF</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 {% endblock %}

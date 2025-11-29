@@ -11,5 +11,6 @@ urlpatterns = [
     path('citas/', views.listar_citas, name='listar_citas'),
     path('citas/calendario/', views.calendario_citas, name='calendario_citas'),
     path('citas/api/', views.eventos_citas, name='eventos_citas'),
+    path('citas/pdf/', views.citas_pdf, name='citas_pdf'),
     
 ]
