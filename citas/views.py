@@ -81,15 +81,16 @@ def eventos_citas(request):
     citas = Cita.objects.all()
     eventos = []
     for c in citas:
-        # Evento de fecha de cita (color rosa)
-        hora_12 = c.hora.strftime("%I:%M %p") if c.hora else ""
-        eventos.append({
-            "title": f"{hora_12} - {c.cliente} - {c.get_accion_display()}",
-            "start": str(c.fecha),
-            "color": "#E91E63",
-            "allDay": True,
-            "url": reverse("ver_cita", args=[c.pk])  # 👈
-        })
+        # Evento de fecha de cita (color rosa) - solo si tiene fecha
+        if c.fecha:
+            hora_12 = c.hora.strftime("%I:%M %p") if c.hora else ""
+            eventos.append({
+                "title": f"{hora_12} - {c.cliente} - {c.get_accion_display()}",
+                "start": str(c.fecha),
+                "color": "#E91E63",
+                "allDay": True,
+                "url": reverse("ver_cita", args=[c.pk])  # 👈
+            })
 
         # Evento de fecha de entrega (color morado)
         if c.fecha_entrega:

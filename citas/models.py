@@ -21,8 +21,8 @@ class Cita(models.Model):
 
     cliente = models.CharField(max_length=100)
     telefono = models.CharField(max_length=15, blank=True, null=True)
-    fecha = models.DateField()
-    hora = models.TimeField()
+    fecha = models.DateField(null=True, blank=True)
+    hora = models.TimeField(null=True, blank=True)
     descripcion = models.TextField(blank=True, null=True)
     copa = models.CharField(max_length=5, blank=True, null=True)  
     busto = models.CharField(max_length=5, blank=True, null=True)  
