@@ -94,21 +94,21 @@ def dashboard_flujo(request):
         if mes_filtro and anio_filtro:
             movimientos = movimientos.filter(fecha__month=mes_filtro, fecha__year=anio_filtro)
         
-        # Totales USD
+        # Totales USD (Mes)
         total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
         total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
         saldo_usd = total_ingresos_usd - total_gastos_usd
         
-        # Cantidades
+        # Cantidades (Mes)
         cant_ingresos = movimientos.filter(tipo='Ingreso').count()
         cant_gastos = movimientos.filter(tipo='Gasto').count()
         
-        # Rentabilidad
+        # Rentabilidad (Mes)
         rentabilidad = 0
         if total_ingresos_usd > 0:
             rentabilidad = (saldo_usd / total_ingresos_usd) * 100
 
-        # Totales Bs (Estimado)
+        # Totales Bs (Estimado - Mes)
         total_ingresos_bs = 0
         total_gastos_bs = 0
         for m in movimientos:
@@ -125,6 +125,26 @@ def dashboard_flujo(request):
             else:
                 total_gastos_bs += m.monto_usd * factor
         saldo_bs = total_ingresos_bs - total_gastos_bs
+
+        # --- RESUMEN ANUAL ---
+        movimientos_anual = MovimientoCaja.objects.filter(fecha__year=anio_filtro)
+        total_ingresos_usd_anual = movimientos_anual.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd_anual = movimientos_anual.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        saldo_usd_anual = total_ingresos_usd_anual - total_gastos_usd_anual
+        
+        rentabilidad_anual = 0
+        if total_ingresos_usd_anual > 0:
+            rentabilidad_anual = (saldo_usd_anual / total_ingresos_usd_anual) * 100
+
+        # --- RESUMEN ACUMULATIVO TOTAL ---
+        movimientos_total = MovimientoCaja.objects.all()
+        total_ingresos_usd_total = movimientos_total.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd_total = movimientos_total.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        saldo_usd_total = total_ingresos_usd_total - total_gastos_usd_total
+        
+        rentabilidad_total = 0
+        if total_ingresos_usd_total > 0:
+            rentabilidad_total = (saldo_usd_total / total_ingresos_usd_total) * 100
 
         # Gráfico (Mantenemos la lógica global para el gráfico o la ajustamos al año seleccionado?)
         # Para el gráfico es mejor mostrar el año seleccionado completo
@@ -161,7 +181,17 @@ def dashboard_flujo(request):
             'gastos_mes': gastos_mes_json,
             'mes_filtro': int(mes_filtro),
             'anio_filtro': int(anio_filtro),
-            'anios_disponibles': anios_disponibles
+            'anios_disponibles': anios_disponibles,
+            # Anual
+            'total_ingresos_usd_anual': round(total_ingresos_usd_anual, 2),
+            'total_gastos_usd_anual': round(total_gastos_usd_anual, 2),
+            'saldo_usd_anual': round(saldo_usd_anual, 2),
+            'rentabilidad_anual': round(rentabilidad_anual, 2),
+            # Total
+            'total_ingresos_usd_total': round(total_ingresos_usd_total, 2),
+            'total_gastos_usd_total': round(total_gastos_usd_total, 2),
+            'saldo_usd_total': round(saldo_usd_total, 2),
+            'rentabilidad_total': round(rentabilidad_total, 2),
         }
 
         return render(request,'flujo/dashboard.html',context)
