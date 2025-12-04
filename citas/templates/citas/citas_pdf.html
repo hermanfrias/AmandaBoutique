@@ -54,24 +54,24 @@
     <table>
       <thead>
         <tr>
+          <th>Descripción</th>
           <th>Cliente</th>
           <th>Teléfono</th>
           <th>Fecha Cita</th>
           <th>Hora</th>
           <th>Tipo</th>
-          <th>Descripción</th>
           <th>Fecha Entrega</th>
         </tr>
       </thead>
       <tbody>
         {% for cita in citas %}
         <tr>
+          <td>{{ cita.descripcion|default:"-" }}</td>
           <td>{{ cita.cliente }}</td>
           <td>{{ cita.telefono }}</td>
           <td>{{ cita.fecha|date:"d/m/Y" }}</td>
           <td>{{ cita.hora|time:"h:i A" }}</td>
           <td>{{ cita.get_accion_display }}</td>
-          <td>{{ cita.descripcion|default:"-" }}</td>
           <td>{{ cita.fecha_entrega|date:"d/m/Y"|default:"-" }}</td>
         </tr>
         {% endfor %}
