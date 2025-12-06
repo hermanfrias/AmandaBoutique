@@ -1,8 +1,10 @@
-{% extends "BoutiqueApp/index.html" %}
+{% extends "BoutiqueApp/base.html" %}
+{% block title %}Editar Cita | Amanda Mateo Boutique{% endblock %}
 {% block content %}
 <div class="container py-5">
-    <h2 class="mb-4 text-center">Editar Cita</h2>
-    <form method="post" class="row g-3">{% csrf_token %}
+    <h2 class="mb-4 text-center text-pink fw-bold">Editar Cita</h2>
+    <form method="post" class="row g-3">
+        {% csrf_token %}
         <div class="col-md-6">
             <label for="id_cliente" class="form-label">Cliente</label>
             {{ form.cliente }}
@@ -72,8 +74,8 @@
             {{ form.descripcion }}
         </div>
         <div class="col-12 text-center mt-3">
-            <button type="submit" class="btn btn-editar px-4 py-2 me-2">Actualizar Cita</button>
-            <a href="{% url 'listar_citas' %}" class="btn btn-volver">Volver</a>
+            <button type="submit" class="btn btn-pink btn-sm me-2">Actualizar Cita</button>
+            <a href="{% url 'listar_citas' %}" class="btn btn-editar btn-sm">Volver</a>
         </div>
     </form>
 </div>

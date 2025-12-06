@@ -1,240 +1,545 @@
-﻿
+﻿# 👗 Amanda Mateo Boutique
+
+<div align="center">
+
+![Django](https://img.shields.io/badge/Django-5.2.7-092E20?style=for-the-badge&logo=django&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+
+**Sistema de Gestión Integral para Boutique de Vestidos de Quinceañera**
+
+[🇪🇸 Español](#español) • [🇺🇸 English](#english) • [📹 Video Demo](https://youtu.be/XqdgIVWoqEk)
+
+</div>
+
 ---
-***English***
 
-# ***Amanda Mateo Boutique***
-#### **Video Demo:** https://youtu.be/XqdgIVWoqEk
-### **Description**: *Amanda Mateo Boutique* is a Python project using the Django framework to create a showroom for a designer of custom-made quinceañera dresses. It also manages the databases for Catalog, Clients, Suppliers, Appointments, Cash Register Transactions, Dollar Exchange Rate, and User Profiles.
+## 🇪🇸 Español
 
-**Technologies**
+### 📋 Descripción
 
-- Python
-- Django
-- HTML
-- SQLite
-- Weasyprint / gtk3-runtime
+**Amanda Mateo Boutique** es un sistema de gestión integral desarrollado en Django para administrar todos los aspectos de una boutique especializada en vestidos de quinceañera hechos a medida. El sistema incluye un showroom dinámico, gestión de inventario, control de citas, seguimiento de clientes y proveedores, y un completo módulo de flujo de caja con conversión automática de divisas.
 
-*Note: gtk3-runtime is required for Weasyprint to function.*
+### ✨ Características Principales
 
-**Description of Files and Folders**
+#### 🏠 **Showroom Dinámico**
 
-**AmandaProject** is the main Django project where the following files were used:
+- Catálogo visual de vestidos con imágenes
+- Visualización automática de todos los modelos disponibles
+- Información detallada de cada diseño (estilo, precio, descripción)
+- Generación de catálogos PDF en dos formatos:
+  - Lista de productos
+  - Fichas individuales por modelo
 
-- **Setting.py**: project configuration.
+#### 📅 **Gestión de Citas**
 
-- **urls.py**: Project URLs.
+- Calendario interactivo con FullCalendar
+- Registro de citas con información completa del cliente
+- Seguimiento de fechas de entrega
+- Registro de medidas (copa, busto, cintura, largo, tiras)
+- Control de pagos (precio, abono, pago total)
+- Soporte para múltiples monedas (USD/Bs)
+- Generación de reportes PDF filtrados por fecha
 
-**BoutiqueApp**: The app that displays the showroom's main page, with a dynamic section that shows the dresses in the Catalog and manages the Catalog database.
+#### 👥 **Gestión de Clientes**
 
-- **views.py**: Python logic.
+- Base de datos completa de clientes
+- Búsqueda rápida por nombre
+- Información de contacto y dirección
+- Historial de citas y compras
 
-- **forms.py**: Python logic for the database formats.
+#### 🏭 **Gestión de Proveedores**
 
-- **models.py**: Definition of the Catalog database.
+- Registro de proveedores
+- Información de contacto
+- Búsqueda y filtrado
 
-- **urls.py**: URLs of the BoutiqueApp.
+#### 💰 **Flujo de Caja**
 
-- **Templates Folder**: Where each of the HTML files used for managing the Catalog database are located.
+- Control de ingresos y egresos
+- Conversión automática Bs → USD usando cotización del día
+- Dashboard financiero con:
+  - Resumen mensual y anual
+  - Totales acumulados
+  - Métricas de rentabilidad
+- Exportación a Excel y PDF
+- Filtrado por rango de fechas
 
-- **index.html**: Showroom's main page, where the dynamic catalog, the Sabre Amanda section, Contacts, and the administration area for the different databases are displayed.
+#### 💵 **Cotización del Dólar**
 
-**ClientesAPP**: The app that manages the customer database.
+- Registro de tasas de cambio diarias
+- Conversión automática en movimientos de caja
+- Historial de cotizaciones
 
-- **views.py**: Python logic.
+#### 👤 **Gestión de Usuarios**
 
-- **forms.py**: Python logic for database formats.
+- Sistema de autenticación completo
+- Perfiles de usuario personalizados
+- Control de acceso a funciones administrativas
+- Registro, login y logout
 
-- **models.py**: Definition of the Clients database.
+### 🛠️ Tecnologías Utilizadas
 
-- **urls.py**: URLs for the ClientsApp.
+- **Backend:** Python 3.11+ / Django 5.2.7
+- **Base de Datos:** SQLite
+- **Frontend:** HTML5, CSS3, Bootstrap 5.3
+- **PDF Generation:** WeasyPrint + GTK3 Runtime
+- **Calendario:** FullCalendar
+- **Exportación:** OpenPyXL (Excel)
+- **Deployment:** WhiteNoise (archivos estáticos)
 
-- **templates folder**: Where each of the HTML files used to manage the Clients database are located.
+### 📦 Instalación
 
-**SuppliersApp**: The app that manages the Suppliers database.
+#### Prerrequisitos
 
-- **views.py**: Python logic.
+- Python 3.11 o superior
+- GTK3 Runtime (requerido para WeasyPrint)
 
-- **forms.py**: Python logic for database formats.
+#### Pasos de Instalación
 
-- **models.py**: Definition of the Suppliers database.
+1. **Clonar el repositorio**
 
-- **urls.py**: URLs for the Suppliers app.
+```bash
+git clone https://github.com/tu-usuario/AmandaBoutique.git
+cd AmandaBoutique
+```
 
-- **templates folder**: Where each of the HTML files used to manage the Suppliers database are located.
+2. **Crear entorno virtual**
 
-**citas** is the app that manages the database for appointments and due dates.
+```bash
+python -m venv .venv
+```
 
-- **views.py**: Python logic.
+3. **Activar entorno virtual**
 
-- **forms.py**: Python logic for database formats.
+```bash
+# Windows
+.venv\Scripts\activate
 
-- **models.py**: Definition of the User Profile database.
+# Linux/Mac
+source .venv/bin/activate
+```
 
-- **urls.py**: URLs for the Appointments app.
+4. **Instalar dependencias**
 
-- **Templates Folder**: Where each of the HTML files used for managing the Appointments database is located.
+```bash
+pip install -r requirements.txt
+```
 
-**flujo** is the app that manages the database for controlling the executive workflow.
+5. **Instalar GTK3 Runtime** (Windows)
+
+   - Descargar desde: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer
+   - Ejecutar el instalador
+   - Agregar GTK3 al PATH del sistema
+
+6. **Configurar variables de entorno**
+
+```bash
+# Copiar el archivo de ejemplo
+copy .env.example .env
+
+# Editar .env con tus configuraciones
+```
+
+7. **Aplicar migraciones**
+
+```bash
+python manage.py migrate
+```
 
-- **views.py**: Python logic.
+8. **Crear superusuario**
 
-- **forms.py**: Python logic for database formats.
+```bash
+python manage.py createsuperuser
+```
 
-- **models.py**: Definition of the User Profile database.
+9. **Recolectar archivos estáticos**
 
-- **urls.py**: URLs for the Appointments app.
+```bash
+python manage.py collectstatic
+```
 
-- **Templates Folder**: This folder contains all the HTML files used to manage the MovimientoCaja and CotizacionDolar databases.
+10. **Ejecutar servidor de desarrollo**
 
-**LoginApp**: This app manages the PerfilUsuarios database.
+```bash
+python manage.py runserver
+```
 
-- **views.py**: Python logic.
+11. **Acceder a la aplicación**
 
-- **forms.py**: Python logic for the database formats.
+- Aplicación: http://localhost:8000
+- Admin: http://localhost:8000/admin
 
-- **models.py**: Definition of the PerfilUsuarios database.
+### 🚀 Despliegue en Producción
 
-- **urls.py**: URLs for the Proveedores app.
+#### Configuración como Servicio Windows (NSSM)
 
-- **Templates Folder**: This folder contains all the HTML files used to manage the Proveedores database.
+1. **Descargar NSSM**
 
-**Usage:**
-- The Home button in the navbar will always take you to the home page.
+   - https://nssm.cc/download
 
-- The About Amanda button will take you to a descriptive section about Amanda Mateo Boutique.
+2. **Instalar el servicio**
 
-    * The Showroom button dynamically displays the different models in the Catalog database, automatically showing everything in the Catalog.
+```powershell
+nssm install DjangoBoutique "C:\ruta\a\.venv\Scripts\python.exe" "C:\ruta\a\server.py"
+nssm set DjangoBoutique AppDirectory "C:\ruta\a\AmandaBoutique"
+nssm set DjangoBoutique DisplayName "Amanda Boutique - Django Server"
+nssm set DjangoBoutique Description "Servidor Django para Amanda Mateo Boutique"
+nssm start DjangoBoutique
+```
 
-    * The Contact button takes you to the contact information.
+3. **Configurar variables de entorno en .env**
 
-    * The Admin button takes you to the section where the different databases are created and listed.
+```env
+DEBUG=False
+SECRET_KEY=tu-clave-secreta-super-segura
+ALLOWED_HOSTS=192.168.1.193,tudominio.com
+```
 
-    * If the user is not logged in, the Login and Register options will appear in the NAVBAR. If they are not logged in, the Login and Logout options will appear.
+### 📁 Estructura del Proyecto
 
-    * In the Administration Panel, you will find the following buttons:
+```
+AmandaBoutique/
+├── AmandaProjecto/          # Configuración principal del proyecto
+│   ├── settings.py          # Configuración de Django
+│   ├── urls.py              # URLs principales
+│   └── wsgi.py              # WSGI para producción
+├── BoutiqueApp/             # App principal - Showroom y Catálogo
+│   ├── models.py            # Modelo: Catalogo
+│   ├── views.py             # Vistas y lógica
+│   ├── forms.py             # Formularios
+│   ├── urls.py              # URLs de la app
+│   └── templates/           # Templates HTML
+├── ClientesApp/             # Gestión de Clientes
+│   ├── models.py            # Modelo: Cliente
+│   └── ...
+├── ProveedoresApp/          # Gestión de Proveedores
+│   ├── models.py            # Modelo: Proveedor
+│   └── ...
+├── citas/                   # Gestión de Citas
+│   ├── models.py            # Modelo: Cita
+│   └── ...
+├── flujo/                   # Flujo de Caja
+│   ├── models.py            # Modelos: MovimientoCaja, CotizacionDolar
+│   └── ...
+├── LoginApp/                # Autenticación y Perfiles
+│   ├── models.py            # Modelo: PerfilUsuario
+│   └── ...
+├── static/                  # Archivos estáticos
+│   ├── css/
+│   │   └── estilos.css      # Estilos personalizados
+│   └── ...
+├── media/                   # Archivos subidos (imágenes)
+├── db.sqlite3               # Base de datos
+├── manage.py                # Utilidad de Django
+├── requirements.txt         # Dependencias
+└── README.md                # Este archivo
+```
 
-    * Administration: This takes you to the administration of Djando users, groups, and databases.
+### 🎨 Modelos de Datos
 
-    * There are also six buttons for uploading information from the Catalog, Clients, Suppliers, Appointments, Cash Transactions, and Dollar Exchange Rate databases.
+#### Catalogo
 
-    * A button to view the dashboard or financial summary. - In the BoutiqueApp, the catalog list includes options to create a PDF in product list format and another option to create a PDF in catalog database format.
+- Código, Modelo, Estilo, Descripción, Precio, Imagen
 
-- The citas app includes options to add a new event and view the calendar graphically.
+#### Cliente
 
-- The flujo app manages debit and credit information, where the amount is maintained.
----
-***Español***
+- Identificación, Nombre, Apellido, Dirección, Teléfono, Email
 
-# ***Amanda Mateo Boutique***
-#### **Video Demo:** https://youtu.be/XqdgIVWoqEk
-### **Descripción**: *Amanda Mateo Boutique* es un proyecto realizado en Python con el framework de Django para crear un showroom para una diseñadora de vestidos para quinceañeras hechos a la mediada, adicionalmente para administrar las bases de datos de Catalogo, Clientes, Proveedores, cita, MovimientoCaja, CotizacionDolar y PerfilUsuarios.
+#### Proveedor
 
-**Tecnologías**
+- Código, Nombre, Dirección, Teléfono, Email
 
-- Python
-- Django
-- HTML
-- SQLite
-- Weasyprint / gtk3-runtime
+#### Cita
 
-*nota: se requiere instalar gtk3-runtime, para que Weasyprint funcione*
+- Cliente, Teléfono, Fecha, Hora, Acción
+- Fecha de Entrega
+- Medidas: Copa, Busto, Cintura, Largo, Tiras
+- Precio, Abono, Pago Total, Moneda
+- Descripción
 
-**Descripción archivos y carpetas**
+#### MovimientoCaja
 
-**AmandaProjecto**, es el proyecto principal de Django donde se usaron los archivos:
+- Fecha, Descripción, Tipo (Ingreso/Egreso)
+- Monto, Moneda, Monto USD
 
-- **Setting.py**: configuración del proyecto.
+#### CotizacionDolar
 
-- **urls.py**: urls del proyecto.
+- Fecha, Tasa de Cambio
 
-**BoutiqueApp**, es la app donde se muestra la página principal del showroom, con una sección dinámica que muestra los vestidos en el Catalogo y hace manejo de la base de datos de Catalogo.
+#### PerfilUsuario
 
-- **views.py**: lógica de Python.
+- Usuario, Email, Avatar
+- Ciudad, País, Teléfono, Fecha de Nacimiento
 
-- **forms.py**: lógica de Python para los formatos de la base de datos.
+### 📖 Uso del Sistema
 
-- **models.py**: definición de la base de datos Catalogo.
+1. **Acceso al Sistema**
 
-- **urls.py**: urls de la app BoutiqueApp.
+   - Iniciar sesión con credenciales de usuario
+   - Los usuarios no autenticados solo pueden ver el showroom público
 
-- **Carpeta templetes**: donde están cada uno de los HTML que se usaron para el manejo de la base de datos Catalogo.
+2. **Panel de Administración**
 
-- **index.html**: página principal del showroom, donde se ve el catálogo dinámico, la sección de sabre Amanda, Contactos y el área de administración de las diferentes bases de datos
+   - Acceso a todas las funcionalidades desde el panel central
+   - Botones de acceso rápido a cada módulo
 
-**ClientesAPP**, es la app que maneja la base de datos de clientes.
+3. **Gestión de Catálogo**
 
-- **views.py**: lógica de Python.
+   - Agregar nuevos modelos con imágenes
+   - Editar información de vestidos existentes
+   - Generar catálogos PDF
 
-- **forms.py**: lógica de Python para los formatos de la base de datos.
+4. **Gestión de Citas**
 
-- **models.py**: definición de la base de datos Clientes.
-- **urls.py**: urls de la app ClientesApp.
-- **Carpeta templetes**: donde estan cada uno de los HTML que se usaron para el manejo de la base de datos Clientes.
+   - Crear citas con información completa
+   - Ver calendario visual
+   - Generar reportes de citas
 
-**ProveedoresApp**, es la app que maneja la base de datos de Proveedores.
+5. **Control Financiero**
+   - Registrar ingresos y egresos
+   - Ver dashboard con métricas
+   - Exportar reportes
 
-- **views.py**: lógica de Python.
+### 🔒 Seguridad
 
-- **forms.py**: lógica de Python para los formatos de la base de datos.
+- Autenticación requerida para funciones administrativas
+- SECRET_KEY configurable vía variables de entorno
+- CSRF protection habilitado
+- Validación de formularios
+- Control de acceso por usuario
 
-- **models.py**: definición de la base de datos Proveedores.
+### 📝 Notas Importantes
 
-- **urls.py**: urls de la app Proveedores.
+- **GTK3 Runtime** es obligatorio para la generación de PDFs
+- El sistema usa **SQLite** por defecto (apropiado para pequeñas/medianas empresas)
+- Para producción, se recomienda configurar **DEBUG=False** en `.env`
+- Los archivos de media se almacenan en `/media/`
 
-- **Carpeta templetes**: donde están cada uno de los HTML que se usaron para el manejo de la base de datos Proveedores.
+### 🤝 Contribuciones
 
-**citas**, es la app que maneja la base de datos de para las citas y fecha de entregas.
+Este es un proyecto personal, pero las sugerencias y mejoras son bienvenidas.
 
-- **views.py**: lógica de Python.
-
-- **forms.py**: lógica de Python para los formatos de la base de datos.
-
-- **models.py**: definición de la base de datos Perfil Usuarios.
-
-- **urls.py**: urls de la app citas.
-
-- **Carpeta templetes**: donde están cada uno de los HTML que se usaron para el manejo de la base de datos Cita.
-
-**flujo**, es la app que maneja la base de datos de para el control de flujo de ejectivo.
-
-- **views.py**: lógica de Python.
-
-- **forms.py**: lógica de Python para los formatos de la base de datos.
-
-- **models.py**: definición de la base de datos Perfil Usuarios.
-
-- **urls.py**: urls de la app citas.
-
-- **Carpeta templetes**: donde están cada uno de los HTML que se usaron para el manejo de la base de datos MovimientoCaja y CotizacionDolar.
-
-**LoginApp**, es la app que maneja la base de datos de PerfilUsuarios.
-
-- **views.py**: lógica de Python.
-- **forms.py**: lógica de Python para los formatos de la base de datos.
-
-- **models.py**: definición de la base de datos Perfil Usuarios.
-
-- **urls.py**: urls de la app Proveedores.
-
-- **Carpeta templetes**: donde están cada uno de los HTML que se usaron para el manejo de la base de datos Proveedores.
-
-**Uso:**
-- El botón de Inicio del navbar siempre llevara a la página de inicio.
-- El botón Sobre Amanda, los llevara a una sección descriptiva de Amanda Mateo Boutique.
-    * El botón de Showroom muestra los diferentes modelos que estan el la base de datos Catalogo en forma dinamica, automaticamente mostrara todo lo que este el Calalogo.
-    * El botón de Contacto, los llevara a la información de contacto.
-    * El botón de Admin, los llevara la sección donde se crean y listan las diferentes bases de datos.
-    * Si el usuario no está logeado le aparecerá en el NAVBAR las opciones de Login y Registrarse, en caso que no lo este le saldrán las opciones de Login y Logout.
-    * En Panel de Administración, Encontraran los botones:
-    * Administración, este pasara a la administración de Djando de usuarios, grupos y base de datos.
-    * También hay 6 botones para la carga de información de las bases de datos de Catalogo, Clientes, Proveedores, cita, MovimientoCaja y CotizacionDolar.
-    * Un botón para ver el dashboard o resumen financiero.
-- El la app BoutiqueApp, en la lista de catalago se crearon la opción de crear un PDF el formato de lista de los productos y otra opción para crear un PDF en formato de ficha la base de datos Catalogo
-- En la app citas están las opciones de agregar un nuevo evento y ver el calendario en forma gráfica.
-- En la app flujo se maneja la información de débito y haber, donde el monto se mantiene en dólares, en caso que los débito o haberes es en Bolívares la app automáticamente lo convierte en dólares con la cotización del día, que está en la base de datos CotizacionDolar.
-- Para poder manejar estas bases de datos se tiene que estar logeado.
-
-**Gracias,**
+### 👨‍💻 Autor
 
 **Herman Frias**
 
+### 📄 Licencia
+
+Este proyecto es de uso privado para Amanda Mateo Boutique.
+
+---
+
+## 🇺🇸 English
+
+### 📋 Description
+
+**Amanda Mateo Boutique** is a comprehensive management system developed in Django to manage all aspects of a boutique specialized in custom-made quinceañera dresses. The system includes a dynamic showroom, inventory management, appointment scheduling, customer and supplier tracking, and a complete cash flow module with automatic currency conversion.
+
+### ✨ Key Features
+
+#### 🏠 **Dynamic Showroom**
+
+- Visual dress catalog with images
+- Automatic display of all available models
+- Detailed information for each design (style, price, description)
+- PDF catalog generation in two formats:
+  - Product list
+  - Individual model cards
+
+#### 📅 **Appointment Management**
+
+- Interactive calendar with FullCalendar
+- Appointment registration with complete customer information
+- Delivery date tracking
+- Measurements recording (cup, bust, waist, length, straps)
+- Payment control (price, deposit, total payment)
+- Multi-currency support (USD/Bs)
+- PDF report generation filtered by date
+
+#### 👥 **Customer Management**
+
+- Complete customer database
+- Quick search by name
+- Contact information and address
+- Appointment and purchase history
+
+#### 🏭 **Supplier Management**
+
+- Supplier registration
+- Contact information
+- Search and filtering
+
+#### 💰 **Cash Flow**
+
+- Income and expense control
+- Automatic Bs → USD conversion using daily exchange rate
+- Financial dashboard with:
+  - Monthly and annual summary
+  - Cumulative totals
+  - Profitability metrics
+- Excel and PDF export
+- Date range filtering
+
+#### 💵 **Dollar Exchange Rate**
+
+- Daily exchange rate recording
+- Automatic conversion in cash movements
+- Exchange rate history
+
+#### 👤 **User Management**
+
+- Complete authentication system
+- Custom user profiles
+- Access control to administrative functions
+- Registration, login, and logout
+
+### 🛠️ Technologies Used
+
+- **Backend:** Python 3.11+ / Django 5.2.7
+- **Database:** SQLite
+- **Frontend:** HTML5, CSS3, Bootstrap 5.3
+- **PDF Generation:** WeasyPrint + GTK3 Runtime
+- **Calendar:** FullCalendar
+- **Export:** OpenPyXL (Excel)
+- **Deployment:** WhiteNoise (static files)
+
+### 📦 Installation
+
+#### Prerequisites
+
+- Python 3.11 or higher
+- GTK3 Runtime (required for WeasyPrint)
+
+#### Installation Steps
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/your-user/AmandaBoutique.git
+cd AmandaBoutique
+```
+
+2. **Create virtual environment**
+
+```bash
+python -m venv .venv
+```
+
+3. **Activate virtual environment**
+
+```bash
+# Windows
+.venv\Scripts\activate
+
+# Linux/Mac
+source .venv/bin/activate
+```
+
+4. **Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+5. **Install GTK3 Runtime** (Windows)
+
+   - Download from: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer
+   - Run the installer
+   - Add GTK3 to system PATH
+
+6. **Configure environment variables**
+
+```bash
+# Copy example file
+copy .env.example .env
+
+# Edit .env with your settings
+```
+
+7. **Apply migrations**
+
+```bash
+python manage.py migrate
+```
+
+8. **Create superuser**
+
+```bash
+python manage.py createsuperuser
+```
+
+9. **Collect static files**
+
+```bash
+python manage.py collectstatic
+```
+
+10. **Run development server**
+
+```bash
+python manage.py runserver
+```
+
+11. **Access the application**
+
+- Application: http://localhost:8000
+- Admin: http://localhost:8000/admin
+
+### 🚀 Production Deployment
+
+#### Windows Service Configuration (NSSM)
+
+1. **Download NSSM**
+
+   - https://nssm.cc/download
+
+2. **Install the service**
+
+```powershell
+nssm install DjangoBoutique "C:\path\to\.venv\Scripts\python.exe" "C:\path\to\server.py"
+nssm set DjangoBoutique AppDirectory "C:\path\to\AmandaBoutique"
+nssm set DjangoBoutique DisplayName "Amanda Boutique - Django Server"
+nssm set DjangoBoutique Description "Django server for Amanda Mateo Boutique"
+nssm start DjangoBoutique
+```
+
+3. **Configure environment variables in .env**
+
+```env
+DEBUG=False
+SECRET_KEY=your-super-secret-key
+ALLOWED_HOSTS=192.168.1.193,yourdomain.com
+```
+
+### 📝 Important Notes
+
+- **GTK3 Runtime** is mandatory for PDF generation
+- The system uses **SQLite** by default (suitable for small/medium businesses)
+- For production, it's recommended to set **DEBUG=False** in `.env`
+- Media files are stored in `/media/`
+
+### 🤝 Contributions
+
+This is a personal project, but suggestions and improvements are welcome.
+
+### 👨‍💻 Author
+
+**Herman Frias**
+
+### 📄 License
+
+This project is for private use by Amanda Mateo Boutique.
+
+---
+
+<div align="center">
+
+**Hecho con ❤️ para Amanda Mateo Boutique**
+
+[⬆ Volver arriba](#-amanda-mateo-boutique)
+
+</div>

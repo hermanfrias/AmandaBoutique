@@ -352,3 +352,16 @@ footer a:hover {
 .text-center {
   text-align: center;
 }
+
+/* Admin Section Styles */
+.admin-section {
+  background: #fdebf2;
+}
+
+.admin-title {
+  color: #8a556bff;
+}
+
+.admin-description {
+  color: #4b2c35;
+}

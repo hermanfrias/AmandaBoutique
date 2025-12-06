@@ -1,4 +1,4 @@
-{% extends "BoutiqueApp/index.html" %}
+{% extends "BoutiqueApp/base.html" %}
 {% load static %}
 {% load l10n %}
 {% load humanize %}
@@ -45,11 +45,6 @@
         <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Total Gastos USD</h6><h5>${{ total_gastos_usd|localize }}</h5><small>{{ cant_gastos }} transacciones</small></div></div>
         <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Saldo USD</h6><h5>${{ saldo_usd|localize }}</h5></div></div>
         <div class="col"><div class="card p-2 text-center" style="background:{% if rentabilidad > 0 %}#d4edda{% else %}#f8d7da{% endif %};"><h6>Rentabilidad</h6><h5>{{ rentabilidad }}%</h5></div></div>
-    </div>
-    <div class="row mb-4">
-        <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Total Ingresos Bs</h6><h5>{{ total_ingresos_bs|localize}} Bs</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Total Gastos Bs</h6><h5>{{ total_gastos_bs|localize }} Bs</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Saldo Bs</h6><h5>{{ saldo_bs|localize }} Bs</h5></div></div>
     </div>
     <hr>
 

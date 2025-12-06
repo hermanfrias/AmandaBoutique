@@ -14,7 +14,7 @@
   <!-- Búsqueda -->
   <form method="GET" action="{% url 'listar_catalogo' %}" class="d-flex align-items-center mb-4">
     <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar por nombre..." value="{{ request.GET.buscar }}">
-    <button type="submit" class="btn btn-buscar">Buscar</button>
+    <button type="submit" class="btn btn-pink btn-sm">Buscar</button>
   </form>
   <!-- Tabla -->
   <div class="table-responsive shadow-sm rounded">

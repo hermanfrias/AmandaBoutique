@@ -1,7 +1,8 @@
-{% extends "BoutiqueApp/index.html" %}
+{% extends "BoutiqueApp/base.html" %}
+{% block title %}Crear Cita | Amanda Mateo Boutique{% endblock %}
 {% block content %}
 <div class="container py-5">
-    <h2 class="mb-4 text-center">Crear Cita</h2>
+    <h2 class="mb-4 text-center text-pink fw-bold">Crear Cita</h2>
     <form method="post" class="row g-3">
         {% csrf_token %}
         <div class="col-md-6">
@@ -31,7 +32,7 @@
         <p><strong>Medidas:</strong></p>
         <div class="col-md-6">
             <label for="id_copa" class="form-label">Copa</label>
-            {{ form.busto }}
+            {{ form.copa }}
         </div>
         <div class="col-md-6">
             <label for="id_busto" class="form-label">Busto</label>
@@ -44,10 +45,6 @@
         <div class="col-md-6">
             <label for="id_largo" class="form-label">Largo</label>
             {{ form.largo }}
-        </div>
-        <div class="col-md-6">
-            <label for="id_busto" class="form-label">Busto</label>
-            {{ form.busto }}
         </div>
         <div class="col-md-6">
             <label for="id_tiras" class="form-label">Tiras</label>
