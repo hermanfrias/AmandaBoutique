@@ -1,6 +1,6 @@
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db.models import Sum
@@ -44,6 +44,7 @@ def listar_movimientos(request):
     return render(request, 'flujo/listar_movimientos.html', context)
 
 @login_required
+@permission_required('flujo.add_movimientocaja', raise_exception=True)
 def crear_movimiento(request):
     if request.method=='POST':
         form = MovimientoCajaForm(request.POST)
@@ -64,6 +65,7 @@ def listar_cotizaciones(request):
     return render(request,'flujo/listar_cotizaciones.html',{'cotizaciones':cotizaciones})
 
 @login_required
+@permission_required('flujo.add_cotizaciondolar', raise_exception=True)
 def crear_cotizacion(request):
     if request.method=='POST':
         form = CotizacionDolarForm(request.POST)
@@ -76,6 +78,7 @@ def crear_cotizacion(request):
     return render(request,'flujo/crear_cotizacion.html',{'form':form})
 
 @login_required
+@permission_required('flujo.change_cotizaciondolar', raise_exception=True)
 def editar_cotizacion(request, id):
     cotizacion = CotizacionDolar.objects.get(id=id)
     if request.method == 'POST':

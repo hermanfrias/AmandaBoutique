@@ -2,7 +2,7 @@ from ClientesApp.forms import ClientesForm
 from ClientesApp.models import Clientes
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 # Create your views here.
 
@@ -17,13 +17,15 @@ class ClientesListView(LoginRequiredMixin, ListView):
             return Clientes.objects.filter(nombre__icontains=query)
         return Clientes.objects.all()
 
-class ClientesCreateView(LoginRequiredMixin, CreateView):
+class ClientesCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'ClientesApp.add_clientes'
     model = Clientes
     form_class = ClientesForm
     template_name = 'ClientesApp/clientes_create.html'
     success_url = reverse_lazy('clientes_list')  
 
-class ClientesUpdateView(LoginRequiredMixin, UpdateView):
+class ClientesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'ClientesApp.change_clientes'
     model = Clientes
     form_class = ClientesForm
     template_name = 'ClientesApp/clientes_update.html'
@@ -31,7 +33,8 @@ class ClientesUpdateView(LoginRequiredMixin, UpdateView):
     slug_field = "identificacion"
     slug_url_kwarg = "identificacion"
 
-class ClientesDeleteView(LoginRequiredMixin, DeleteView):
+class ClientesDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'ClientesApp.delete_clientes'
     model = Clientes
     template_name = 'ClientesApp/clientes_confirm_delete.html'
     success_url = reverse_lazy('clientes_list')

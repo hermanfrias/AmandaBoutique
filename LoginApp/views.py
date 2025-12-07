@@ -8,6 +8,32 @@ def registrar_usuario(request):
         form = FormularioCreacionUsuario(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
+            
+            # Asignar solo permisos de lectura (view) a nuevos usuarios
+            from django.contrib.contenttypes.models import ContentType
+            from django.contrib.auth.models import Permission
+            
+            # Lista de modelos para asignar permisos de view
+            models_to_grant_view = [
+                ('BoutiqueApp', 'catalogo'),
+                ('citas', 'cita'),
+                ('ClientesApp', 'cliente'),
+                ('ProveedoresApp', 'proveedor'),
+                ('flujo', 'movimientocaja'),
+                ('flujo', 'cotizaciondolar'),
+            ]
+            
+            for app_label, model_name in models_to_grant_view:
+                try:
+                    content_type = ContentType.objects.get(app_label=app_label, model=model_name)
+                    view_permission = Permission.objects.get(
+                        content_type=content_type,
+                        codename=f'view_{model_name}'
+                    )
+                    user.user_permissions.add(view_permission)
+                except (ContentType.DoesNotExist, Permission.DoesNotExist):
+                    pass  # Si el modelo no existe, continuar
+            
             login(request, user)
             return redirect('perfil')
     else:
@@ -29,6 +55,106 @@ def editar_perfil(request):
         form = FormularioCambioUsuario(instance=request.user)
     return render(request, 'LoginApp/editar_perfil.html', {'form': form})
 
+@login_required
+def gestionar_permisos(request):
+    """Vista para que superusuarios gestionen permisos de usuarios"""
+    if not request.user.is_superuser:
+        from django.contrib import messages
+        messages.error(request, 'No tienes permisos para acceder a esta página.')
+        return redirect('index')
+    
+    from LoginApp.models import PerfilUsuario
+    usuarios = PerfilUsuario.objects.all().order_by('username')
+    return render(request, 'LoginApp/gestionar_permisos.html', {'usuarios': usuarios})
+
+@login_required
+def editar_permisos_usuario(request, user_id):
+    """Vista para editar permisos de un usuario específico"""
+    if not request.user.is_superuser:
+        from django.contrib import messages
+        messages.error(request, 'No tienes permisos para acceder a esta página.')
+        return redirect('index')
+    
+    from django.shortcuts import get_object_or_404
+    from django.contrib.contenttypes.models import ContentType
+    from django.contrib.auth.models import Permission
+    from LoginApp.models import PerfilUsuario
+    
+    usuario = get_object_or_404(PerfilUsuario, id=user_id)
+    
+    if request.method == 'POST':
+        # Limpiar permisos actuales (excepto si es superusuario)
+        if not usuario.is_superuser:
+            usuario.user_permissions.clear()
+            
+            # Asignar nuevos permisos seleccionados
+            permisos_seleccionados = request.POST.getlist('permisos')
+            for permiso_id in permisos_seleccionados:
+                try:
+                    permiso = Permission.objects.get(id=permiso_id)
+                    usuario.user_permissions.add(permiso)
+                except Permission.DoesNotExist:
+                    pass
+        
+        from django.contrib import messages
+        messages.success(request, f'Permisos actualizados para {usuario.username}')
+        return redirect('gestionar_permisos')
+    
+    # Obtener permisos organizados por modelo
+    permisos_por_modelo = {}
+    modelos = [
+        ('BoutiqueApp', 'catalogo', 'Catálogo'),
+        ('citas', 'cita', 'Citas'),
+        ('ClientesApp', 'clientes', 'Clientes'),
+        ('ProveedoresApp', 'proveedores', 'Proveedores'),
+        ('flujo', 'movimientocaja', 'Movimientos de Caja'),
+        ('flujo', 'cotizaciondolar', 'Cotización Dólar'),
+    ]
+    
+    for app_label, model_name, display_name in modelos:
+        try:
+            content_type = ContentType.objects.get(app_label=app_label, model=model_name)
+            permisos = Permission.objects.filter(content_type=content_type).order_by('codename')
+            permisos_por_modelo[display_name] = permisos
+        except ContentType.DoesNotExist:
+            pass
+    
+    # Permisos actuales del usuario
+    permisos_usuario = set(usuario.user_permissions.values_list('id', flat=True))
+    
+    context = {
+        'usuario': usuario,
+        'permisos_por_modelo': permisos_por_modelo,
+        'permisos_usuario': permisos_usuario,
+    }
+    
+    return render(request, 'LoginApp/editar_permisos.html', context)
 
 
-
+@login_required
+def eliminar_usuario(request, user_id):
+    """Vista para eliminar un usuario"""
+    if not request.user.is_superuser:
+        from django.contrib import messages
+        messages.error(request, 'No tienes permisos para acceder a esta página.')
+        return redirect('index')
+    
+    from django.shortcuts import get_object_or_404
+    from LoginApp.models import PerfilUsuario
+    
+    usuario = get_object_or_404(PerfilUsuario, id=user_id)
+    
+    # No permitir eliminar superusuarios
+    if usuario.is_superuser:
+        from django.contrib import messages
+        messages.error(request, 'No se puede eliminar un superusuario.')
+        return redirect('gestionar_permisos')
+    
+    if request.method == 'POST':
+        username = usuario.username
+        usuario.delete()
+        from django.contrib import messages
+        messages.success(request, f'Usuario {username} eliminado correctamente.')
+        return redirect('gestionar_permisos')
+    
+    return render(request, 'LoginApp/eliminar_usuario.html', {'usuario': usuario})

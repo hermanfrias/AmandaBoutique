@@ -5,7 +5,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="text-pink fw-bold">Movimientos de Caja</h2>
     <div class="btn-group-catalogo">
+      {% if perms.flujo.add_movimientocaja %}
       <a href="{% url 'crear_movimiento' %}" class="btn btn-listar">Agregar</a>
+      {% endif %}
       <button
         type="button"
         class="btn btn-pink"

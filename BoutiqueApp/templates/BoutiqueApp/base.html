@@ -108,6 +108,17 @@
                     >Resumen</a
                   >
                 </li>
+                {% if user.is_superuser %}
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a
+                    href="{% url 'gestionar_permisos' %}"
+                    class="dropdown-item"
+                  >
+                    <i class="bi bi-shield-lock"></i> Gestionar Usuarios
+                  </a>
+                </li>
+                {% endif %}
               </ul>
             </li>
             {% if user.is_authenticated %}

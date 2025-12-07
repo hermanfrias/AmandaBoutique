@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from weasyprint import HTML, CSS
 from BoutiqueApp.forms import CatalogoForm
 from BoutiqueApp.models import Catalogo
@@ -13,6 +13,8 @@ def index(request):
     catalogos = Catalogo.objects.all()
     return render(request, 'BoutiqueApp/index.html', {'catalogos': catalogos})
 
+@login_required
+@permission_required('BoutiqueApp.add_catalogo', raise_exception=True)
 def actualizar_catalogo(request):
     if request.method == 'POST':
         form = CatalogoForm(request.POST, request.FILES)
@@ -45,6 +47,7 @@ def detalle_catalogo(request, codigo):
 # --- EDITAR LOS REGISTROS ---
 
 @login_required
+@permission_required('BoutiqueApp.change_catalogo', raise_exception=True)
 def editar_catalogo(request, codigo):
     catalogo = Catalogo.objects.get(codigo=codigo)
     if request.method == 'POST':
@@ -59,6 +62,7 @@ def editar_catalogo(request, codigo):
 # --- ELIMINAR UN REGISTROS ---
 
 @login_required
+@permission_required('BoutiqueApp.delete_catalogo', raise_exception=True)
 def eliminar_catalogo(request, codigo):
     catalogo = Catalogo.objects.get(codigo=codigo)
     if request.method == 'POST':

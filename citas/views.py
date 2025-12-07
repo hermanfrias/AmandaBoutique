@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from .models import Cita
 from .forms import CitaForm
 from django.contrib import messages
@@ -31,6 +31,7 @@ def listar_citas(request):
 
 
 @login_required
+@permission_required('citas.add_cita', raise_exception=True)
 def crear_cita(request):
     if request.method=='POST':
         form=CitaForm(request.POST)
@@ -45,6 +46,7 @@ def crear_cita(request):
     return render(request,'citas/crear_cita.html',{'form':form})
 
 @login_required
+@permission_required('citas.change_cita', raise_exception=True)
 def editar_cita(request, pk):
     cita=get_object_or_404(Cita, pk=pk)
     if request.method=='POST':
@@ -58,6 +60,7 @@ def editar_cita(request, pk):
     return render(request,'citas/editar_cita.html',{'form':form})
 
 @login_required
+@permission_required('citas.delete_cita', raise_exception=True)
 def eliminar_cita(request, pk):
     cita=get_object_or_404(Cita, pk=pk)
     if request.method=='POST':
