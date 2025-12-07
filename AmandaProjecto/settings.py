@@ -160,6 +160,10 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'perfil'
 LOGOUT_REDIRECT_URL = 'index'
 
+# Session and CSRF cookie settings to avoid conflicts with other Django projects
+SESSION_COOKIE_NAME = 'amandaboutique_sessionid'
+CSRF_COOKIE_NAME = 'amandaboutique_csrftoken'
+
 FORMAT_MODULE_PATH = [
     'flujo.formats',
 ]

@@ -18,6 +18,12 @@
         text-align: left;
         font-size: 12px;
       }
+      td.text-right {
+        text-align: right;
+      }
+      th.text-right {
+        text-align: right;
+      }
       th {
         background-color: #fdebf2;
         color: #8a556b;
@@ -50,12 +56,13 @@
       <h1>Amanda Mateo Boutique</h1>
       <p class="subtitle">
         Reporte de Movimientos de Caja
-        {% if fecha_inicio and fecha_fin %}
-            <br>Del {{ fecha_inicio|date:"d/m/Y" }} al {{ fecha_fin|date:"d/m/Y" }}
+        {% if tipo_filtro and tipo_filtro != 'Todos' %}
+        <br />Tipo: {{ tipo_filtro }}
+        {% endif %}
+        {% if fecha_inicio and fecha_fin %} <br />Del {{ fecha_inicio|date:"d/m/Y" }} al {{fecha_fin|date:"d/m/Y" }}
         {% elif fecha_inicio %}
-            <br>Desde {{ fecha_inicio|date:"d/m/Y" }}
-        {% elif fecha_fin %}
-            <br>Hasta {{ fecha_fin|date:"d/m/Y" }}
+        <br />Desde {{ fecha_inicio|date:"d/m/Y" }}
+        {% elif fecha_fin %} <br />Hasta {{ fecha_fin|date:"d/m/Y" }}
         {% endif %}
       </p>
     </header>
@@ -67,8 +74,8 @@
           <th>Descripción</th>
           <th>Tipo</th>
           <th>Moneda</th>
-          <th>Monto</th>
-          <th>Monto USD</th>
+          <th class="text-right">Monto</th>
+          <th class="text-right">Monto USD</th>
         </tr>
       </thead>
       <tbody>
@@ -76,10 +83,14 @@
         <tr>
           <td>{{ mov.fecha|date:"d/m/Y" }}</td>
           <td>{{ mov.descripcion }}</td>
-          <td class="{% if mov.tipo == 'Ingreso' %}ingreso{% else %}gasto{% endif %}">{{ mov.tipo }}</td>
+          <td
+            class="{% if mov.tipo == 'Ingreso' %}ingreso{% else %}gasto{% endif %}"
+          >
+            {{ mov.tipo }}
+          </td>
           <td>{{ mov.moneda }}</td>
-          <td>{{ mov.monto }}</td>
-          <td>{{ mov.monto_usd|floatformat:2 }}</td>
+          <td class="text-right">{{ mov.monto }}</td>
+          <td class="text-right">{{ mov.monto_usd|floatformat:2 }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -88,7 +99,7 @@
     <div class="totales">
       <p class="ingreso">Total Ingresos (USD): ${{ total_ingresos_usd }}</p>
       <p class="gasto">Total Gastos (USD): ${{ total_gastos_usd }}</p>
-      <p style="font-size: 16px;">Saldo (USD): ${{ saldo_usd }}</p>
+      <p style="font-size: 16px">Saldo (USD): ${{ saldo_usd }}</p>
     </div>
   </body>
 </html>

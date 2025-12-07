@@ -10,8 +10,38 @@ from .forms import MovimientoCajaForm, CotizacionDolarForm
 
 @login_required
 def listar_movimientos(request):
+    from django.utils.dateparse import parse_date
+    
     movimientos = MovimientoCaja.objects.all()
-    return render(request, 'flujo/listar_movimientos.html', {'movimientos': movimientos})
+    
+    # Obtener filtros
+    fecha_inicio_str = request.GET.get('fecha_inicio')
+    fecha_fin_str = request.GET.get('fecha_fin')
+    tipo_filtro = request.GET.get('tipo')
+    
+    # Aplicar filtro de fechas
+    fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
+    fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
+    
+    if fecha_inicio and fecha_fin:
+        movimientos = movimientos.filter(fecha__range=[fecha_inicio, fecha_fin])
+    elif fecha_inicio:
+        movimientos = movimientos.filter(fecha__gte=fecha_inicio)
+    elif fecha_fin:
+        movimientos = movimientos.filter(fecha__lte=fecha_fin)
+    
+    # Aplicar filtro de tipo
+    if tipo_filtro and tipo_filtro != 'Todos':
+        movimientos = movimientos.filter(tipo=tipo_filtro)
+    
+    context = {
+        'movimientos': movimientos,
+        'fecha_inicio': fecha_inicio_str or '',
+        'fecha_fin': fecha_fin_str or '',
+        'tipo_filtro': tipo_filtro or 'Todos',
+    }
+    
+    return render(request, 'flujo/listar_movimientos.html', context)
 
 @login_required
 def crear_movimiento(request):
@@ -213,45 +243,60 @@ def movimientos_pdf(request):
     from django.utils.dateparse import parse_date
     from django.db.models import Q
     import os
+    import traceback
 
-    movimientos = MovimientoCaja.objects.all().order_by('-fecha')
+    try:
+        movimientos = MovimientoCaja.objects.all().order_by('-fecha')
 
-    fecha_inicio_str = request.GET.get('fecha_inicio')
-    fecha_fin_str = request.GET.get('fecha_fin')
+        fecha_inicio_str = request.GET.get('fecha_inicio')
+        fecha_fin_str = request.GET.get('fecha_fin')
+        tipo_filtro = request.GET.get('tipo')
 
-    fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
-    fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
+        fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
+        fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
 
-    if fecha_inicio and fecha_fin:
-        movimientos = movimientos.filter(fecha__range=[fecha_inicio, fecha_fin])
-    elif fecha_inicio:
-        movimientos = movimientos.filter(fecha__gte=fecha_inicio)
-    elif fecha_fin:
-        movimientos = movimientos.filter(fecha__lte=fecha_fin)
-    
-    # Calcular totales
-    total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
-    total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
-    saldo_usd = total_ingresos_usd - total_gastos_usd
+        if fecha_inicio and fecha_fin:
+            movimientos = movimientos.filter(fecha__range=[fecha_inicio, fecha_fin])
+        elif fecha_inicio:
+            movimientos = movimientos.filter(fecha__gte=fecha_inicio)
+        elif fecha_fin:
+            movimientos = movimientos.filter(fecha__lte=fecha_fin)
+        
+        # Aplicar filtro de tipo
+        if tipo_filtro and tipo_filtro != 'Todos':
+            movimientos = movimientos.filter(tipo=tipo_filtro)
+        
+        # Calcular totales
+        total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        saldo_usd = total_ingresos_usd - total_gastos_usd
 
-    html_string = render_to_string('flujo/movimientos_pdf.html', {
-        'movimientos': movimientos,
-        'fecha_inicio': fecha_inicio,
-        'fecha_fin': fecha_fin,
-        'total_ingresos_usd': round(total_ingresos_usd, 2),
-        'total_gastos_usd': round(total_gastos_usd, 2),
-        'saldo_usd': round(saldo_usd, 2),
-    })
+        html_string = render_to_string('flujo/movimientos_pdf.html', {
+            'movimientos': movimientos,
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'tipo_filtro': tipo_filtro or '',
+            'total_ingresos_usd': round(total_ingresos_usd, 2),
+            'total_gastos_usd': round(total_gastos_usd, 2),
+            'saldo_usd': round(saldo_usd, 2),
+        })
 
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="movimientos_caja.pdf"'
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="movimientos_caja.pdf"'
 
-    css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
+        css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
 
-    HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
-        response, stylesheets=[CSS(css_path)]
-    )
-    return response
+        HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+            response, stylesheets=[CSS(css_path)]
+        )
+        return response
+    except Exception as e:
+        # Mostrar el error completo para debugging
+        error_msg = f"Error generando PDF: {str(e)}\n\nTraceback:\n{traceback.format_exc()}"
+        print("=" * 80)
+        print(error_msg)
+        print("=" * 80)
+        return HttpResponse(f"<pre>{error_msg}</pre>", status=500)
 
 @login_required
 def movimientos_excel(request):
@@ -265,6 +310,7 @@ def movimientos_excel(request):
 
     fecha_inicio_str = request.GET.get('fecha_inicio')
     fecha_fin_str = request.GET.get('fecha_fin')
+    tipo_filtro = request.GET.get('tipo')
 
     fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
     fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
@@ -275,6 +321,10 @@ def movimientos_excel(request):
         movimientos = movimientos.filter(fecha__gte=fecha_inicio)
     elif fecha_fin:
         movimientos = movimientos.filter(fecha__lte=fecha_fin)
+    
+    # Aplicar filtro de tipo
+    if tipo_filtro and tipo_filtro != 'Todos':
+        movimientos = movimientos.filter(tipo=tipo_filtro)
 
     # Calcular totales
     total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
