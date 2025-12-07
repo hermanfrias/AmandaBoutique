@@ -1,5 +1,6 @@
-{% extends 'BoutiqueApp/base.html' %} {% block title %}Gestionar Permisos |
-Amanda Mateo Boutique{% endblock %} {% block content %}
+{% extends 'BoutiqueApp/base.html' %}
+{% block title %}Gestionar Permisos | Amanda Mateo Boutique{% endblock %}
+{% block content %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-12">
@@ -7,11 +8,8 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
         <h2 class="text-pink">
           <i class="bi bi-shield-lock"></i> Gestión de Permisos de Usuarios
         </h2>
-        <a href="{% url 'index' %}" class="btn btn-volver">
-          <i class="bi bi-arrow-left"></i> Volver
-        </a>
+        <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
       </div>
-
       {% if messages %} {% for message in messages %}
       <div
         class="alert alert-{{ message.tags }} alert-dismissible fade show"
@@ -60,13 +58,13 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
                       href="{% url 'editar_permisos_usuario' usuario.id %}"
                       class="btn btn-editar btn-sm"
                     >
-                      <i class="bi bi-pencil"></i> Editar Permisos
+                      Editar Permisos
                     </a>
                     <a
                       href="{% url 'eliminar_usuario' usuario.id %}"
                       class="btn btn-eliminar btn-sm"
                     >
-                      <i class="bi bi-trash"></i> Eliminar
+                      Eliminar
                     </a>
                     {% else %}
                     <span class="text-muted">N/A</span>

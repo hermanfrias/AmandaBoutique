@@ -8,6 +8,7 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
       {% if perms.flujo.add_movimientocaja %}
       <a href="{% url 'crear_movimiento' %}" class="btn btn-listar">Agregar</a>
       {% endif %}
+      <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
       <button
         type="button"
         class="btn btn-pink"

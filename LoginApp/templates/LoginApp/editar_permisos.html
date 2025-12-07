@@ -8,9 +8,7 @@
         <h2 class="text-pink">
           <i class="bi bi-shield-lock"></i> Editar Permisos: {{ usuario.username }}
         </h2>
-        <a href="{% url 'gestionar_permisos' %}" class="btn btn-volver">
-          <i class="bi bi-arrow-left"></i> Volver
-        </a>
+        <a href="{% url 'gestionar_permisos' %}" class="btn btn-volver">Volver</a>
       </div>
 
       <div class="card shadow-sm mb-3">
@@ -65,12 +63,8 @@
             {% endfor %}
           </div>
           <div class="card-footer">
-            <button type="submit" class="btn btn-pink">
-              <i class="bi bi-save"></i> Guardar Permisos
-            </button>
-            <a href="{% url 'gestionar_permisos' %}" class="btn btn-secondary">
-              <i class="bi bi-x-circle"></i> Cancelar
-            </a>
+            <button type="submit" class="btn btn-pink">Guardar</button>
+            <a href="{% url 'gestionar_permisos' %}" class="btn btn-secondary">Volver</a>
           </div>
         </div>
       </form>

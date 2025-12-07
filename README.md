@@ -1,553 +1,262 @@
-﻿# 👗 Amanda Mateo Boutique
+﻿# Amanda Mateo Boutique - Sistema de Gestión
 
-<div align="center">
+Sistema web completo para la gestión de boutique desarrollado con Django, que incluye gestión de inventario, citas, clientes, proveedores, flujo de caja y control de usuarios con permisos granulares.
 
-![Django](https://img.shields.io/badge/Django-5.2.7-092E20?style=for-the-badge&logo=django&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+## Características Principales
 
-**Sistema de Gestión Integral para Boutique de Vestidos de Quinceañera**
+### 📦 Gestión de Catálogo
 
-[🇪🇸 Español](#español) • [🇺🇸 English](#english) • [📹 Video Demo](https://youtu.be/XqdgIVWoqEk)
+- CRUD completo de productos
+- Búsqueda y filtrado de artículos
+- Exportación a PDF (lista y tarjetas)
+- Control de permisos por usuario
 
-</div>
+### 📅 Sistema de Citas
 
----
+- Calendario interactivo para agendar citas
+- Visualización mensual y semanal
+- Estados de citas (Pendiente, Confirmada, Completada, Cancelada)
+- Gestión completa de citas con permisos
 
-## 🇪🇸 Español
+### 👥 Gestión de Clientes
 
-### 📋 Descripción
-
-**Amanda Mateo Boutique** es un sistema de gestión integral desarrollado en Django para administrar todos los aspectos de una boutique especializada en vestidos de quinceañera hechos a medida. El sistema incluye un showroom dinámico, gestión de inventario, control de citas, seguimiento de clientes y proveedores, y un completo módulo de flujo de caja con conversión automática de divisas.
-
-### ✨ Características Principales
-
-#### 🏠 **Showroom Dinámico**
-
-- Catálogo visual de vestidos con imágenes
-- Visualización automática de todos los modelos disponibles
-- Información detallada de cada diseño (estilo, precio, descripción)
-- Generación de catálogos PDF en dos formatos:
-  - Lista de productos
-  - Fichas individuales por modelo
-
-#### 📅 **Gestión de Citas**
-
-- Calendario interactivo con FullCalendar
-- Registro de citas con información completa del cliente
-- Seguimiento de fechas de entrega
-- Registro de medidas (copa, busto, cintura, largo, tiras)
-- Control de pagos (precio, abono, pago total)
-- Soporte para múltiples monedas (USD/Bs)
-- Generación de reportes PDF filtrados por fecha
-
-#### 👥 **Gestión de Clientes**
-
-- Base de datos completa de clientes
-- Búsqueda rápida por nombre
-- Información de contacto y dirección
-- Historial de citas y compras
-
-#### 🏭 **Gestión de Proveedores**
-
-- Registro de proveedores
-- Información de contacto
+- Registro completo de clientes
+- Historial de interacciones
 - Búsqueda y filtrado
+- Permisos de acceso configurables
 
-#### 💰 **Flujo de Caja**
+### 🏢 Gestión de Proveedores
 
-- Control de ingresos y egresos
-- Conversión automática Bs → USD usando cotización del día
-- **Filtros avanzados:**
-  - Filtro por rango de fechas (inicio y fin)
-  - Filtro por tipo de movimiento (Todos/Ingreso/Gasto)
-- Dashboard financiero con:
-  - Resumen mensual y anual
-  - Totales acumulados
-  - Métricas de rentabilidad
-- Exportación a Excel y PDF con filtros aplicados
-- Columnas de montos alineadas a la derecha para mejor legibilidad
+- Administración de proveedores
+- Información de contacto y detalles
+- Control de acceso por permisos
 
-#### 💵 **Cotización del Dólar**
+### 💰 Flujo de Caja
 
-- Registro de tasas de cambio diarias
-- Conversión automática en movimientos de caja
-- Historial de cotizaciones
+- Registro de movimientos (Ingresos/Egresos)
+- Cotización del dólar
+- Dashboard con resumen financiero
+- Exportación a Excel y PDF
+- Filtrado por fechas y tipos
 
-#### 👤 **Gestión de Usuarios**
+### 🔐 Sistema de Permisos de Usuario
 
-- Sistema de autenticación completo
-- Perfiles de usuario personalizados
-- Control de acceso a funciones administrativas
-- Registro, login y logout
+- **Registro con permisos de solo lectura por defecto**
+- **Gestión de permisos por superusuarios**
+- Permisos granulares por módulo:
+  - Ver (view)
+  - Agregar (add)
+  - Cambiar (change)
+  - Eliminar (delete)
+- **Interfaz de gestión de usuarios**
+- **Eliminación de usuarios (solo no-superusuarios)**
+- Protección de vistas con decoradores
+- UI adaptativa según permisos
 
-### 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
-- **Backend:** Python 3.11+ / Django 5.2.7
-- **Base de Datos:** SQLite
-- **Frontend:** HTML5, CSS3, Bootstrap 5.3
-- **PDF Generation:** WeasyPrint + GTK3 Runtime
-- **Calendario:** FullCalendar
-- **Exportación:** OpenPyXL (Excel)
-- **Deployment:** WhiteNoise (archivos estáticos)
+- **Backend**: Django 5.1.4
+- **Base de datos**: SQLite (desarrollo)
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Estilos**: Bootstrap 5 + CSS personalizado
+- **Exportación**: ReportLab (PDF), OpenPyXL (Excel)
+- **Calendario**: FullCalendar.js
 
-### 📦 Instalación
+## Estructura del Proyecto
 
-#### Prerrequisitos
+```
+AmandaBoutique/
+├── BoutiqueApp/          # Gestión de catálogo
+├── citas/                # Sistema de citas
+├── ClientesApp/          # Gestión de clientes
+├── ProveedoresApp/       # Gestión de proveedores
+├── flujo/                # Flujo de caja y cotizaciones
+├── LoginApp/             # Autenticación y permisos
+├── static/               # Archivos estáticos (CSS, JS, imágenes)
+└── templates/            # Templates base
+```
 
-- Python 3.11 o superior
-- GTK3 Runtime (requerido para WeasyPrint)
-
-#### Pasos de Instalación
+## Instalación
 
 1. **Clonar el repositorio**
 
 ```bash
-git clone https://github.com/tu-usuario/AmandaBoutique.git
+git clone <url-del-repositorio>
 cd AmandaBoutique
 ```
 
 2. **Crear entorno virtual**
 
 ```bash
-python -m venv .venv
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
 ```
 
-3. **Activar entorno virtual**
-
-```bash
-# Windows
-.venv\Scripts\activate
-
-# Linux/Mac
-source .venv/bin/activate
-```
-
-4. **Instalar dependencias**
+3. **Instalar dependencias**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-5. **Instalar GTK3 Runtime** (Windows)
-
-   - Descargar desde: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer
-   - Ejecutar el instalador
-   - Agregar GTK3 al PATH del sistema
-
-6. **Configurar variables de entorno**
-
-```bash
-# Copiar el archivo de ejemplo
-copy .env.example .env
-
-# Editar .env con tus configuraciones
-```
-
-7. **Aplicar migraciones**
+4. **Aplicar migraciones**
 
 ```bash
 python manage.py migrate
 ```
 
-8. **Crear superusuario**
+5. **Crear superusuario**
 
 ```bash
 python manage.py createsuperuser
 ```
 
-9. **Recolectar archivos estáticos**
-
-```bash
-python manage.py collectstatic
-```
-
-10. **Ejecutar servidor de desarrollo**
+6. **Ejecutar servidor de desarrollo**
 
 ```bash
 python manage.py runserver
 ```
 
-11. **Acceder a la aplicación**
+7. **Acceder a la aplicación**
 
-- Aplicación: http://localhost:8000
-- Admin: http://localhost:8000/admin
+- URL: http://127.0.0.1:8000/
+- Admin: http://127.0.0.1:8000/admin/
 
-### 🚀 Despliegue en Producción
+## Sistema de Permisos
 
-#### Configuración como Servicio Windows (NSSM)
+### Configuración Inicial
 
-1. **Descargar NSSM**
+- Los nuevos usuarios se registran con **permisos de solo lectura** (view) en todos los módulos
+- Solo los **superusuarios** pueden modificar permisos de otros usuarios
 
-   - https://nssm.cc/download
+### Gestión de Permisos
 
-2. **Instalar el servicio**
+1. Acceder como superusuario
+2. Ir a **Admin → Gestionar Usuarios**
+3. Seleccionar usuario y hacer clic en **Editar Permisos**
+4. Asignar permisos por módulo:
+   - ✅ Ver - Solo lectura
+   - ➕ Agregar - Crear nuevos registros
+   - ✏️ Cambiar - Editar registros existentes
+   - 🗑️ Eliminar - Borrar registros
 
-```powershell
-nssm install DjangoBoutique "C:\ruta\a\.venv\Scripts\python.exe" "C:\ruta\a\server.py"
-nssm set DjangoBoutique AppDirectory "C:\ruta\a\AmandaBoutique"
-nssm set DjangoBoutique DisplayName "Amanda Boutique - Django Server"
-nssm set DjangoBoutique Description "Servidor Django para Amanda Mateo Boutique"
-nssm start DjangoBoutique
-```
+### Módulos con Control de Permisos
 
-3. **Configurar variables de entorno en .env**
+- Catálogo
+- Citas
+- Clientes
+- Proveedores
+- Movimientos de Caja
+- Cotización Dólar
 
-```env
-DEBUG=False
-SECRET_KEY=tu-clave-secreta-super-segura
-ALLOWED_HOSTS=192.168.1.193,tudominio.com
-```
+## Guía de Uso
 
-### 📁 Estructura del Proyecto
+### Gestión de Catálogo
 
-```
-AmandaBoutique/
-├── AmandaProjecto/          # Configuración principal del proyecto
-│   ├── settings.py          # Configuración de Django
-│   ├── urls.py              # URLs principales
-│   └── wsgi.py              # WSGI para producción
-├── BoutiqueApp/             # App principal - Showroom y Catálogo
-│   ├── models.py            # Modelo: Catalogo
-│   ├── views.py             # Vistas y lógica
-│   ├── forms.py             # Formularios
-│   ├── urls.py              # URLs de la app
-│   └── templates/           # Templates HTML
-├── ClientesApp/             # Gestión de Clientes
-│   ├── models.py            # Modelo: Cliente
-│   └── ...
-├── ProveedoresApp/          # Gestión de Proveedores
-│   ├── models.py            # Modelo: Proveedor
-│   └── ...
-├── citas/                   # Gestión de Citas
-│   ├── models.py            # Modelo: Cita
-│   └── ...
-├── flujo/                   # Flujo de Caja
-│   ├── models.py            # Modelos: MovimientoCaja, CotizacionDolar
-│   └── ...
-├── LoginApp/                # Autenticación y Perfiles
-│   ├── models.py            # Modelo: PerfilUsuario
-│   └── ...
-├── static/                  # Archivos estáticos
-│   ├── css/
-│   │   └── estilos.css      # Estilos personalizados
-│   └── ...
-├── media/                   # Archivos subidos (imágenes)
-├── db.sqlite3               # Base de datos
-├── manage.py                # Utilidad de Django
-├── requirements.txt         # Dependencias
-└── README.md                # Este archivo
-```
+1. Navegar a **Catálogo**
+2. Usar **Agregar** para nuevos productos (requiere permiso)
+3. Buscar productos por nombre
+4. Exportar a PDF (lista o tarjetas)
+5. Editar/Eliminar productos (requiere permisos)
 
-### 🎨 Modelos de Datos
+### Sistema de Citas
 
-#### Catalogo
+1. Ir a **Citas → Calendario**
+2. Hacer clic en una fecha para crear cita (requiere permiso)
+3. Ver todas las citas en **Listar Citas**
+4. Cambiar estado de citas según progreso
+5. Editar o eliminar citas (requiere permisos)
 
-- Código, Modelo, Estilo, Descripción, Precio, Imagen
+### Flujo de Caja
 
-#### Cliente
+1. Acceder a **Flujo de Caja**
+2. Registrar movimientos (Ingreso/Egreso)
+3. Actualizar cotización del dólar
+4. Ver dashboard con resumen
+5. Exportar reportes a Excel o PDF
+6. Filtrar por rango de fechas
 
-- Identificación, Nombre, Apellido, Dirección, Teléfono, Email
+### Gestión de Usuarios (Solo Superusuarios)
 
-#### Proveedor
+1. Ir a **Admin → Gestionar Usuarios**
+2. Ver lista de todos los usuarios
+3. **Editar Permisos**: Asignar/revocar permisos por módulo
+4. **Eliminar**: Borrar usuarios (excepto superusuarios)
 
-- Código, Nombre, Dirección, Teléfono, Email
+## Estándares de Diseño
 
-#### Cita
+### Botones Estandarizados
 
-- Cliente, Teléfono, Fecha, Hora, Acción
-- Fecha de Entrega
-- Medidas: Copa, Busto, Cintura, Largo, Tiras
-- Precio, Abono, Pago Total, Moneda
-- Descripción
+- **Guardar**: `btn-pink` (rosa) - Guardar cambios
+- **Editar**: `btn-editar` (amarillo) - Modificar registros
+- **Eliminar**: `btn-eliminar` (rojo) - Borrar registros
+- **Ver**: `btn-ver` (azul) - Ver detalles
+- **Agregar**: `btn-listar` (verde) - Crear nuevos
+- **Volver**: `btn-volver` / `btn-secondary` (gris) - Regresar
 
-#### MovimientoCaja
+### Paleta de Colores
 
-- Fecha, Descripción, Tipo (Ingreso/Egreso)
-- Monto, Moneda, Monto USD
+- **Principal**: Rosa (#b76e79)
+- **Fondo**: Rosa claro (#fff5fa)
+- **Encabezados**: Rosa (#ffe6f2)
+- **Texto**: Gris oscuro
 
-#### CotizacionDolar
+## Seguridad
 
-- Fecha, Tasa de Cambio
+- ✅ Autenticación requerida para todas las vistas
+- ✅ Permisos granulares por modelo y acción
+- ✅ Protección CSRF en formularios
+- ✅ Validación de permisos en backend
+- ✅ UI adaptativa según permisos del usuario
+- ✅ Superusuarios protegidos contra eliminación
 
-#### PerfilUsuario
+## Funcionalidades Destacadas
 
-- Usuario, Email, Avatar
-- Ciudad, País, Teléfono, Fecha de Nacimiento
+### Exportación de Datos
 
-### 📖 Uso del Sistema
+- **PDF**: Catálogo (lista y tarjetas), Movimientos de caja
+- **Excel**: Movimientos de caja con filtros
 
-1. **Acceso al Sistema**
+### Dashboard Financiero
 
-   - Iniciar sesión con credenciales de usuario
-   - Los usuarios no autenticados solo pueden ver el showroom público
+- Resumen de ingresos y egresos
+- Gráficos de movimientos
+- Balance actual
+- Cotización del dólar actualizada
 
-2. **Panel de Administración**
+### Interfaz Responsiva
 
-   - Acceso rápido desde el navbar mediante menú desplegable
-   - Enlaces organizados en una sola columna
-   - Diseño coherente con el tema rosa del sitio
-   - Acceso a todos los módulos: Administración, Citas, Catálogo, Clientes, Proveedores, Flujo de Caja, Cotización, Resumen
+- Diseño adaptable a diferentes dispositivos
+- Navegación intuitiva
+- Feedback visual en acciones
 
-3. **Gestión de Catálogo**
+## Próximas Mejoras
 
-   - Agregar nuevos modelos con imágenes
-   - Editar información de vestidos existentes
-   - Generar catálogos PDF
+- [ ] Reportes avanzados con gráficos
+- [ ] Notificaciones de citas
+- [ ] Historial de cambios por usuario
+- [ ] Backup automático de base de datos
+- [ ] API REST para integración
 
-4. **Gestión de Citas**
+## Contribución
 
-   - Crear citas con información completa
-   - Ver calendario visual
-   - Generar reportes de citas
+Para contribuir al proyecto:
 
-5. **Control Financiero**
-   - Registrar ingresos y egresos
-   - Ver dashboard con métricas
-   - Exportar reportes
+1. Fork el repositorio
+2. Crear rama feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit cambios (`git commit -m 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Crear Pull Request
 
-### 🔒 Seguridad
+## Licencia
 
-- Autenticación requerida para funciones administrativas
-- SECRET_KEY configurable vía variables de entorno
-- CSRF protection habilitado
-- Validación de formularios
-- Control de acceso por usuario
+Este proyecto es privado y de uso exclusivo para Amanda Mateo Boutique.
 
-### 📝 Notas Importantes
+## Soporte
 
-- **GTK3 Runtime** es obligatorio para la generación de PDFs
-- El sistema usa **SQLite** por defecto (apropiado para pequeñas/medianas empresas)
-- Para producción, se recomienda configurar **DEBUG=False** en `.env`
-- Los archivos de media se almacenan en `/media/`
-
-### 🤝 Contribuciones
-
-Este es un proyecto personal, pero las sugerencias y mejoras son bienvenidas.
-
-### 👨‍💻 Autor
-
-**Herman Frias**
-
-### 📄 Licencia
-
-Este proyecto es de uso privado para Amanda Mateo Boutique.
+Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-## 🇺🇸 English
-
-### 📋 Description
-
-**Amanda Mateo Boutique** is a comprehensive management system developed in Django to manage all aspects of a boutique specialized in custom-made quinceañera dresses. The system includes a dynamic showroom, inventory management, appointment scheduling, customer and supplier tracking, and a complete cash flow module with automatic currency conversion.
-
-### ✨ Key Features
-
-#### 🏠 **Dynamic Showroom**
-
-- Visual dress catalog with images
-- Automatic display of all available models
-- Detailed information for each design (style, price, description)
-- PDF catalog generation in two formats:
-  - Product list
-  - Individual model cards
-
-#### 📅 **Appointment Management**
-
-- Interactive calendar with FullCalendar
-- Appointment registration with complete customer information
-- Delivery date tracking
-- Measurements recording (cup, bust, waist, length, straps)
-- Payment control (price, deposit, total payment)
-- Multi-currency support (USD/Bs)
-- PDF report generation filtered by date
-
-#### 👥 **Customer Management**
-
-- Complete customer database
-- Quick search by name
-- Contact information and address
-- Appointment and purchase history
-
-#### 🏭 **Supplier Management**
-
-- Supplier registration
-- Contact information
-- Search and filtering
-
-#### 💰 **Cash Flow**
-
-- Income and expense control
-- Automatic Bs → USD conversion using daily exchange rate
-- **Advanced filters:**
-  - Date range filter (start and end)
-  - Movement type filter (All/Income/Expense)
-- Financial dashboard with:
-  - Monthly and annual summary
-  - Cumulative totals
-  - Profitability metrics
-- Excel and PDF export with applied filters
-- Amount columns right-aligned for better readability
-
-#### 💵 **Dollar Exchange Rate**
-
-- Daily exchange rate recording
-- Automatic conversion in cash movements
-- Exchange rate history
-
-#### 👤 **User Management**
-
-- Complete authentication system
-- Custom user profiles
-- Access control to administrative functions
-- Registration, login, and logout
-
-### 🛠️ Technologies Used
-
-- **Backend:** Python 3.11+ / Django 5.2.7
-- **Database:** SQLite
-- **Frontend:** HTML5, CSS3, Bootstrap 5.3
-- **PDF Generation:** WeasyPrint + GTK3 Runtime
-- **Calendar:** FullCalendar
-- **Export:** OpenPyXL (Excel)
-- **Deployment:** WhiteNoise (static files)
-
-### 📦 Installation
-
-#### Prerequisites
-
-- Python 3.11 or higher
-- GTK3 Runtime (required for WeasyPrint)
-
-#### Installation Steps
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/your-user/AmandaBoutique.git
-cd AmandaBoutique
-```
-
-2. **Create virtual environment**
-
-```bash
-python -m venv .venv
-```
-
-3. **Activate virtual environment**
-
-```bash
-# Windows
-.venv\Scripts\activate
-
-# Linux/Mac
-source .venv/bin/activate
-```
-
-4. **Install dependencies**
-
-```bash
-pip install -r requirements.txt
-```
-
-5. **Install GTK3 Runtime** (Windows)
-
-   - Download from: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer
-   - Run the installer
-   - Add GTK3 to system PATH
-
-6. **Configure environment variables**
-
-```bash
-# Copy example file
-copy .env.example .env
-
-# Edit .env with your settings
-```
-
-7. **Apply migrations**
-
-```bash
-python manage.py migrate
-```
-
-8. **Create superuser**
-
-```bash
-python manage.py createsuperuser
-```
-
-9. **Collect static files**
-
-```bash
-python manage.py collectstatic
-```
-
-10. **Run development server**
-
-```bash
-python manage.py runserver
-```
-
-11. **Access the application**
-
-- Application: http://localhost:8000
-- Admin: http://localhost:8000/admin
-
-### 🚀 Production Deployment
-
-#### Windows Service Configuration (NSSM)
-
-1. **Download NSSM**
-
-   - https://nssm.cc/download
-
-2. **Install the service**
-
-```powershell
-nssm install DjangoBoutique "C:\path\to\.venv\Scripts\python.exe" "C:\path\to\server.py"
-nssm set DjangoBoutique AppDirectory "C:\path\to\AmandaBoutique"
-nssm set DjangoBoutique DisplayName "Amanda Boutique - Django Server"
-nssm set DjangoBoutique Description "Django server for Amanda Mateo Boutique"
-nssm start DjangoBoutique
-```
-
-3. **Configure environment variables in .env**
-
-```env
-DEBUG=False
-SECRET_KEY=your-super-secret-key
-ALLOWED_HOSTS=192.168.1.193,yourdomain.com
-```
-
-### 📝 Important Notes
-
-- **GTK3 Runtime** is mandatory for PDF generation
-- The system uses **SQLite** by default (suitable for small/medium businesses)
-- For production, it's recommended to set **DEBUG=False** in `.env`
-- Media files are stored in `/media/`
-
-### 🤝 Contributions
-
-This is a personal project, but suggestions and improvements are welcome.
-
-### 👨‍💻 Author
-
-**Herman Frias**
-
-### 📄 License
-
-This project is for private use by Amanda Mateo Boutique.
-
----
-
-<div align="center">
-
-**Hecho con ❤️ para Amanda Mateo Boutique**
-
-[⬆ Volver arriba](#-amanda-mateo-boutique)
-
-</div>
+**Versión**: 2.0  
+**Última actualización**: Diciembre 2025  
+**Desarrollado con**: Django 5.1.4 + Bootstrap 5

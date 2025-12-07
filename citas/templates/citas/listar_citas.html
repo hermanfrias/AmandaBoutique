@@ -1,5 +1,6 @@
-{% extends "BoutiqueApp/base.html" %} {% block title %}Citas | Amanda Mateo
-Boutique{% endblock %} {% block content %}
+{% extends "BoutiqueApp/base.html" %}
+{% block title %}Citas | Amanda Mateo Boutique{% endblock %}
+{% block content %}
 <div class="container py-5">
   <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -8,6 +9,7 @@ Boutique{% endblock %} {% block content %}
       {% if perms.citas.add_cita %}
       <a href="{% url 'crear_cita' %}" class="btn btn-listar">Agregar</a>
       {% endif %}
+      <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
       <a href="{% url 'calendario_citas' %}" class="btn btn-listar"
         >Calendario</a
       >
