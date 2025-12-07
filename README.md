@@ -61,12 +61,15 @@
 
 - Control de ingresos y egresos
 - Conversión automática Bs → USD usando cotización del día
+- **Filtros avanzados:**
+  - Filtro por rango de fechas (inicio y fin)
+  - Filtro por tipo de movimiento (Todos/Ingreso/Gasto)
 - Dashboard financiero con:
   - Resumen mensual y anual
   - Totales acumulados
   - Métricas de rentabilidad
-- Exportación a Excel y PDF
-- Filtrado por rango de fechas
+- Exportación a Excel y PDF con filtros aplicados
+- Columnas de montos alineadas a la derecha para mejor legibilidad
 
 #### 💵 **Cotización del Dólar**
 
@@ -284,8 +287,10 @@ AmandaBoutique/
 
 2. **Panel de Administración**
 
-   - Acceso a todas las funcionalidades desde el panel central
-   - Botones de acceso rápido a cada módulo
+   - Acceso rápido desde el navbar mediante menú desplegable
+   - Enlaces organizados en una sola columna
+   - Diseño coherente con el tema rosa del sitio
+   - Acceso a todos los módulos: Administración, Citas, Catálogo, Clientes, Proveedores, Flujo de Caja, Cotización, Resumen
 
 3. **Gestión de Catálogo**
 
@@ -377,12 +382,15 @@ Este proyecto es de uso privado para Amanda Mateo Boutique.
 
 - Income and expense control
 - Automatic Bs → USD conversion using daily exchange rate
+- **Advanced filters:**
+  - Date range filter (start and end)
+  - Movement type filter (All/Income/Expense)
 - Financial dashboard with:
   - Monthly and annual summary
   - Cumulative totals
   - Profitability metrics
-- Excel and PDF export
-- Date range filtering
+- Excel and PDF export with applied filters
+- Amount columns right-aligned for better readability
 
 #### 💵 **Dollar Exchange Rate**
 

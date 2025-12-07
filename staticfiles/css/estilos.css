@@ -352,3 +352,55 @@ footer a:hover {
 .text-center {
   text-align: center;
 }
+
+/* Admin Section Styles */
+.admin-section {
+  background: #fdebf2;
+}
+
+.admin-title {
+  color: #8a556bff;
+}
+
+.admin-description {
+  color: #4b2c35;
+}
+
+/* Admin Dropdown Styles */
+.admin-dropdown {
+  background-color: #ffe6f2;
+  border: 2px solid #f5d0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(183, 110, 121, 0.2);
+  min-width: 220px;
+}
+
+.admin-dropdown .dropdown-header {
+  color: #b76e79;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 10px 16px;
+}
+
+.admin-dropdown .dropdown-divider {
+  border-color: #f5d0e0;
+  margin: 0.25rem 0;
+}
+
+.admin-dropdown .dropdown-item {
+  color: #7b3f61;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.admin-dropdown .dropdown-item:hover {
+  background-color: #ffe6f2;
+  color: #b76e79;
+  transform: translateX(5px);
+}
+
+.admin-dropdown .dropdown-item:active {
+  background-color: #ffd6ea;
+  color: #8c4a56;
+}

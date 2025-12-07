@@ -51,8 +51,64 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'index' %}#contacto">Contacto</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'index' %}#admin">Admin</a>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="adminDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Admin
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end admin-dropdown"
+                aria-labelledby="adminDropdown"
+              >
+                <li class="dropdown-header">Panel de Administración</li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a href="/admin/" class="dropdown-item">Administración</a>
+                </li>
+                <li>
+                  <a href="{% url 'listar_citas' %}" class="dropdown-item"
+                    >Citas</a
+                  >
+                </li>
+                <li>
+                  <a href="{% url 'listar_catalogo' %}" class="dropdown-item"
+                    >Catálogo</a
+                  >
+                </li>
+                <li>
+                  <a href="{% url 'clientes_list' %}" class="dropdown-item"
+                    >Clientes</a
+                  >
+                </li>
+                <li>
+                  <a href="{% url 'proveedores_list' %}" class="dropdown-item"
+                    >Proveedores</a
+                  >
+                </li>
+                <li>
+                  <a href="{% url 'listar_movimientos' %}" class="dropdown-item"
+                    >Flujo de Caja</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{% url 'listar_cotizaciones' %}"
+                    class="dropdown-item"
+                    >Cotización</a
+                  >
+                </li>
+                <li>
+                  <a href="{% url 'dashboard_flujo' %}" class="dropdown-item"
+                    >Resumen</a
+                  >
+                </li>
+              </ul>
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
@@ -78,25 +134,6 @@
     </nav>
 
     {% block content %} {% endblock %}
-
-    <!-- ADMIN -->
-    <section id="admin" class="py-5 admin-section">
-      <div class="container text-center">
-        <h2 class="mb-3 admin-title">Panel de Administración</h2>
-        <p class="lead mb-4 admin-description">Actualiza la información de tu base de datos con un solo clic</p>
-    
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-          <a href="/admin/" class="btn btn-listar" style="min-width: 150px;">Administración</a>
-          <a href="{% url 'listar_citas' %}" class="btn btn-listar" style="min-width: 150px;">Citas</a>
-          <a href="{% url 'listar_catalogo' %}" class="btn btn-listar" style="min-width: 150px;">Catálogo</a>
-          <a href="{% url 'clientes_list' %}" class="btn btn-listar" style="min-width: 150px;">Clientes</a>
-          <a href="{% url 'proveedores_list' %}" class="btn btn-listar" style="min-width: 150px;">Proveedores</a>
-          <a href="{% url 'listar_movimientos' %}" class="btn btn-listar" style="min-width: 150px;">Flujo de Caja</a>
-          <a href="{% url 'listar_cotizaciones' %}" class="btn btn-listar" style="min-width: 150px;">Cotizacion</a>
-          <a href="{% url 'dashboard_flujo' %}" class="btn btn-listar" style="min-width: 150px;">Resumen</a>
-        </div>
-      </div>
-    </section>
 
     <!-- FOOTER -->
     <footer>
