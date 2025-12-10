@@ -33,11 +33,37 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
 
 ### 💰 Flujo de Caja
 
-- Registro de movimientos (Ingresos/Egresos)
-- Cotización del dólar
-- Dashboard con resumen financiero
-- Exportación a Excel y PDF
-- Filtrado por fechas y tipos
+- **Registro completo de movimientos financieros**
+  - Ingresos y Gastos
+  - Tipo de movimiento: Venta, Compra de Insumos, Nómina, Alquiler, Otros
+  - Método de pago: Efectivo, Depósito, Transferencia, Pago Móvil, Otro
+  - Moneda: Bolívares o Dólares
+- **CRUD completo de movimientos**
+  - Crear, editar y eliminar movimientos
+  - Confirmación modal antes de eliminar
+  - Fecha pre-cargada en formulario de edición
+- **Cotización del dólar**
+  - Registro diario de cotización
+  - Conversión automática Bs → USD
+  - Validación de cotización al crear movimientos en Bs
+- **Dashboard financiero interactivo**
+  - Resumen mensual, anual y total
+  - Gráficos de ingresos y gastos
+  - Rentabilidad calculada
+- **Filtros avanzados**
+  - Por rango de fechas
+  - Por tipo (Ingreso/Gasto)
+  - Por tipo de movimiento
+  - Por método de pago
+  - Por moneda
+- **Exportación profesional**
+  - Excel con todas las columnas
+  - PDF con formato optimizado
+  - Filtros aplicables a exportaciones
+- **Interfaz optimizada**
+  - Tabla responsiva con columnas ajustables
+  - Botones de acción claros y accesibles
+  - Descripción con ajuste de texto multilínea
 
 ### 🔐 Sistema de Permisos de Usuario
 
@@ -168,12 +194,57 @@ python manage.py runserver
 
 ### Flujo de Caja
 
-1. Acceder a **Flujo de Caja**
-2. Registrar movimientos (Ingreso/Egreso)
-3. Actualizar cotización del dólar
-4. Ver dashboard con resumen
-5. Exportar reportes a Excel o PDF
-6. Filtrar por rango de fechas
+#### Gestión de Movimientos
+
+1. Acceder a **Flujo de Caja → Movimientos**
+2. **Crear nuevo movimiento** (requiere permiso):
+   - Seleccionar fecha
+   - Ingresar descripción
+   - Elegir tipo: Ingreso o Gasto
+   - Seleccionar moneda: Bolívares ($) o Dólares (Bs)
+   - Ingresar monto
+   - **Opcional**: Tipo de movimiento (Venta, Compra de Insumos, Nómina, Alquiler, Otros)
+   - **Opcional**: Método de pago (Efectivo, Depósito, Transferencia, Pago Móvil, Otro)
+3. **Editar movimiento** (requiere permiso):
+   - Clic en botón "Editar"
+   - Modificar campos necesarios (fecha pre-cargada)
+   - Guardar cambios
+4. **Eliminar movimiento** (requiere permiso):
+   - Clic en botón "Eliminar"
+   - Confirmar en modal de seguridad
+
+#### Filtros Avanzados
+
+Usar la sección de filtros para buscar movimientos específicos:
+
+- **Fecha Inicio/Fin**: Rango de fechas
+- **Tipo**: Ingreso o Gasto
+- **Tipo Mov.**: Venta, Compra de Insumos, Nómina, Alquiler, Otros
+- **Método Pago**: Efectivo, Depósito, Transferencia, Pago Móvil, Otro
+- **Moneda**: Bolívares o Dólares
+
+Los filtros se pueden combinar para búsquedas precisas.
+
+#### Cotización del Dólar
+
+1. Ir a **Flujo de Caja → Cotizaciones**
+2. Registrar cotización diaria (requiere permiso)
+3. **Importante**: Debe existir cotización para la fecha antes de crear movimientos en Bolívares
+
+#### Dashboard y Reportes
+
+1. Ver **Dashboard** para resumen visual:
+   - Totales mensuales, anuales y acumulados
+   - Gráficos de ingresos vs gastos
+   - Rentabilidad calculada
+2. **Exportar a Excel**:
+   - Clic en "Exportar"
+   - Seleccionar rango de fechas (opcional)
+   - Descargar archivo con todas las columnas
+3. **Exportar a PDF**:
+   - Clic en "Exportar"
+   - Seleccionar rango de fechas (opcional)
+   - Imprimir o guardar PDF formateado
 
 ### Gestión de Usuarios (Solo Superusuarios)
 
@@ -257,6 +328,6 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.0  
-**Última actualización**: Diciembre 2025  
+**Versión**: 2.1  
+**Última actualización**: Diciembre 2024 - Mejoras en Flujo de Caja  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5

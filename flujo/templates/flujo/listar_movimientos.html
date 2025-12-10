@@ -24,7 +24,7 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
   <div class="card shadow-sm mb-4">
     <div class="card-body">
       <form method="get" action="{% url 'listar_movimientos' %}" class="row g-3">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
           <input
             type="date"
@@ -34,7 +34,7 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
             value="{{ fecha_inicio }}"
           />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="fecha_fin" class="form-label">Fecha Fin</label>
           <input
             type="date"
@@ -44,7 +44,7 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
             value="{{ fecha_fin }}"
           />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="tipo" class="form-label">Tipo</label>
           <select class="form-select" id="tipo" name="tipo">
             <option value="Todos" {% if tipo_filtro == 'Todos' %}selected{% endif %}>Todos</option>
@@ -52,8 +52,38 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
             <option value="Gasto" {% if tipo_filtro == 'Gasto' %}selected{% endif %}>Gasto</option>
           </select>
         </div>
-        <div class="col-md-3 d-flex align-items-end">
-          <button type="submit" class="btn btn-pink w-100">
+        <div class="col-md-2">
+          <label for="tipo_movimiento" class="form-label">Tipo Mov.</label>
+          <select class="form-select" id="tipo_movimiento" name="tipo_movimiento">
+            <option value="Todos" {% if tipo_movimiento_filtro == 'Todos' %}selected{% endif %}>Todos</option>
+            <option value="Venta" {% if tipo_movimiento_filtro == 'Venta' %}selected{% endif %}>Venta</option>
+            <option value="Compra de Insumos" {% if tipo_movimiento_filtro == 'Compra de Insumos' %}selected{% endif %}>Compra de Insumos</option>
+            <option value="Nómina" {% if tipo_movimiento_filtro == 'Nómina' %}selected{% endif %}>Nómina</option>
+            <option value="Alquiler" {% if tipo_movimiento_filtro == 'Alquiler' %}selected{% endif %}>Alquiler</option>
+            <option value="Otros" {% if tipo_movimiento_filtro == 'Otros' %}selected{% endif %}>Otros</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="metodo_pago" class="form-label">Método Pago</label>
+          <select class="form-select" id="metodo_pago" name="metodo_pago">
+            <option value="Todos" {% if metodo_pago_filtro == 'Todos' %}selected{% endif %}>Todos</option>
+            <option value="Efectivo" {% if metodo_pago_filtro == 'Efectivo' %}selected{% endif %}>Efectivo</option>
+            <option value="Depósito" {% if metodo_pago_filtro == 'Depósito' %}selected{% endif %}>Depósito</option>
+            <option value="Transferencia" {% if metodo_pago_filtro == 'Transferencia' %}selected{% endif %}>Transferencia</option>
+            <option value="Pago Móvil" {% if metodo_pago_filtro == 'Pago Móvil' %}selected{% endif %}>Pago Móvil</option>
+            <option value="Otro" {% if metodo_pago_filtro == 'Otro' %}selected{% endif %}>Otro</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="moneda" class="form-label">Moneda</label>
+          <select class="form-select" id="moneda" name="moneda">
+            <option value="Todos" {% if moneda_filtro == 'Todos' %}selected{% endif %}>Todos</option>
+            <option value="Bs" {% if moneda_filtro == 'Bs' %}selected{% endif %}>Bolívares</option>
+            <option value="$" {% if moneda_filtro == '$' %}selected{% endif %}>Dólares</option>
+          </select>
+        </div>
+        <div class="col-md-12 d-flex justify-content-center mt-3">
+          <button type="submit" class="btn btn-pink px-5">
             <i class="fas fa-search"></i> Buscar
           </button>
         </div>
@@ -62,35 +92,121 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
   </div>
   
   <div class="table-responsive shadow-sm rounded">
-    <table class="table table-striped table-bordered text-center">
+    <style>
+      .table-movimientos {
+        font-size: 0.9rem;
+      }
+      .table-movimientos th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      .table-movimientos td {
+        vertical-align: middle;
+      }
+      .col-fecha { width: 90px; }
+      .col-descripcion { 
+        max-width: 180px; 
+        word-wrap: break-word;
+        white-space: normal;
+      }
+      .col-tipo { width: 80px; }
+      .col-tipo-mov { width: 130px; }
+      .col-metodo { width: 120px; }
+      .col-moneda { width: 70px; }
+      .col-monto { width: 110px; }
+      .col-monto-usd { width: 110px; }
+      .col-acciones { width: 180px; }
+      .btn-action-group {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-action {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        min-width: 70px;
+      }
+    </style>
+    <table class="table table-striped table-bordered table-hover table-movimientos">
       <thead>
         <tr>
-          <th>Fecha</th>
-          <th>Descripción</th>
-          <th>Tipo</th>
-          <th>Moneda</th>
-          <th class="text-end">Monto</th>
-          <th class="text-end">Monto USD</th>
+          <th class="col-fecha">Fecha</th>
+          <th class="col-descripcion text-start">Descripción</th>
+          <th class="col-tipo">Tipo</th>
+          <th class="col-tipo-mov">Tipo Mov.</th>
+          <th class="col-metodo">Método Pago</th>
+          <th class="col-moneda">Moneda</th>
+          <th class="col-monto text-end">Monto</th>
+          <th class="col-monto-usd text-end">Monto USD</th>
+          <th class="col-acciones">Acciones</th>
         </tr>
       </thead>
       <tbody>
         {% for m in movimientos %}
         <tr>
-          <td>{{ m.fecha|date:"d/m/Y" }}</td>
-          <td>{{ m.descripcion }}</td>
-          <td>{{ m.tipo }}</td>
-          <td>{{ m.moneda }}</td>
-          <td class="text-end">{{ m.monto }}</td>
-          <td class="text-end">{{ m.monto_usd }}</td>
+          <td class="col-fecha">{{ m.fecha|date:"d/m/Y" }}</td>
+          <td class="col-descripcion text-start">{{ m.descripcion }}</td>
+          <td class="col-tipo">{{ m.tipo }}</td>
+          <td class="col-tipo-mov">{{ m.tipo_movimiento|default:"-" }}</td>
+          <td class="col-metodo">{{ m.metodo_pago|default:"-" }}</td>
+          <td class="col-moneda">{{ m.moneda }}</td>
+          <td class="col-monto text-end">{{ m.monto }}</td>
+          <td class="col-monto-usd text-end">{{ m.monto_usd }}</td>
+          <td class="col-acciones">
+            <div class="btn-action-group">
+              {% if perms.flujo.change_movimientocaja %}
+              <a href="{% url 'editar_movimiento' m.id %}" class="btn btn-sm btn-editar btn-action">
+                Editar
+              </a>
+              {% endif %}
+              {% if perms.flujo.delete_movimientocaja %}
+              <button class="btn btn-sm btn-eliminar btn-action" onclick="confirmarEliminacion({{ m.id }})">
+                Eliminar
+              </button>
+              {% endif %}
+            </div>
+          </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" class="text-center">No hay movimientos</td>
+          <td colspan="9" class="text-center">No hay movimientos</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <!-- Totales -->
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+      <h5 class="text-pink fw-bold mb-3">Totales</h5>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="p-3 bg-light rounded">
+            <p class="mb-1 text-muted small">Total en Bolívares</p>
+            <h4 class="mb-0 text-dark">Bs {{ total_bs|floatformat:2 }}</h4>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 bg-light rounded">
+            <p class="mb-1 text-muted small">Total en Dólares</p>
+            <h4 class="mb-0 text-success">$ {{ total_usd|floatformat:2 }}</h4>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 bg-light rounded">
+            <p class="mb-1 text-muted small">Total USD (Convertido)</p>
+            <h4 class="mb-0 text-primary">$ {{ total_usd_converted|floatformat:2 }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- Modal para Exportar -->
@@ -162,6 +278,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
     const fechaInicio = document.getElementById("fecha_inicio_export").value;
     const fechaFin = document.getElementById("fecha_fin_export").value;
     const tipo = document.getElementById("tipo") ? document.getElementById("tipo").value : "Todos";
+    const tipoMovimiento = document.getElementById("tipo_movimiento") ? document.getElementById("tipo_movimiento").value : "Todos";
+    const metodoPago = document.getElementById("metodo_pago") ? document.getElementById("metodo_pago").value : "Todos";
+    const moneda = document.getElementById("moneda") ? document.getElementById("moneda").value : "Todos";
 
     let url = "{% url 'movimientos_pdf' %}";
     const params = new URLSearchParams();
@@ -169,6 +288,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
     if (fechaInicio) params.append("fecha_inicio", fechaInicio);
     if (fechaFin) params.append("fecha_fin", fechaFin);
     if (tipo && tipo !== "Todos") params.append("tipo", tipo);
+    if (tipoMovimiento && tipoMovimiento !== "Todos") params.append("tipo_movimiento", tipoMovimiento);
+    if (metodoPago && metodoPago !== "Todos") params.append("metodo_pago", metodoPago);
+    if (moneda && moneda !== "Todos") params.append("moneda", moneda);
 
     if (params.toString()) {
       url += "?" + params.toString();
@@ -181,6 +303,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
     const fechaInicio = document.getElementById("fecha_inicio_export").value;
     const fechaFin = document.getElementById("fecha_fin_export").value;
     const tipo = document.getElementById("tipo") ? document.getElementById("tipo").value : "Todos";
+    const tipoMovimiento = document.getElementById("tipo_movimiento") ? document.getElementById("tipo_movimiento").value : "Todos";
+    const metodoPago = document.getElementById("metodo_pago") ? document.getElementById("metodo_pago").value : "Todos";
+    const moneda = document.getElementById("moneda") ? document.getElementById("moneda").value : "Todos";
 
     let url = "{% url 'movimientos_excel' %}";
     const params = new URLSearchParams();
@@ -188,6 +313,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
     if (fechaInicio) params.append("fecha_inicio", fechaInicio);
     if (fechaFin) params.append("fecha_fin", fechaFin);
     if (tipo && tipo !== "Todos") params.append("tipo", tipo);
+    if (tipoMovimiento && tipoMovimiento !== "Todos") params.append("tipo_movimiento", tipoMovimiento);
+    if (metodoPago && metodoPago !== "Todos") params.append("metodo_pago", metodoPago);
+    if (moneda && moneda !== "Todos") params.append("moneda", moneda);
 
     if (params.toString()) {
       url += "?" + params.toString();
@@ -195,5 +323,31 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
 
     window.location.href = url;
   }
+
+  function confirmarEliminacion(id) {
+    const modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
+    document.getElementById('btnConfirmarEliminar').href = `/flujo/movimientos/eliminar/${id}/`;
+    modal.show();
+  }
 </script>
+
+<!-- Modal de Confirmación para Eliminar -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Está seguro que desea eliminar este movimiento? Esta acción no se puede deshacer.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" id="btnConfirmarEliminar" class="btn btn-danger">Eliminar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

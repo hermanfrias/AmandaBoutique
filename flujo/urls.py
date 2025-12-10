@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.listar_movimientos, name='listar_movimientos'),
     path('movimientos/crear/', views.crear_movimiento, name='crear_movimiento'),
+    path('movimientos/editar/<int:id>/', views.editar_movimiento, name='editar_movimiento'),
+    path('movimientos/eliminar/<int:id>/', views.eliminar_movimiento, name='eliminar_movimiento'),
     path('movimientos/pdf/', views.movimientos_pdf, name='movimientos_pdf'),
     path('movimientos/excel/', views.movimientos_excel, name='movimientos_excel'),
     path('cotizaciones/', views.listar_cotizaciones, name='listar_cotizaciones'),

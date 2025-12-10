@@ -18,6 +18,9 @@ def listar_movimientos(request):
     fecha_inicio_str = request.GET.get('fecha_inicio')
     fecha_fin_str = request.GET.get('fecha_fin')
     tipo_filtro = request.GET.get('tipo')
+    tipo_movimiento_filtro = request.GET.get('tipo_movimiento')
+    metodo_pago_filtro = request.GET.get('metodo_pago')
+    moneda_filtro = request.GET.get('moneda')
     
     # Aplicar filtro de fechas
     fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
@@ -34,14 +37,45 @@ def listar_movimientos(request):
     if tipo_filtro and tipo_filtro != 'Todos':
         movimientos = movimientos.filter(tipo=tipo_filtro)
     
+    # Aplicar filtro de tipo_movimiento
+    if tipo_movimiento_filtro and tipo_movimiento_filtro != 'Todos':
+        movimientos = movimientos.filter(tipo_movimiento=tipo_movimiento_filtro)
+    
+    # Aplicar filtro de metodo_pago
+    if metodo_pago_filtro and metodo_pago_filtro != 'Todos':
+        movimientos = movimientos.filter(metodo_pago=metodo_pago_filtro)
+    
+    # Aplicar filtro de moneda
+    if moneda_filtro and moneda_filtro != 'Todos':
+        movimientos = movimientos.filter(moneda=moneda_filtro)
+    
+    # Calcular totales separados por moneda
+    from django.db.models import Sum, Q
+    
+    # Total en Bolívares (solo movimientos en Bs)
+    total_bs = movimientos.filter(moneda='Bs').aggregate(total=Sum('monto'))['total'] or 0
+    
+    # Total en Dólares (solo movimientos en $)
+    total_usd = movimientos.filter(moneda='$').aggregate(total=Sum('monto'))['total'] or 0
+    
+    # Total en USD (todos los movimientos convertidos)
+    total_usd_converted = movimientos.aggregate(total=Sum('monto_usd'))['total'] or 0
+    
     context = {
         'movimientos': movimientos,
         'fecha_inicio': fecha_inicio_str or '',
         'fecha_fin': fecha_fin_str or '',
         'tipo_filtro': tipo_filtro or 'Todos',
+        'tipo_movimiento_filtro': tipo_movimiento_filtro or 'Todos',
+        'metodo_pago_filtro': metodo_pago_filtro or 'Todos',
+        'moneda_filtro': moneda_filtro or 'Todos',
+        'total_bs': round(total_bs, 2),
+        'total_usd': round(total_usd, 2),
+        'total_usd_converted': round(total_usd_converted, 2),
     }
     
     return render(request, 'flujo/listar_movimientos.html', context)
+
 
 @login_required
 @permission_required('flujo.add_movimientocaja', raise_exception=True)
@@ -58,6 +92,31 @@ def crear_movimiento(request):
     else:
         form = MovimientoCajaForm()
     return render(request,'flujo/crear_movimiento.html',{'form':form})
+
+@login_required
+@permission_required('flujo.change_movimientocaja', raise_exception=True)
+def editar_movimiento(request, id):
+    movimiento = MovimientoCaja.objects.get(id=id)
+    if request.method == 'POST':
+        form = MovimientoCajaForm(request.POST, instance=movimiento)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, 'Movimiento actualizado correctamente')
+                return redirect('listar_movimientos')
+            except ValidationError as e:
+                form.add_error('fecha', e)
+    else:
+        form = MovimientoCajaForm(instance=movimiento)
+    return render(request, 'flujo/editar_movimiento.html', {'form': form, 'movimiento': movimiento})
+
+@login_required
+@permission_required('flujo.delete_movimientocaja', raise_exception=True)
+def eliminar_movimiento(request, id):
+    movimiento = MovimientoCaja.objects.get(id=id)
+    movimiento.delete()
+    messages.success(request, 'Movimiento eliminado correctamente')
+    return redirect('listar_movimientos')
 
 @login_required
 def listar_cotizaciones(request):
@@ -254,6 +313,9 @@ def movimientos_pdf(request):
         fecha_inicio_str = request.GET.get('fecha_inicio')
         fecha_fin_str = request.GET.get('fecha_fin')
         tipo_filtro = request.GET.get('tipo')
+        tipo_movimiento_filtro = request.GET.get('tipo_movimiento')
+        metodo_pago_filtro = request.GET.get('metodo_pago')
+        moneda_filtro = request.GET.get('moneda')
 
         fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
         fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
@@ -269,20 +331,44 @@ def movimientos_pdf(request):
         if tipo_filtro and tipo_filtro != 'Todos':
             movimientos = movimientos.filter(tipo=tipo_filtro)
         
-        # Calcular totales
+        # Aplicar filtro de tipo_movimiento
+        if tipo_movimiento_filtro and tipo_movimiento_filtro != 'Todos':
+            movimientos = movimientos.filter(tipo_movimiento=tipo_movimiento_filtro)
+        
+        # Aplicar filtro de metodo_pago
+        if metodo_pago_filtro and metodo_pago_filtro != 'Todos':
+            movimientos = movimientos.filter(metodo_pago=metodo_pago_filtro)
+        
+        # Aplicar filtro de moneda
+        if moneda_filtro and moneda_filtro != 'Todos':
+            movimientos = movimientos.filter(moneda=moneda_filtro)
+        
+        # Calcular totales por tipo (Ingreso/Gasto)
         total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
         total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
         saldo_usd = total_ingresos_usd - total_gastos_usd
+        
+        # Calcular totales separados por moneda
+        total_bs = movimientos.filter(moneda='Bs').aggregate(total=Sum('monto'))['total'] or 0
+        total_usd = movimientos.filter(moneda='$').aggregate(total=Sum('monto'))['total'] or 0
+        total_usd_converted = movimientos.aggregate(total=Sum('monto_usd'))['total'] or 0
 
         html_string = render_to_string('flujo/movimientos_pdf.html', {
             'movimientos': movimientos,
             'fecha_inicio': fecha_inicio,
             'fecha_fin': fecha_fin,
             'tipo_filtro': tipo_filtro or '',
+            'tipo_movimiento_filtro': tipo_movimiento_filtro or '',
+            'metodo_pago_filtro': metodo_pago_filtro or '',
+            'moneda_filtro': moneda_filtro or '',
             'total_ingresos_usd': round(total_ingresos_usd, 2),
             'total_gastos_usd': round(total_gastos_usd, 2),
             'saldo_usd': round(saldo_usd, 2),
+            'total_bs': round(total_bs, 2),
+            'total_usd': round(total_usd, 2),
+            'total_usd_converted': round(total_usd_converted, 2),
         })
+
 
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="movimientos_caja.pdf"'
@@ -314,6 +400,9 @@ def movimientos_excel(request):
     fecha_inicio_str = request.GET.get('fecha_inicio')
     fecha_fin_str = request.GET.get('fecha_fin')
     tipo_filtro = request.GET.get('tipo')
+    tipo_movimiento_filtro = request.GET.get('tipo_movimiento')
+    metodo_pago_filtro = request.GET.get('metodo_pago')
+    moneda_filtro = request.GET.get('moneda')
 
     fecha_inicio = parse_date(fecha_inicio_str) if fecha_inicio_str else None
     fecha_fin = parse_date(fecha_fin_str) if fecha_fin_str else None
@@ -328,6 +417,18 @@ def movimientos_excel(request):
     # Aplicar filtro de tipo
     if tipo_filtro and tipo_filtro != 'Todos':
         movimientos = movimientos.filter(tipo=tipo_filtro)
+    
+    # Aplicar filtro de tipo_movimiento
+    if tipo_movimiento_filtro and tipo_movimiento_filtro != 'Todos':
+        movimientos = movimientos.filter(tipo_movimiento=tipo_movimiento_filtro)
+    
+    # Aplicar filtro de metodo_pago
+    if metodo_pago_filtro and metodo_pago_filtro != 'Todos':
+        movimientos = movimientos.filter(metodo_pago=metodo_pago_filtro)
+    
+    # Aplicar filtro de moneda
+    if moneda_filtro and moneda_filtro != 'Todos':
+        movimientos = movimientos.filter(moneda=moneda_filtro)
 
     # Calcular totales
     total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
@@ -345,14 +446,14 @@ def movimientos_excel(request):
     header_alignment = Alignment(horizontal="center", vertical="center")
 
     # Título
-    ws.merge_cells('A1:F1')
+    ws.merge_cells('A1:H1')
     ws['A1'] = 'Amanda Mateo Boutique - Movimientos de Caja'
     ws['A1'].font = Font(bold=True, size=14)
     ws['A1'].alignment = Alignment(horizontal="center")
 
     # Rango de fechas
     if fecha_inicio or fecha_fin:
-        ws.merge_cells('A2:F2')
+        ws.merge_cells('A2:H2')
         if fecha_inicio and fecha_fin:
             ws['A2'] = f'Del {fecha_inicio.strftime("%d/%m/%Y")} al {fecha_fin.strftime("%d/%m/%Y")}'
         elif fecha_inicio:
@@ -363,7 +464,7 @@ def movimientos_excel(request):
 
     # Encabezados
     start_row = 4 if (fecha_inicio or fecha_fin) else 3
-    headers = ['Fecha', 'Descripción', 'Tipo', 'Moneda', 'Monto', 'Monto USD']
+    headers = ['Fecha', 'Descripción', 'Tipo', 'Tipo Mov.', 'Método Pago', 'Moneda', 'Monto', 'Monto USD']
     for col, header in enumerate(headers, 1):
         cell = ws.cell(row=start_row, column=col)
         cell.value = header
@@ -377,9 +478,11 @@ def movimientos_excel(request):
         ws.cell(row=row, column=1, value=mov.fecha.strftime("%d/%m/%Y"))
         ws.cell(row=row, column=2, value=mov.descripcion)
         ws.cell(row=row, column=3, value=mov.tipo)
-        ws.cell(row=row, column=4, value=mov.moneda)
-        ws.cell(row=row, column=5, value=float(mov.monto))
-        ws.cell(row=row, column=6, value=float(mov.monto_usd))
+        ws.cell(row=row, column=4, value=mov.tipo_movimiento or "-")
+        ws.cell(row=row, column=5, value=mov.metodo_pago or "-")
+        ws.cell(row=row, column=6, value=mov.moneda)
+        ws.cell(row=row, column=7, value=float(mov.monto))
+        ws.cell(row=row, column=8, value=float(mov.monto_usd))
         row += 1
 
     # Totales
@@ -399,9 +502,11 @@ def movimientos_excel(request):
     ws.column_dimensions['A'].width = 12
     ws.column_dimensions['B'].width = 40
     ws.column_dimensions['C'].width = 10
-    ws.column_dimensions['D'].width = 10
-    ws.column_dimensions['E'].width = 15
-    ws.column_dimensions['F'].width = 15
+    ws.column_dimensions['D'].width = 18
+    ws.column_dimensions['E'].width = 18
+    ws.column_dimensions['F'].width = 10
+    ws.column_dimensions['G'].width = 15
+    ws.column_dimensions['H'].width = 15
 
     # Preparar respuesta
     response = HttpResponse(

@@ -12,12 +12,30 @@ class CotizacionDolar(models.Model):
 class MovimientoCaja(models.Model):
     MONEDAS = [('Bs','Bolívares'),('$','Dólares')]
     TIPO = [('Ingreso','Ingreso'),('Gasto','Gasto')]
+    TIPO_MOVIMIENTO = [
+        ('Venta', 'Venta'),
+        ('Compra de Insumos', 'Compra de Insumos'),
+        ('Nómina', 'Nómina'),
+        ('Alquiler', 'Alquiler'),
+        ('Otros', 'Otros')
+    ]
+    METODO_PAGO = [
+        ('Efectivo', 'Efectivo'),
+        ('Depósito', 'Depósito'),
+        ('Transferencia', 'Transferencia'),
+        ('Pago Móvil', 'Pago Móvil'),
+        ('Otro', 'Otro')
+    ]
+    
     fecha = models.DateField()
     descripcion = models.CharField(max_length=200)
     tipo = models.CharField(max_length=10, choices=TIPO)
     monto = models.DecimalField(max_digits=15, decimal_places=2)
     moneda = models.CharField(max_length=2, choices=MONEDAS, default='Bs')
     monto_usd = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+    tipo_movimiento = models.CharField(max_length=20, choices=TIPO_MOVIMIENTO, blank=True, null=True)
+    metodo_pago = models.CharField(max_length=20, choices=METODO_PAGO, blank=True, null=True)
+
 
     class Meta:
         ordering = ['-fecha']
