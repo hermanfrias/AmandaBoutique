@@ -1,0 +1,96 @@
+{% extends 'BoutiqueApp/base.html' %}
+{% block title %}Detalle de Insumo - Amanda Mateo Boutique{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Detalle de Insumo</h2>
+    </div>
+    <div class="col text-end">
+      <a href="{% url 'listar_insumos' %}" class="btn btn-secondary">
+        Volver
+      </a>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4>{{ insumo.codigo }} - {{ insumo.descripcion }}</h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Código:</strong> {{ insumo.codigo }}</p>
+          <p><strong>Descripción:</strong> {{ insumo.descripcion }}</p>
+          <p><strong>Unidad de Medida:</strong> {{ insumo.medida }}</p>
+        </div>
+        <div class="col-md-6">
+          <p>
+            <strong>Existencia:</strong> {{ insumo.existencia|floatformat:2 }} {{ insumo.medida }}
+          </p>
+          <p>
+            <strong>Existencia Mínima:</strong> {{ insumo.existencia_minima|floatformat:2 }} {{ insumo.medida }}
+          </p>
+          <p>
+            <strong>Costo Unitario (USD):</strong> ${{ insumo.costo_dolar|floatformat:2 }}
+          </p>
+          <p>
+            <strong>Fecha de Creación:</strong> {{ insumo.fecha_creacion|date:"d/m/Y" }}
+          </p>
+        </div>
+      </div>
+      <div class="mt-3">
+        <a href="{% url 'editar_insumo' insumo.pk %}" class="btn btn-editar">
+          Editar
+        </a>
+        <a
+          href="{% url 'eliminar_insumo' insumo.pk %}"
+          class="btn btn-eliminar"
+        >
+          Eliminar
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4>Historial de Compras</h4>
+    </div>
+    <div class="card-body">
+      {% if compras %}
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th class="text-end">Cantidad</th>
+              <th>Moneda</th>
+              <th class="text-end">Monto</th>
+              <th>IVA</th>
+              <th class="text-end">Total USD</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for compra in compras %}
+            <tr>
+              <td>{{ compra.fecha_compra|date:"d/m/Y" }}</td>
+              <td class="text-end">{{ compra.cantidad|floatformat:2 }}</td>
+              <td>{{ compra.get_moneda_display }}</td>
+              <td class="text-end">{{ compra.monto|floatformat:2 }}</td>
+              <td>{% if compra.aplicar_iva %}Sí{% else %}No{% endif %}</td>
+              <td class="text-end">
+                ${{ compra.monto_total_usd|floatformat:2 }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted">No hay compras registradas para este insumo.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

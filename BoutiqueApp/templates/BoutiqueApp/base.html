@@ -108,6 +108,22 @@
                     >Resumen</a
                   >
                 </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a href="{% url 'listar_insumos' %}" class="dropdown-item"
+                    >Insumos</a
+                  >
+                </li>
+                <li>
+                  <a href="{% url 'listar_compras' %}" class="dropdown-item"
+                    >Compras de Insumos</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'listar_usos' %}">
+                    Uso de Insumos
+                  </a>
+                </li>
                 {% if user.is_superuser %}
                 <li><hr class="dropdown-divider" /></li>
                 <li>

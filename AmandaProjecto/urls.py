@@ -28,6 +28,7 @@ urlpatterns = [
     path("clientes/", include("ClientesApp.urls")),
     path("citas/", include("citas.urls")),
     path("flujo/", include("flujo.urls")),
+    path("inventario/", include("Inventario.urls")),
     ]
 
 if settings.DEBUG:

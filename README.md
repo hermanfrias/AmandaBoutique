@@ -65,6 +65,37 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - Botones de acción claros y accesibles
   - Descripción con ajuste de texto multilínea
 
+### 📦 Gestión de Inventario
+
+- **Control de Existencias de Insumos**
+  - Registro de insumos con código auto-generado (INS0001, INS0002...)
+  - Descripción, unidad de medida (Unidades/Metros)
+  - Existencia actual y existencia mínima
+  - Costo unitario en USD (calculado automáticamente)
+  - Fecha de creación
+- **Compras de Insumos**
+  - Registro de compras con fecha
+  - Cantidad y moneda (Bolívares o Dólares)
+  - Opción de aplicar IVA (16%)
+  - Conversión automática de moneda usando cotización del día
+  - Cálculo automático de totales con/sin IVA
+  - **Actualización automática**: Al registrar una compra:
+    - Se suma la cantidad al inventario
+    - Se calcula el costo unitario: `monto_total_usd / cantidad`
+- **Uso de Insumos**
+  - Registro de consumo de insumos con descripción
+  - Formulario dinámico para agregar múltiples insumos
+  - **Actualización automática**: Al registrar un uso:
+    - Se resta la cantidad del inventario
+    - Se calcula el costo total del uso
+  - Validación de existencia suficiente
+  - Restauración automática de stock al eliminar un uso
+- **Reportes y Seguimiento**
+  - Historial de compras por insumo
+  - Historial de usos por insumo
+  - Cálculo de costos de producción
+  - Alertas de stock mínimo (visual)
+
 ### 🔐 Sistema de Permisos de Usuario
 
 - **Registro con permisos de solo lectura por defecto**
@@ -97,6 +128,7 @@ AmandaBoutique/
 ├── ClientesApp/          # Gestión de clientes
 ├── ProveedoresApp/       # Gestión de proveedores
 ├── flujo/                # Flujo de caja y cotizaciones
+├── Inventario/           # Gestión de inventario de insumos
 ├── LoginApp/             # Autenticación y permisos
 ├── static/               # Archivos estáticos (CSS, JS, imágenes)
 └── templates/            # Templates base
@@ -246,6 +278,55 @@ Los filtros se pueden combinar para búsquedas precisas.
    - Seleccionar rango de fechas (opcional)
    - Imprimir o guardar PDF formateado
 
+### Gestión de Inventario
+
+#### Insumos
+
+1. Acceder a **Admin → Insumos**
+2. **Crear nuevo insumo**:
+   - El código se genera automáticamente (INS0001, INS0002...)
+   - Ingresar descripción
+   - Seleccionar unidad de medida (Unidades o Metros)
+   - Ingresar existencia inicial
+   - Definir existencia mínima (para alertas)
+   - **Opcional**: Ingresar costo unitario (o dejarlo vacío para cálculo automático)
+3. **Ver detalle**: Muestra historial de compras y usos
+
+#### Compras de Insumos
+
+1. Ir a **Admin → Compras de Insumos**
+2. **Registrar compra**:
+   - Seleccionar insumo
+   - Ingresar fecha de compra
+   - Ingresar cantidad comprada
+   - Seleccionar moneda (Bs o $)
+   - Ingresar monto
+   - Marcar si aplica IVA (16%)
+3. **Actualización automática**:
+   - Se suma la cantidad al inventario
+   - Se calcula el costo unitario: `monto_total_usd / cantidad`
+   - Se convierten montos según cotización del día
+
+#### Uso de Insumos
+
+1. Ir a **Admin → Uso de Insumos**
+2. **Registrar uso**:
+   - Ingresar fecha de uso
+   - Describir el uso (ej: "Vestido para cliente María")
+   - Agregar insumos utilizados:
+     - Seleccionar insumo (muestra existencia disponible)
+     - Ingresar cantidad utilizada
+     - Usar botón "+ Agregar Insumo" para más insumos
+3. **Validaciones automáticas**:
+   - Verifica existencia suficiente
+   - Valida que el insumo tenga costo definido
+4. **Actualización automática**:
+   - Se resta la cantidad del inventario
+   - Se calcula el costo total del uso
+5. **Editar/Eliminar**:
+   - Al editar: ajusta inventario según diferencia
+   - Al eliminar: restaura existencias automáticamente
+
 ### Gestión de Usuarios (Solo Superusuarios)
 
 1. Ir a **Admin → Gestionar Usuarios**
@@ -328,6 +409,6 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.1  
-**Última actualización**: Diciembre 2024 - Mejoras en Flujo de Caja  
+**Versión**: 2.2  
+**Última actualización**: Diciembre 2024 - Módulo de Inventario de Insumos  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5

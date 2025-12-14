@@ -1,0 +1,51 @@
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Eliminar Uso - Amanda
+Mateo Boutique{% endblock %} {% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          <h3>Confirmar Eliminación</h3>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-warning">
+            <strong>¡Atención!</strong> Al eliminar este uso, se restaurarán las
+            existencias de todos los insumos utilizados.
+          </div>
+
+          <h5>Uso a Eliminar:</h5>
+          <ul>
+            <li><strong>Fecha:</strong> {{ uso.fecha_uso|date:"d/m/Y" }}</li>
+            <li><strong>Descripción:</strong> {{ uso.descripcion }}</li>
+            <li>
+              <strong>Costo Total:</strong> ${{ uso.costo_total_usd|floatformat:2 }}
+            </li>
+          </ul>
+
+          <h6 class="mt-4">Insumos que se restaurarán:</h6>
+          <ul>
+            {% for detalle in uso.detalles.all %}
+            <li>
+              {{ detalle.insumo.codigo }} - {{ detalle.insumo.descripcion }}:
+              +{{ detalle.cantidad|floatformat:2 }} {{ detalle.insumo.medida }}
+            </li>
+            {% endfor %}
+          </ul>
+
+          <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between">
+              <a href="{% url 'listar_usos' %}" class="btn btn-secondary">
+                Cancelar
+              </a>
+              <button type="submit" class="btn btn-danger">
+                Confirmar Eliminación
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
