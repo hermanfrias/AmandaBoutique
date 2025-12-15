@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Listado de Insumos | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 12px;
+      }
+      td.text-right {
+        text-align: right;
+      }
+      th.text-right {
+        text-align: right;
+      }
+      th {
+        background-color: #fdebf2;
+        color: #8a556b;
+      }
+      h1 {
+        color: #b76e79;
+        text-align: center;
+      }
+      p.subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .totales {
+        margin-top: 30px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .alerta {
+        background-color: #fff3cd;
+        color: #856404;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Listado de Insumos en Inventario<br />
+        Fecha de generación: {{ fecha_generacion|date:"d/m/Y" }}
+      </p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Descripción</th>
+          <th>Categoría</th>
+          <th>Proveedor</th>
+          <th>Medida</th>
+          <th class="text-right">Existencia</th>
+          <th class="text-right">Exist. Mínima</th>
+          <th class="text-right">Costo USD</th>
+          <th>Fecha Creación</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for insumo in insumos %}
+        <tr
+          {% if insumo.existencia < insumo.existencia_minima %}
+          class="alerta"
+          {% endif %}
+        >
+          <td>{{ insumo.codigo }}</td>
+          <td>{{ insumo.descripcion }}</td>
+          <td>{{ insumo.categoria }}</td>
+          <td>{{ insumo.proveedor.nombre|default:"-" }}</td>
+          <td>{{ insumo.medida }}</td>
+          <td class="text-right">{{ insumo.existencia|floatformat:2 }}</td>
+          <td class="text-right">
+            {{ insumo.existencia_minima|floatformat:2 }}
+          </td>
+          <td class="text-right">
+            {{ insumo.costo_dolar|floatformat:2|default:"-" }}
+          </td>
+          <td>{{ insumo.fecha_creacion|date:"d/m/Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" style="text-align: center">
+            No hay insumos registrados.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totales">
+      <p>Total de Insumos: {{ total_insumos }}</p>
+      <p>
+        Valor Total del Inventario (USD): ${{ valor_total_inventario|floatformat:2 }}
+      </p>
+      {% if insumos_bajo_minimo > 0 %}
+      <p style="color: #856404">
+        ⚠️ Insumos bajo existencia mínima: {{ insumos_bajo_minimo }}
+      </p>
+      {% endif %}
+    </div>
+  </body>
+</html>

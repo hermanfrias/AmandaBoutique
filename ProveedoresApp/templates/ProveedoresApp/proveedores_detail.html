@@ -1,45 +1,64 @@
-{% extends "BoutiqueApp/base.html" %}
-{% block content %}
+{% extends "BoutiqueApp/base.html" %} {% block content %}
 <div class="container my-5">
-    <div class="card shadow-lg" style="border: 2px solid #F8C8DC; border-radius: 15px;">
-        <div class="card-header text-center" 
-            style="background-color: #F8C8DC; color: #B76E79; font-size: 1.5rem; font-weight: bold;">
-            Detalles del Proveedor
-        </div>
-        <div class="card-body px-5 py-4">
-            <div class="row mb-3">
-                <div class="col-md-4"><strong>Código del Proveedor:</strong></div>
-                <div class="col-md-8">{{ proveedores.codigo_proveedor }}</div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4"><strong>Nombre:</strong></div>
-                <div class="col-md-8">{{ proveedores.nombre }}</div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4"><strong>Contacto:</strong></div>
-                <div class="col-md-8">{{ proveedores.contacto }}</div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4"><strong>Teléfono:</strong></div>
-                <div class="col-md-8">{{ proveedores.telefono }}</div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4"><strong>Email:</strong></div>
-                <div class="col-md-8">{{ proveedores.email }}</div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4"><strong>Dirección:</strong></div>
-                <div class="col-md-8">{{ proveedores.direccion }}</div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4"><strong>Fecha de Registro:</strong></div>
-                <div class="col-md-8">{{ proveedores.fecha_creacion }}</div>
-            </div>
-            <div class="text-center mt-4">
-                <a href="{% url 'proveedores_update' proveedores.codigo_proveedor %}" class="btn btn-editar px-4 py-2 me-2">Editar</a>
-                <a href="{% url 'proveedores_list' %}" class="btn btn-volver px-4 py-2">Volver</a>
-            </div>
-        </div>
+  <div
+    class="card shadow-lg"
+    style="border: 2px solid #f8c8dc; border-radius: 15px"
+  >
+    <div
+      class="card-header text-center"
+      style="
+        background-color: #f8c8dc;
+        color: #b76e79;
+        font-size: 1.5rem;
+        font-weight: bold;
+      "
+    >
+      Detalles del Proveedor
     </div>
+    <div class="card-body px-5 py-4">
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Código del Proveedor:</strong></div>
+        <div class="col-md-8">{{ proveedores.codigo_proveedor }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Nombre:</strong></div>
+        <div class="col-md-8">{{ proveedores.nombre }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Contacto:</strong></div>
+        <div class="col-md-8">{{ proveedores.contacto }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>RIF:</strong></div>
+        <div class="col-md-8">{{ proveedores.rif|default:"-" }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Teléfono:</strong></div>
+        <div class="col-md-8">{{ proveedores.telefono }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Email:</strong></div>
+        <div class="col-md-8">{{ proveedores.email }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Dirección:</strong></div>
+        <div class="col-md-8">{{ proveedores.direccion }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4"><strong>Fecha de Registro:</strong></div>
+        <div class="col-md-8">{{ proveedores.fecha_creacion }}</div>
+      </div>
+      <div class="text-center mt-4">
+        <a
+          href="{% url 'proveedores_update' proveedores.codigo_proveedor %}"
+          class="btn btn-editar px-4 py-2 me-2"
+          >Editar</a
+        >
+        <a href="{% url 'proveedores_list' %}" class="btn btn-volver px-4 py-2"
+          >Volver</a
+        >
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

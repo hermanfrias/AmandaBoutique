@@ -1,6 +1,5 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}Detalle de Insumo - Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Detalle de Insumo -
+Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row mb-4">
     <div class="col">
@@ -22,20 +21,29 @@
         <div class="col-md-6">
           <p><strong>Código:</strong> {{ insumo.codigo }}</p>
           <p><strong>Descripción:</strong> {{ insumo.descripcion }}</p>
-          <p><strong>Unidad de Medida:</strong> {{ insumo.medida }}</p>
+          <p><strong>Categoría:</strong> {{ insumo.categoria }}</p>
+          <p>
+            <strong>Proveedor:</strong> {{ insumo.proveedor.nombre|default:"-"
+            }}
+          </p>
+          <p><strong>Medida:</strong> {{ insumo.medida }}</p>
         </div>
         <div class="col-md-6">
           <p>
-            <strong>Existencia:</strong> {{ insumo.existencia|floatformat:2 }} {{ insumo.medida }}
+            <strong>Existencia:</strong> {{ insumo.existencia|floatformat:2 }}
+            {{ insumo.medida }}
           </p>
           <p>
-            <strong>Existencia Mínima:</strong> {{ insumo.existencia_minima|floatformat:2 }} {{ insumo.medida }}
+            <strong>Existencia Mínima:</strong> {{
+            insumo.existencia_minima|floatformat:2 }} {{ insumo.medida }}
           </p>
           <p>
-            <strong>Costo Unitario (USD):</strong> ${{ insumo.costo_dolar|floatformat:2 }}
+            <strong>Costo Unitario (USD):</strong> ${{
+            insumo.costo_dolar|floatformat:2 }}
           </p>
           <p>
-            <strong>Fecha de Creación:</strong> {{ insumo.fecha_creacion|date:"d/m/Y" }}
+            <strong>Fecha de Creación:</strong> {{
+            insumo.fecha_creacion|date:"d/m/Y" }}
           </p>
         </div>
       </div>

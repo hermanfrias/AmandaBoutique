@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Listado de Compras | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 11px;
+      }
+      td.text-right {
+        text-align: right;
+      }
+      th.text-right {
+        text-align: right;
+      }
+      th.text-center {
+        text-align: center;
+      }
+      td.text-center {
+        text-align: center;
+      }
+      th {
+        background-color: #fdebf2;
+        color: #8a556b;
+      }
+      h1 {
+        color: #b76e79;
+        text-align: center;
+      }
+      p.subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .totales {
+        margin-top: 30px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Listado de Compras de Insumos<br />
+        {% if fecha_desde or fecha_hasta %}
+        Período: 
+        {% if fecha_desde %}
+        {{ fecha_desde|date:"d/m/Y" }}
+        {% else %}
+        Inicio
+        {% endif %} 
+        {% if fecha_hasta %}{{ fecha_hasta|date:"d/m/Y" }}
+        {% else %}
+        Hoy
+        {% endif %}
+        <br />
+        {% endif %} Fecha de generación: {{ fecha_generacion|date:"d/m/Y" }}
+      </p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Insumo</th>
+          <th class="text-right">Cantidad</th>
+          <th>Moneda</th>
+          <th class="text-right">Monto</th>
+          <th class="text-center">IVA</th>
+          <th class="text-right">Total Bs</th>
+          <th class="text-right">Total USD</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for compra in compras %}
+        <tr>
+          <td>{{ compra.fecha_compra|date:"d/m/Y" }}</td>
+          <td>{{ compra.insumo.codigo }} - {{ compra.insumo.descripcion }}</td>
+          <td class="text-right">{{ compra.cantidad|floatformat:2 }}</td>
+          <td>{{ compra.get_moneda_display }}</td>
+          <td class="text-right">{{ compra.monto|floatformat:2 }}</td>
+          <td class="text-center">
+            {% if compra.aplicar_iva %}Sí{% else %}No{% endif %}
+          </td>
+          <td class="text-right">{{ compra.monto_total_bs|floatformat:2 }}</td>
+          <td class="text-right">{{ compra.monto_total_usd|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" style="text-align: center">
+            No hay compras registradas.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totales">
+      <p>Total de Compras: {{ total_compras }}</p>
+      <p>Total Invertido (Bs): {{ total_bs|floatformat:2 }}</p>
+      <p>Total Invertido (USD): ${{ total_usd|floatformat:2 }}</p>
+    </div>
+  </body>
+</html>

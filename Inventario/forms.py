@@ -6,13 +6,15 @@ from flujo.models import CotizacionDolar
 class ExistenciaInsumoForm(forms.ModelForm):
     class Meta:
         model = ExistenciaInsumo
-        fields = ['descripcion', 'medida', 'existencia', 'existencia_minima', 'costo_dolar']
+        fields = ['descripcion', 'medida', 'existencia', 'existencia_minima', 'costo_dolar', 'proveedor', 'categoria']
         widgets = {
-            'descripcion': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.TextInput(attrs={'class': 'form-control', 'maxlength': '150'}),
             'medida': forms.Select(attrs={'class': 'form-select'}),
             'existencia': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'existencia_minima': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'costo_dolar': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'proveedor': forms.Select(attrs={'class': 'form-select'}),
+            'categoria': forms.Select(attrs={'class': 'form-select'}),
         }
         labels = {
             'descripcion': 'Descripción',
@@ -20,6 +22,8 @@ class ExistenciaInsumoForm(forms.ModelForm):
             'existencia': 'Existencia',
             'existencia_minima': 'Existencia Mínima',
             'costo_dolar': 'Costo Unitario (USD)',
+            'proveedor': 'Proveedor',
+            'categoria': 'Categoría',
         }
 
 

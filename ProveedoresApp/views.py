@@ -47,3 +47,46 @@ class ProveedoresDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "proveedores"
     slug_field = "codigo_proveedor"
     slug_url_kwarg = "codigo_proveedor"
+
+
+# ==================== VISTA PARA PDF DE PROVEEDORES ====================
+
+from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from weasyprint import HTML, CSS
+from django.conf import settings
+import os
+import traceback
+import datetime
+
+@login_required
+def proveedores_pdf(request):
+    try:
+        proveedores = Proveedores.objects.all().order_by('nombre')
+        
+        # Calcular totales
+        total_proveedores = proveedores.count()
+        
+        html_string = render_to_string('ProveedoresApp/proveedores_pdf.html', {
+            'proveedores': proveedores,
+            'total_proveedores': total_proveedores,
+            'fecha_generacion': datetime.date.today(),
+        })
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="listado_proveedores.pdf"'
+
+        css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
+
+        HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+            response, stylesheets=[CSS(css_path)]
+        )
+        return response
+    except Exception as e:
+        # Mostrar el error completo para debugging
+        error_msg = f"Error generando PDF: {str(e)}\n\nTraceback:\n{traceback.format_exc()}"
+        print("=" * 80)
+        print(error_msg)
+        print("=" * 80)
+        return HttpResponse(f"<pre>{error_msg}</pre>", status=500)

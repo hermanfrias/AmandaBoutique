@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Listado de Proveedores | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 11px;
+      }
+      td.text-right {
+        text-align: right;
+      }
+      th {
+        background-color: #fdebf2;
+        color: #8a556b;
+        font-weight: bold;
+      }
+      h1 {
+        color: #b76e79;
+        text-align: center;
+      }
+      p.subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .totales {
+        margin-top: 30px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Listado de Proveedores<br />
+        Fecha de generación: {{ fecha_generacion|date:"d/m/Y" }}
+      </p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>RIF</th>
+          <th>Contacto</th>
+          <th>Teléfono</th>
+          <th>Email</th>
+          <th>Dirección</th>
+          <th>Rubro</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for proveedor in proveedores %}
+        <tr>
+          <td>{{ proveedor.nombre }}</td>
+          <td>{{ proveedor.rif|default:"-" }}</td>
+          <td>{{ proveedor.contacto }}</td>
+          <td>{{ proveedor.telefono }}</td>
+          <td>{{ proveedor.email }}</td>
+          <td>{{ proveedor.direccion }}</td>
+          <td>{{ proveedor.rublo }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" style="text-align: center">
+            No hay proveedores registrados.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totales">
+      <p>Total de Proveedores: {{ total_proveedores }}</p>
+    </div>
+  </body>
+</html>

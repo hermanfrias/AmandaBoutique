@@ -1,4 +1,4 @@
-{% extends 'BoutiqueApp/base.html' %} 
+{% extends 'BoutiqueApp/base.html' %}
 {% block title %}{{ accion }} Insumo - Amanda Mateo Boutique{% endblock %}
 {% block content %}
 <div class="container mt-5">
@@ -10,8 +10,7 @@
         </div>
         <div class="card-body">
           <form method="post">
-            {% csrf_token %} 
-            {% if form.non_field_errors %}
+            {% csrf_token %} {% if form.non_field_errors %}
             <div class="alert alert-danger">{{ form.non_field_errors }}</div>
             {% endif %}
 
@@ -22,8 +21,7 @@
               >
                 {{ form.descripcion.label }}
               </label>
-              {{ form.descripcion }}
-              {% if form.descripcion.errors %}
+              {{ form.descripcion }} {% if form.descripcion.errors %}
               <div class="text-danger">{{ form.descripcion.errors }}</div>
               {% endif %}
             </div>
@@ -32,8 +30,7 @@
               <label for="{{ form.medida.id_for_label }}" class="form-label">
                 {{ form.medida.label }}
               </label>
-              {{ form.medida }}
-              {% if form.medida.errors %}
+              {{ form.medida }} {% if form.medida.errors %}
               <div class="text-danger">{{ form.medida.errors }}</div>
               {% endif %}
             </div>
@@ -45,8 +42,7 @@
               >
                 {{ form.existencia.label }}
               </label>
-              {{ form.existencia }}
-              {% if form.existencia.errors %}
+              {{ form.existencia }} {% if form.existencia.errors %}
               <div class="text-danger">{{ form.existencia.errors }}</div>
               {% endif %}
             </div>
@@ -58,8 +54,7 @@
               >
                 {{ form.existencia_minima.label }}
               </label>
-              {{ form.existencia_minima }}
-              {% if form.existencia_minima.errors %}
+              {{ form.existencia_minima }} {% if form.existencia_minima.errors %}
               <div class="text-danger">{{ form.existencia_minima.errors }}</div>
               {% endif %}
             </div>
@@ -71,14 +66,31 @@
               >
                 {{ form.costo_dolar.label }}
               </label>
-              {{ form.costo_dolar }}
-              {% if form.costo_dolar.errors %}
+              {{ form.costo_dolar }} {% if form.costo_dolar.errors %}
               <div class="text-danger">{{ form.costo_dolar.errors }}</div>
               {% endif %}
               <small class="form-text text-muted">
                 Puede ingresar el costo manualmente o se calculará
                 automáticamente al registrar una compra.
               </small>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.proveedor.id_for_label }}" class="form-label">
+                {{ form.proveedor.label }}
+              </label>
+              {{ form.proveedor }} {% if form.proveedor.errors %}
+              <div class="text-danger">{{ form.proveedor.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.categoria.id_for_label }}" class="form-label">
+                {{ form.categoria.label }}
+              </label>
+              {{ form.categoria }} {% if form.categoria.errors %}
+              <div class="text-danger">{{ form.categoria.errors }}</div>
+              {% endif %}
             </div>
 
             <div class="col-12 text-center mt-3">

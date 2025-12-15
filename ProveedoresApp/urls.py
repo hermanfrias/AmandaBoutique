@@ -1,11 +1,11 @@
 from django.urls import path
-from ProveedoresApp.views import *
+from ProveedoresApp import views
 
 urlpatterns = [
-    path('', ProveedoresListView.as_view(), name='proveedores_list'),
-    path('crear/', ProveedoresCreateView.as_view(), name='proveedores_create'),
-    path('<str:codigo_proveedor>/editar/', ProveedoresUpdateView.as_view(), name='proveedores_update'),
-    path('<str:codigo_proveedor>/eliminar/', ProveedoresDeleteView.as_view(), name='proveedores_confirm_delete'),
-    path('<str:codigo_proveedor>/', ProveedoresDetailView.as_view(), name='proveedores_detail'),
-    
+    path('', views.ProveedoresListView.as_view(), name='proveedores_list'),
+    path('create/', views.ProveedoresCreateView.as_view(), name='proveedores_create'),
+    path('update/<slug:codigo_proveedor>/', views.ProveedoresUpdateView.as_view(), name='proveedores_update'),
+    path('delete/<slug:codigo_proveedor>/', views.ProveedoresDeleteView.as_view(), name='proveedores_confirm_delete'),
+    path('detail/<slug:codigo_proveedor>/', views.ProveedoresDetailView.as_view(), name='proveedores_detail'),
+    path('pdf/', views.proveedores_pdf, name='proveedores_pdf'),
 ]

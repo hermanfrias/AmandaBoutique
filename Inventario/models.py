@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from decimal import Decimal
+from ProveedoresApp.models import Proveedores
 
 
 class ExistenciaInsumo(models.Model):
@@ -8,14 +9,23 @@ class ExistenciaInsumo(models.Model):
         ('Unidades', 'Unidades'),
         ('Metros', 'Metros'),
     ]
+    CATEGORIA_CHOICES = [
+        ('Telas', 'Telas'),
+        ('Hilos', 'Hilos'),
+        ('Adornos', 'Adornos'),
+        ('Estructura', 'Estructura'),
+        ('Otros', 'Otros'),
+    ]
     
     codigo = models.CharField(max_length=20, unique=True, blank=True)
     fecha_creacion = models.DateField(auto_now_add=True)
-    descripcion = models.CharField(max_length=200)
+    descripcion = models.CharField(max_length=150, unique=True)
     medida = models.CharField(max_length=20, choices=MEDIDAS)
     existencia = models.DecimalField(max_digits=10, decimal_places=2)
     existencia_minima = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Existencia mínima requerida")
     costo_dolar = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Costo unitario en USD (se calcula automáticamente al registrar compras)")
+    proveedor = models.ForeignKey(Proveedores, on_delete=models.SET_NULL, null=True, blank=True, related_name='insumos')
+    categoria = models.CharField(max_length=20, choices=CATEGORIA_CHOICES, default='Otros')
 
     def save(self, *args, **kwargs):
         if not self.codigo:
@@ -121,12 +131,24 @@ class CompraInsumo(models.Model):
             self.monto_total_bs = self.monto_bs
             self.monto_total_usd = self.monto_usd
         
+        # Guardar la cantidad anterior si es una edición
+        cantidad_anterior = Decimal('0')
+        if self.pk:  # Si ya existe (es una edición)
+            try:
+                compra_anterior = CompraInsumo.objects.get(pk=self.pk)
+                cantidad_anterior = compra_anterior.cantidad
+            except CompraInsumo.DoesNotExist:
+                cantidad_anterior = Decimal('0')
+        
         super().save(*args, **kwargs)
         
         # Actualizar el insumo automáticamente
         if self.cantidad > 0:
-            # Actualizar existencia: sumar la cantidad comprada
-            self.insumo.existencia += self.cantidad
+            # Calcular la diferencia de cantidad
+            diferencia_cantidad = self.cantidad - cantidad_anterior
+            
+            # Actualizar existencia: ajustar según la diferencia
+            self.insumo.existencia += diferencia_cantidad
             
             # Actualizar costo_dolar: calcular monto_total_usd / cantidad
             nuevo_costo = self.monto_total_usd / self.cantidad

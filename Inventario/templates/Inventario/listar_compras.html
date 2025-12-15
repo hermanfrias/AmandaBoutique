@@ -6,9 +6,65 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
       <h2>Listado de Compras de Insumos</h2>
     </div>
     <div class="col text-end">
-      <a href="{% url 'crear_compra' %}" class="btn btn-pink">
+      <a
+        href="{% url 'compras_pdf' %}?{% if fecha_desde %}fecha_desde={{ fecha_desde }}&{% endif %}{% if fecha_hasta %}fecha_hasta={{ fecha_hasta }}{% endif %}"
+        class="btn btn-pink btn-sm me-2"
+        target="_blank"
+      >
+        Imprimir PDF
+      </a>
+      <a href="{% url 'crear_compra' %}" class="btn btn-listar">
         Registrar Compra
       </a>
+      <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
+    </div>
+  </div>
+
+  <!-- Filtros por Fecha -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="get" class="row g-3">
+        <div class="col-md-5">
+          <label for="fecha_desde" class="form-label">Desde</label>
+          <input
+            type="date"
+            name="fecha_desde"
+            id="fecha_desde"
+            class="form-control"
+            value="{{ fecha_desde }}"
+          />
+        </div>
+        <div class="col-md-5">
+          <label for="fecha_hasta" class="form-label">Hasta</label>
+          <input
+            type="date"
+            name="fecha_hasta"
+            id="fecha_hasta"
+            class="form-control"
+            value="{{ fecha_hasta }}"
+          />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn btn-pink w-100">Filtrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Búsqueda dinámica -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <div class="input-group">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control"
+          placeholder="Buscar por insumo (tiempo real)..."
+        />
+        <button class="btn btn-pink" type="button" id="clearSearch">
+          Limpiar
+        </button>
+      </div>
     </div>
   </div>
 
@@ -39,7 +95,7 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
           <th class="text-center">IVA</th>
           <th class="text-end">Total Bs</th>
           <th class="text-end">Total USD</th>
-          <th class="text-center">Acciones</th>
+          <th class="text-center" style="white-space: nowrap">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -92,4 +148,28 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
     </table>
   </div>
 </div>
+
+<script>
+  // Búsqueda dinámica
+  document.getElementById("searchInput").addEventListener("input", function () {
+    const searchTerm = this.value.toLowerCase();
+    const rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach((row) => {
+      const insumoCell = row.cells[1]; // Columna de Insumo
+      if (insumoCell) {
+        const text = insumoCell.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? "" : "none";
+      }
+    });
+  });
+
+  // Botón limpiar
+  document.getElementById("clearSearch").addEventListener("click", function () {
+    document.getElementById("searchInput").value = "";
+    const rows = document.querySelectorAll("tbody tr");
+    rows.forEach((row) => (row.style.display = ""));
+  });
+</script>
+
 {% endblock %}

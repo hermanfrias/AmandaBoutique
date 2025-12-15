@@ -11,7 +11,7 @@ class ProveedorForm(forms.ModelForm):
             'telefono',
             'direccion',
             'rublo',
-            
+            'rif',
         ]   
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
@@ -20,5 +20,5 @@ class ProveedorForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
             'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'rublo': forms.TextInput(attrs={'class': 'form-control'}),
-            
+            'rif': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: J-12345678-9'}),
         }

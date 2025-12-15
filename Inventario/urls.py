@@ -8,6 +8,7 @@ urlpatterns = [
     path('insumos/<int:pk>/editar/', views.editar_insumo, name='editar_insumo'),
     path('insumos/<int:pk>/eliminar/', views.eliminar_insumo, name='eliminar_insumo'),
     path('insumos/<int:pk>/', views.detalle_insumo, name='detalle_insumo'),
+    path('insumos/pdf/', views.insumos_pdf, name='insumos_pdf'),
     
     # URLs para CompraInsumo
     path('compras/', views.listar_compras, name='listar_compras'),
@@ -15,6 +16,7 @@ urlpatterns = [
     path('compras/<int:pk>/editar/', views.editar_compra, name='editar_compra'),
     path('compras/<int:pk>/eliminar/', views.eliminar_compra, name='eliminar_compra'),
     path('compras/<int:pk>/', views.detalle_compra, name='detalle_compra'),
+    path('compras/pdf/', views.compras_pdf, name='compras_pdf'),
     
     # URLs para UsoInsumo
     path('usos/', views.listar_usos, name='listar_usos'),
