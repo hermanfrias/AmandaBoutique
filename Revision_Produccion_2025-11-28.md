@@ -1,7 +1,7 @@
 # Revisión del Proyecto Amanda Boutique en Producción
 
 **Fecha de Creación:** 28 de noviembre de 2025  
-**Última Actualización:** 14 de diciembre de 2025  
+**Última Actualización:** 15 de diciembre de 2025  
 **Servidor:** 192.168.1.193:8000 (Producción) / 192.168.1.193:9000 (AsoTunapuy)  
 **Servicio:** DjangoServidor (NSSM)
 
@@ -22,7 +22,7 @@ El servicio está corriendo correctamente y configurado para usar Waitress como 
 
 ---
 
-## 📋 Cambios Recientes Implementados (Nov 28 - Dic 14, 2025)
+## 📋 Cambios Recientes Implementados (Nov 28 - Dic 15, 2025)
 
 ### 🎨 Estandarización de UI y Diseño (Dic 6-14)
 
@@ -179,6 +179,86 @@ Bolívares (Estimado):
   - Historial de compras por insumo
   - Historial de usos por insumo
   - Cálculo de costos de producción
+
+#### **Mejoras del Módulo de Inventario (Dic 15, 2025)** ✅
+
+**Objetivo:** Mejorar la funcionalidad, usabilidad y precisión del módulo de inventario.
+
+**Cambios implementados:**
+
+1. **Nuevos Campos en Modelo Insumo** ✅
+
+   - ✅ **Campo `proveedor`** - Relación ForeignKey con ProveedoresApp
+   - ✅ **Campo `categoria`** - Clasificación de insumos (Telas, Hilos, Botones, Cierres, Elásticos, Adornos, Otros)
+   - ✅ Migración de base de datos aplicada correctamente
+
+2. **Filtros Avanzados en Listado de Insumos** ✅
+
+   - ✅ **Filtro por Categoría** - Dropdown con todas las categorías disponibles
+   - ✅ **Filtro por Proveedor** - Dropdown con todos los proveedores
+   - ✅ Filtros aplicados correctamente en la vista `listar_insumos`
+   - ✅ Interfaz de usuario mejorada con filtros visibles
+
+3. **Integración de Select2 en Compras** ✅
+
+   - ✅ **Selector de insumos con búsqueda** - Implementado en `form_compra.html`
+   - ✅ **jQuery actualizado** - Versión 3.6.0 cargada correctamente
+   - ✅ **Select2 configurado** - Búsqueda rápida de insumos por nombre
+   - ✅ Mejora significativa en UX al registrar compras
+
+4. **Corrección de Bug en Edición de Compras** ✅
+
+   - ✅ **Problema identificado:** Al editar una compra, se sumaba incorrectamente al inventario
+   - ✅ **Solución implementada:** Método `save()` en `CompraInsumo` ajustado
+   - ✅ **Lógica correcta:**
+     - Al crear: suma cantidad al inventario
+     - Al editar: calcula diferencia y ajusta inventario
+     - Al eliminar: resta cantidad del inventario
+   - ✅ Validación de existencia suficiente al editar
+
+5. **Actualización de Templates** ✅
+
+   - ✅ **`form_insumo.html`** - Campos proveedor y categoría agregados
+   - ✅ **`detalle_insumo.html`** - Muestra proveedor y categoría
+   - ✅ **`listar_insumos.html`** - Botones de acción en una sola línea
+   - ✅ **`insumos_pdf.html`** - Incluye proveedor y categoría en reporte
+
+6. **Corrección de Cálculo en PDF de Inventario** ✅
+
+   - ✅ **Problema:** Valor total del inventario calculado incorrectamente
+   - ✅ **Solución:** Corregida lógica en `Inventario/views.py`
+   - ✅ **Cálculo correcto:** `valor_total += insumo.existencia * insumo.costo_unitario`
+   - ✅ Reporte PDF ahora muestra valores precisos
+
+7. **Estandarización de Botones en Inventario** ✅
+
+   - ✅ **Colores consistentes** - Alineados con el resto del proyecto
+   - ✅ **Botón "Ver"** - Cambiado de `btn-info` a `btn-ver` (rosa suave)
+   - ✅ **Botones centrados** - En formularios de guardar/volver
+   - ✅ **Tamaño uniforme** - Uso de `btn-sm` en todos los botones
+
+8. **Mensaje de Confirmación al Guardar** ✅
+   - ✅ **Feedback visual** - Mensaje "Movimiento guardado correctamente"
+   - ✅ Mejora en experiencia de usuario
+
+**Archivos modificados:**
+
+- [`Inventario/models.py`](file:///E:/AmandaBoutique/Inventario/models.py) - Nuevos campos y lógica de compras
+- [`Inventario/views.py`](file:///E:/AmandaBoutique/Inventario/views.py) - Filtros y corrección de PDF
+- [`Inventario/forms.py`](file:///E:/AmandaBoutique/Inventario/forms.py) - Campos actualizados
+- [`Inventario/templates/Inventario/listar_insumos.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_insumos.html) - Filtros y botones
+- [`Inventario/templates/Inventario/form_insumo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/form_insumo.html) - Nuevos campos
+- [`Inventario/templates/Inventario/detalle_insumo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/detalle_insumo.html) - Visualización mejorada
+- [`Inventario/templates/Inventario/form_compra.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/form_compra.html) - Select2 integrado
+- [`Inventario/templates/Inventario/insumos_pdf.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/insumos_pdf.html) - Reporte mejorado
+
+**Impacto:**
+
+- ✅ **Mejor organización** - Categorías y proveedores facilitan la gestión
+- ✅ **Búsqueda más rápida** - Select2 mejora significativamente la UX
+- ✅ **Datos precisos** - Bug de edición corregido, inventario confiable
+- ✅ **Reportes exactos** - PDF con cálculos correctos
+- ✅ **UI consistente** - Botones estandarizados en todo el módulo
 
 ### 📊 Reportes y PDFs (Dic 7-9)
 
@@ -457,7 +537,7 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 
 ## ✨ Resumen de Mejoras Recientes
 
-> [!IMPORTANT] > **Cambios implementados (Nov 28 - Dic 14, 2025):**
+> [!IMPORTANT] > **Cambios implementados (Nov 28 - Dic 15, 2025):**
 >
 > ### 🎨 Estandarización y Diseño
 >
@@ -483,33 +563,38 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 > 14. ✅ Uso de insumos con formulario dinámico
 > 15. ✅ Cálculo automático de costos de producción
 > 16. ✅ Alertas de stock mínimo
+> 17. ✅ **NUEVO (Dic 15):** Campos de categoría y proveedor
+> 18. ✅ **NUEVO (Dic 15):** Filtros por categoría y proveedor
+> 19. ✅ **NUEVO (Dic 15):** Select2 para búsqueda rápida de insumos
+> 20. ✅ **NUEVO (Dic 15):** Corrección de bug en edición de compras
+> 21. ✅ **NUEVO (Dic 15):** Cálculo correcto de valor total en PDF
 >
 > ### 📊 Reportes y PDFs
 >
-> 17. ✅ Headers repetidos en todas las páginas
-> 18. ✅ Formato estandarizado y profesional
-> 19. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
-> 20. ✅ Alineación y formato de números mejorados
+> 22. ✅ Headers repetidos en todas las páginas
+> 23. ✅ Formato estandarizado y profesional
+> 24. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
+> 25. ✅ Alineación y formato de números mejorados
 >
 > ### 🔐 Permisos y Usuarios
 >
-> 21. ✅ Sistema de permisos granulares por módulo
-> 22. ✅ Interfaz de gestión de usuarios mejorada
-> 23. ✅ Registro con permisos de solo lectura por defecto
-> 24. ✅ UI adaptativa según permisos
+> 26. ✅ Sistema de permisos granulares por módulo
+> 27. ✅ Interfaz de gestión de usuarios mejorada
+> 28. ✅ Registro con permisos de solo lectura por defecto
+> 29. ✅ UI adaptativa según permisos
 >
 > ### 🔧 Correcciones y Optimizaciones
 >
-> 25. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
-> 26. ✅ Base de datos optimizada (campo mes_pago, señales Django)
-> 27. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
-> 28. ✅ Validaciones mejoradas en formularios
+> 30. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
+> 31. ✅ Base de datos optimizada (campo mes_pago, señales Django)
+> 32. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
+> 33. ✅ Validaciones mejoradas en formularios
 >
 > ### 🚀 Producción
 >
-> 29. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
-> 30. ✅ Scripts de despliegue automatizados
-> 31. ✅ Documentación completa de implementación
+> 34. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
+> 35. ✅ Scripts de despliegue automatizados
+> 36. ✅ Documentación completa de implementación
 
 ---
 
@@ -592,8 +677,8 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 
 ## 📞 Información de Contacto y Soporte
 
-**Versión del Sistema:** 2.2  
-**Última Actualización:** 14 de diciembre de 2025  
+**Versión del Sistema:** 2.3  
+**Última Actualización:** 15 de diciembre de 2025  
 **Desarrollado con:** Django 5.1.4 + Bootstrap 5  
 **Documentación:** README.md actualizado con todas las funcionalidades
 
@@ -628,5 +713,5 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
 
 ---
 
-**Documento actualizado:** 14 de diciembre de 2025  
+**Documento actualizado:** 15 de diciembre de 2025  
 **Próxima revisión:** Enero 2026

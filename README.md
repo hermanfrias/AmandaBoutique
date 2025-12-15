@@ -70,11 +70,15 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
 - **Control de Existencias de Insumos**
   - Registro de insumos con código auto-generado (INS0001, INS0002...)
   - Descripción, unidad de medida (Unidades/Metros)
+  - **Categorías de insumos** - Clasificación por tipo (Telas, Hilos, Botones, etc.)
+  - **Proveedores** - Asignación de proveedor a cada insumo
   - Existencia actual y existencia mínima
   - Costo unitario en USD (calculado automáticamente)
   - Fecha de creación
+  - **Filtros avanzados** - Por categoría y proveedor en listado
 - **Compras de Insumos**
   - Registro de compras con fecha
+  - **Selector de insumos con búsqueda** - Integración con Select2 para búsqueda rápida
   - Cantidad y moneda (Bolívares o Dólares)
   - Opción de aplicar IVA (16%)
   - Conversión automática de moneda usando cotización del día
@@ -82,6 +86,7 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - **Actualización automática**: Al registrar una compra:
     - Se suma la cantidad al inventario
     - Se calcula el costo unitario: `monto_total_usd / cantidad`
+  - **Corrección de bug**: Editar compra ahora ajusta correctamente el inventario
 - **Uso de Insumos**
   - Registro de consumo de insumos con descripción
   - Formulario dinámico para agregar múltiples insumos
@@ -95,6 +100,8 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - Historial de usos por insumo
   - Cálculo de costos de producción
   - Alertas de stock mínimo (visual)
+  - **Exportación a PDF** - Reporte completo de inventario con valor total
+  - **Cálculo correcto de valor total** - Suma de (existencia × costo unitario)
 
 ### 🔐 Sistema de Permisos de Usuario
 
@@ -409,6 +416,6 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.2  
-**Última actualización**: Diciembre 2024 - Módulo de Inventario de Insumos  
+**Versión**: 2.3  
+**Última actualización**: 15 de diciembre de 2024 - Mejoras del Módulo de Inventario  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5
