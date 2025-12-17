@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from decimal import Decimal
 
 class CotizacionDolar(models.Model):
     fecha = models.DateField(unique=True)
@@ -8,6 +9,53 @@ class CotizacionDolar(models.Model):
         ordering = ['-fecha']
     def __str__(self):
         return f"{self.fecha} - {self.valor} Bs"
+
+
+class ConfiguracionIVA(models.Model):
+    """
+    Modelo para gestionar el porcentaje de IVA de forma dinámica.
+    Permite cambios históricos del IVA según la fecha.
+    """
+    fecha_inicio = models.DateField(
+        unique=True, 
+        verbose_name='Fecha de Inicio',
+        help_text='Fecha a partir de la cual aplica este porcentaje de IVA'
+    )
+    porcentaje = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        verbose_name='Porcentaje de IVA',
+        help_text='Ejemplo: 16.00 para 16%'
+    )
+    activo = models.BooleanField(
+        default=True, 
+        verbose_name='Activo',
+        help_text='Solo las configuraciones activas se usan en los cálculos'
+    )
+    
+    class Meta:
+        ordering = ['-fecha_inicio']
+        verbose_name = 'Configuración de IVA'
+        verbose_name_plural = 'Configuraciones de IVA'
+    
+    def __str__(self):
+        return f"{self.fecha_inicio} - {self.porcentaje}% IVA"
+    
+    @classmethod
+    def obtener_iva_para_fecha(cls, fecha):
+        """
+        Obtiene el porcentaje de IVA vigente para una fecha específica.
+        Retorna el IVA como decimal (ej: 0.16 para 16%)
+        """
+        config = cls.objects.filter(
+            fecha_inicio__lte=fecha,
+            activo=True
+        ).order_by('-fecha_inicio').first()
+        
+        if config:
+            return config.porcentaje / Decimal('100')  # Convertir a decimal (16.00 -> 0.16)
+        return Decimal('0.16')  # Valor por defecto si no hay configuración
+
 
 class MovimientoCaja(models.Model):
     MONEDAS = [('Bs','Bolívares'),('$','Dólares')]

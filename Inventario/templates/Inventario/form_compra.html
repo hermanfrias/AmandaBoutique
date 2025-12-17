@@ -11,12 +11,9 @@
         <div class="card-body">
           <form method="post" id="compraForm">
             {% csrf_token %}
-
-
             {% if messages %}
             {% for message in messages %}
-            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-              {{ message }}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">{{ message }}
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
@@ -30,9 +27,7 @@
 
             <div class="row mb-4">
               <div class="col-md-6">
-                <label for="numero_factura" class="form-label"
-                  >Número de Factura</label
-                >
+                <label for="numero_factura" class="form-label">Número de Factura</label>
                 <input
                   type="text"
                   name="numero_factura"
@@ -43,9 +38,7 @@
                 />
               </div>
               <div class="col-md-6">
-                <label for="fecha_compra" class="form-label"
-                  >Fecha de Compra</label
-                >
+                <label for="fecha_compra" class="form-label">Fecha de Compra</label>
                 <input
                   type="date"
                   name="fecha_compra"
@@ -73,13 +66,13 @@
                 <div class="form-check mt-4">
                   <input
                     type="checkbox"
-                    name="aplicar_iva"
-                    id="aplicar_iva"
+                    name="aplicar_iva_global"
+                    id="aplicar_iva_global"
                     class="form-check-input"
-                    {% if aplicar_iva %}checked{% endif %}
+                    checked
                   />
-                  <label class="form-check-label" for="aplicar_iva">
-                    Aplicar IVA (16%)
+                  <label class="form-check-label" for="aplicar_iva_global">
+                    Aplicar IVA a todos los items por defecto
                   </label>
                 </div>
               </div>
@@ -94,7 +87,7 @@
               {% for form in formset %}
               <div class="formset-form border rounded p-3 mb-3">
                 <div class="row">
-                  <div class="col-md-5">
+                  <div class="col-md-4">
                     <label
                       for="{{ form.insumo.id_for_label }}"
                       class="form-label"
@@ -106,7 +99,7 @@
                     <div class="text-danger">{{ form.insumo.errors }}</div>
                     {% endif %}
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label
                       for="{{ form.cantidad.id_for_label }}"
                       class="form-label"
@@ -118,7 +111,7 @@
                     <div class="text-danger">{{ form.cantidad.errors }}</div>
                     {% endif %}
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label
                       for="{{ form.monto.id_for_label }}"
                       class="form-label"
@@ -130,7 +123,24 @@
                     <div class="text-danger">{{ form.monto.errors }}</div>
                     {% endif %}
                   </div>
-                  <div class="col-md-1 d-flex align-items-end">
+                  <div class="col-md-2">
+                    <label
+                      for="{{ form.aplicar_iva.id_for_label }}"
+                      class="form-label"
+                    >
+                      {{ form.aplicar_iva.label }}
+                    </label>
+                    <div class="form-check mt-2">
+                      {{ form.aplicar_iva }}
+                      <label class="form-check-label" for="{{ form.aplicar_iva.id_for_label }}">
+                        Aplicar
+                      </label>
+                    </div>
+                    {% if form.aplicar_iva.errors %}
+                    <div class="text-danger">{{ form.aplicar_iva.errors }}</div>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-2 d-flex align-items-end">
                     {% if not forloop.first %}
                     <button
                       type="button"
@@ -197,6 +207,17 @@
     const container = document.getElementById("formset-container");
     const addButton = document.getElementById("add-form");
     const totalForms = document.querySelector("#id_form-TOTAL_FORMS");
+    const globalIvaCheckbox = document.getElementById("aplicar_iva_global");
+
+    // Sincronizar checkbox global de IVA con todos los items
+    if (globalIvaCheckbox) {
+      globalIvaCheckbox.addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.aplicar-iva-item');
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = this.checked;
+        });
+      });
+    }
 
     // Inicializar Select2 en todos los campos de insumo existentes
     $(".insumo-select").select2({
@@ -257,7 +278,12 @@
       const inputs = newForm.querySelectorAll("input, select");
       inputs.forEach((input) => {
         if (input.type !== "hidden") {
-          input.value = "";
+          if (input.type === "checkbox" && input.classList.contains('aplicar-iva-item')) {
+            // Heredar el estado del checkbox global de IVA
+            input.checked = globalIvaCheckbox ? globalIvaCheckbox.checked : true;
+          } else {
+            input.value = "";
+          }
         }
       });
 

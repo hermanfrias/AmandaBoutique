@@ -76,19 +76,28 @@ class CompraInsumoDetalleForm(forms.Form):
     insumo = forms.ModelChoiceField(
         queryset=ExistenciaInsumo.objects.all(),
         widget=forms.Select(attrs={'class': 'form-select insumo-select'}),
-        label='Insumo'
+        label='Insumo',
+        required=False
     )
     cantidad = forms.DecimalField(
         max_digits=10,
         decimal_places=2,
         widget=forms.NumberInput(attrs={'class': 'form-control cantidad-input', 'step': '0.01', 'min': '0.01'}),
-        label='Cantidad'
+        label='Cantidad',
+        required=False
     )
     monto = forms.DecimalField(
         max_digits=15,
         decimal_places=2,
         widget=forms.NumberInput(attrs={'class': 'form-control monto-input', 'step': '0.01', 'min': '0.01'}),
-        label='Monto'
+        label='Monto',
+        required=False
+    )
+    aplicar_iva = forms.BooleanField(
+        required=False,
+        initial=True,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input aplicar-iva-item'}),
+        label='IVA'
     )
     
     def __init__(self, *args, **kwargs):
@@ -102,7 +111,6 @@ CompraInsumoDetalleFormSet = forms.formset_factory(
     extra=3,
     can_delete=True,
     min_num=1,
-    validate_min=True,
 )
 
 

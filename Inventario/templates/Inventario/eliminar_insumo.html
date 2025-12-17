@@ -20,9 +20,9 @@ Mateo Boutique{% endblock %} {% block content %}
           <form method="post">
             {% csrf_token %}
             <div class="d-flex justify-content-between">
-              <a href="{% url 'listar_insumos' %}" class="btn btn-secondary">
-                Volver
-              </a>
+              <a href="{% url 'listar_insumos' %}" class="btn btn-secondary"
+                >Volver</a
+              >
               <button type="submit" class="btn btn-eliminar">
                 Confirmar Eliminación
               </button>

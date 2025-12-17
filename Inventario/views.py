@@ -192,7 +192,7 @@ def crear_compra(request):
         numero_factura = request.POST.get('numero_factura')
         fecha_compra_str = request.POST.get('fecha_compra')
         moneda = request.POST.get('moneda')
-        aplicar_iva = request.POST.get('aplicar_iva') == 'on'
+        # NOTA: aplicar_iva ahora es por item, no global
         
         # Validar campos requeridos
         if not fecha_compra_str or not moneda:
@@ -204,7 +204,6 @@ def crear_compra(request):
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
-                'aplicar_iva': aplicar_iva,
             }
             return render(request, 'Inventario/form_compra.html', context)
         
@@ -221,7 +220,6 @@ def crear_compra(request):
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
-                'aplicar_iva': aplicar_iva,
             }
             return render(request, 'Inventario/form_compra.html', context)
         
@@ -240,7 +238,6 @@ def crear_compra(request):
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
-                'aplicar_iva': aplicar_iva,
             }
             return render(request, 'Inventario/form_compra.html', context)
         
@@ -253,19 +250,26 @@ def crear_compra(request):
                 # Crear una CompraInsumo por cada línea del formset
                 for form in formset:
                     if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
-                        compra = CompraInsumo(
-                            numero_factura=numero_factura,
-                            fecha_compra=fecha_compra,
-                            moneda=moneda,
-                            aplicar_iva=aplicar_iva,
-                            insumo=form.cleaned_data['insumo'],
-                            cantidad=form.cleaned_data['cantidad'],
-                            monto=form.cleaned_data['monto'],
-                        )
-                        print(f"🔵 Antes de guardar CompraInsumo: {compra.insumo}")
-                        compra.save()
-                        print(f"🟢 Después de guardar CompraInsumo ID: {compra.pk}")
-                        compras_creadas.append(compra)
+                        # Verificar que los campos obligatorios tengan valores
+                        insumo = form.cleaned_data.get('insumo')
+                        cantidad = form.cleaned_data.get('cantidad')
+                        monto = form.cleaned_data.get('monto')
+                        
+                        # Solo procesar si todos los campos obligatorios tienen valores
+                        if insumo and cantidad and monto:
+                            compra = CompraInsumo(
+                                numero_factura=numero_factura,
+                                fecha_compra=fecha_compra,
+                                moneda=moneda,
+                                aplicar_iva=form.cleaned_data.get('aplicar_iva', False),  # IVA por item
+                                insumo=insumo,
+                                cantidad=cantidad,
+                                monto=monto,
+                            )
+                            print(f"🔵 Antes de guardar CompraInsumo: {compra.insumo}")
+                            compra.save()
+                            print(f"🟢 Después de guardar CompraInsumo ID: {compra.pk}")
+                            compras_creadas.append(compra)
                 
                 if not compras_creadas:
                     messages.error(request, 'Debe agregar al menos un insumo.')
@@ -275,7 +279,6 @@ def crear_compra(request):
                         'numero_factura': numero_factura,
                         'fecha_compra': fecha_compra_str,
                         'moneda': moneda,
-                        'aplicar_iva': aplicar_iva,
                     }
                     return render(request, 'Inventario/form_compra.html', context)
                 
@@ -295,7 +298,6 @@ def crear_compra(request):
                     'numero_factura': numero_factura,
                     'fecha_compra': fecha_compra_str,
                     'moneda': moneda,
-                    'aplicar_iva': aplicar_iva,
                 }
                 return render(request, 'Inventario/form_compra.html', context)
             except Exception as e:
@@ -306,7 +308,6 @@ def crear_compra(request):
                     'numero_factura': numero_factura,
                     'fecha_compra': fecha_compra_str,
                     'moneda': moneda,
-                    'aplicar_iva': aplicar_iva,
                 }
                 return render(request, 'Inventario/form_compra.html', context)
         else:
@@ -317,7 +318,6 @@ def crear_compra(request):
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
-                'aplicar_iva': aplicar_iva,
             }
             return render(request, 'Inventario/form_compra.html', context)
     else:
@@ -400,28 +400,71 @@ def compras_pdf(request):
     import datetime
 
     try:
-        compras = CompraInsumo.objects.all()
-        
-        # Aplicar filtros de fecha
+        # Obtener filtros de fecha
         fecha_desde = request.GET.get('fecha_desde', '')
         fecha_hasta = request.GET.get('fecha_hasta', '')
         
+        # Filtrar compras
+        compras = CompraInsumo.objects.all()
+        
         if fecha_desde:
             compras = compras.filter(fecha_compra__gte=fecha_desde)
-        
         if fecha_hasta:
             compras = compras.filter(fecha_compra__lte=fecha_hasta)
         
-        # Calcular totales
-        total_compras = compras.count()
-        total_bs = sum(compra.monto_total_bs for compra in compras)
-        total_usd = sum(compra.monto_total_usd for compra in compras)
+        # Agrupar por número de factura (igual que en listar_compras)
+        compras_agrupadas = []
+        facturas_procesadas = set()
+        
+        for compra in compras.order_by('-fecha_compra', 'numero_factura'):
+            # Crear una clave única para agrupar (numero_factura + fecha)
+            clave = f"{compra.numero_factura or 'SIN_FACTURA'}_{compra.fecha_compra}"
+            
+            if clave not in facturas_procesadas:
+                facturas_procesadas.add(clave)
+                
+                # Obtener todas las compras con el mismo numero_factura y fecha
+                if compra.numero_factura:
+                    items = CompraInsumo.objects.filter(
+                        numero_factura=compra.numero_factura,
+                        fecha_compra=compra.fecha_compra
+                    )
+                else:
+                    # Si no tiene número de factura, solo agrupar esta compra individual
+                    items = CompraInsumo.objects.filter(pk=compra.pk)
+                
+                # Calcular totales del grupo
+                total_bs = sum(item.monto_total_bs or 0 for item in items)
+                total_usd = sum(item.monto_total_usd or 0 for item in items)
+                subtotal_bs = sum(item.monto_bs or 0 for item in items)
+                subtotal_usd = sum(item.monto_usd or 0 for item in items)
+                
+                # Verificar si todas las compras están anuladas
+                todas_anuladas = all(item.anulada for item in items)
+                
+                compras_agrupadas.append({
+                    'numero_factura': compra.numero_factura or '-',
+                    'fecha_compra': compra.fecha_compra,
+                    'moneda': compra.moneda,
+                    'aplicar_iva': compra.aplicar_iva,
+                    'cantidad_items': items.count(),
+                    'subtotal_bs': subtotal_bs,
+                    'subtotal_usd': subtotal_usd,
+                    'total_bs': total_bs,
+                    'total_usd': total_usd,
+                    'anulada': todas_anuladas,
+                })
+        
+        # Calcular totales generales (excluyendo anuladas)
+        total_facturas = len([g for g in compras_agrupadas if not g['anulada']])
+        total_bs_general = sum(g['total_bs'] for g in compras_agrupadas if not g['anulada'])
+        total_usd_general = sum(g['total_usd'] for g in compras_agrupadas if not g['anulada'])
         
         html_string = render_to_string('Inventario/compras_pdf.html', {
-            'compras': compras,
-            'total_compras': total_compras,
-            'total_bs': total_bs,
-            'total_usd': total_usd,
+            'compras_agrupadas': compras_agrupadas,
+            'total_facturas': total_facturas,
+            'total_bs': total_bs_general,
+            'total_usd': total_usd_general,
             'fecha_desde': fecha_desde,
             'fecha_hasta': fecha_hasta,
             'fecha_generacion': datetime.date.today(),

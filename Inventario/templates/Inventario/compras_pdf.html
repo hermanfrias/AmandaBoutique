@@ -58,51 +58,68 @@
       <p class="subtitle">
         Listado de Compras de Insumos<br />
         {% if fecha_desde or fecha_hasta %}
-        Período: 
+        Período:
         {% if fecha_desde %}
         {{ fecha_desde|date:"d/m/Y" }}
         {% else %}
         Inicio
-        {% endif %} 
-        {% if fecha_hasta %}{{ fecha_hasta|date:"d/m/Y" }}
-        {% else %}
-        Hoy
         {% endif %}
+        {% if fecha_hasta %}
+        {{ fecha_hasta|date:"d/m/Y" }}
+        {% else %}
+        Hoy {% endif %}
         <br />
-        {% endif %} Fecha de generación: {{ fecha_generacion|date:"d/m/Y" }}
+        {% endif %}
+        Fecha de generación: {{ fecha_generacion|date:"d/m/Y" }}
       </p>
     </header>
 
     <table>
       <thead>
         <tr>
+          <th>Nº Factura</th>
           <th>Fecha</th>
-          <th>Insumo</th>
-          <th class="text-right">Cantidad</th>
           <th>Moneda</th>
-          <th class="text-right">Monto</th>
           <th class="text-center">IVA</th>
+          <th class="text-center">Ítems</th>
+          <th class="text-right">Subtotal Bs</th>
+          <th class="text-right">Subtotal USD</th>
           <th class="text-right">Total Bs</th>
           <th class="text-right">Total USD</th>
         </tr>
       </thead>
       <tbody>
-        {% for compra in compras %}
-        <tr>
-          <td>{{ compra.fecha_compra|date:"d/m/Y" }}</td>
-          <td>{{ compra.insumo.codigo }} - {{ compra.insumo.descripcion }}</td>
-          <td class="text-right">{{ compra.cantidad|floatformat:2 }}</td>
-          <td>{{ compra.get_moneda_display }}</td>
-          <td class="text-right">{{ compra.monto|floatformat:2 }}</td>
-          <td class="text-center">
-            {% if compra.aplicar_iva %}Sí{% else %}No{% endif %}
+        {% for grupo in compras_agrupadas %}
+        <tr
+          {%
+          if
+          grupo.anulada
+          %}style="opacity: 0.6; text-decoration: line-through;"
+          {%
+          endif
+          %}
+        >
+          <td>
+            {{ grupo.numero_factura }} {% if grupo.anulada %}
+            <span style="color: #dc3545; font-weight: bold; font-size: 9px">
+              [ANULADA]</span
+            >
+            {% endif %}
           </td>
-          <td class="text-right">{{ compra.monto_total_bs|floatformat:2 }}</td>
-          <td class="text-right">{{ compra.monto_total_usd|floatformat:2 }}</td>
+          <td>{{ grupo.fecha_compra|date:"d/m/Y" }}</td>
+          <td>{{ grupo.moneda }}</td>
+          <td class="text-center">
+            {% if grupo.aplicar_iva %}Sí{% else %}No{% endif %}
+          </td>
+          <td class="text-center">{{ grupo.cantidad_items }}</td>
+          <td class="text-right">{{ grupo.subtotal_bs|floatformat:2 }}</td>
+          <td class="text-right">${{ grupo.subtotal_usd|floatformat:2 }}</td>
+          <td class="text-right">{{ grupo.total_bs|floatformat:2 }}</td>
+          <td class="text-right">${{ grupo.total_usd|floatformat:2 }}</td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="8" style="text-align: center">
+          <td colspan="9" style="text-align: center">
             No hay compras registradas.
           </td>
         </tr>
@@ -111,7 +128,7 @@
     </table>
 
     <div class="totales">
-      <p>Total de Compras: {{ total_compras }}</p>
+      <p>Total de Facturas: {{ total_facturas }}</p>
       <p>Total Invertido (Bs): {{ total_bs|floatformat:2 }}</p>
       <p>Total Invertido (USD): ${{ total_usd|floatformat:2 }}</p>
     </div>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import MovimientoCaja, CotizacionDolar
+from .models import MovimientoCaja, CotizacionDolar, ConfiguracionIVA
 
 class MovimientoCajaForm(forms.ModelForm):
     class Meta:
@@ -24,4 +24,15 @@ class CotizacionDolarForm(forms.ModelForm):
         widgets = {
             'fecha': forms.DateInput(format='%Y-%m-%d', attrs={'type':'date','class':'form-control'}),
             'valor': forms.NumberInput(attrs={'class':'form-control'}),
+        }
+
+
+class ConfiguracionIVAForm(forms.ModelForm):
+    class Meta:
+        model = ConfiguracionIVA
+        fields = ['fecha_inicio', 'porcentaje', 'activo']
+        widgets = {
+            'fecha_inicio': forms.DateInput(format='%Y-%m-%d', attrs={'type':'date','class':'form-control'}),
+            'porcentaje': forms.NumberInput(attrs={'class':'form-control', 'step': '0.01'}),
+            'activo': forms.CheckboxInput(attrs={'class':'form-check-input'}),
         }

@@ -12,5 +12,9 @@ urlpatterns = [
     path('cotizaciones/crear/', views.crear_cotizacion, name='crear_cotizacion'),
     path('cotizaciones/editar/<int:id>/', views.editar_cotizacion, name='editar_cotizacion'),
     path('cotizaciones/eliminar/<int:id>/', views.eliminar_cotizacion, name='eliminar_cotizacion'),
+    path('configuraciones-iva/', views.listar_configuraciones_iva, name='listar_configuraciones_iva'),
+    path('configuraciones-iva/crear/', views.crear_configuracion_iva, name='crear_configuracion_iva'),
+    path('configuraciones-iva/editar/<int:id>/', views.editar_configuracion_iva, name='editar_configuracion_iva'),
+    path('configuraciones-iva/eliminar/<int:id>/', views.eliminar_configuracion_iva, name='eliminar_configuracion_iva'),
     path('dashboard/', views.dashboard_flujo, name='dashboard_flujo'),
 ]

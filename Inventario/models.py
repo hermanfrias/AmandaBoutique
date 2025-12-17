@@ -155,7 +155,9 @@ class CompraInsumo(models.Model):
         
         # Calcular IVA si aplica
         if self.aplicar_iva:
-            iva_rate = Decimal('0.16')  # 16%
+            # Obtener IVA dinámico según la fecha de compra
+            from flujo.models import ConfiguracionIVA
+            iva_rate = ConfiguracionIVA.obtener_iva_para_fecha(self.fecha_compra)
             self.monto_iva_bs = self.monto_bs * iva_rate
             self.monto_iva_usd = self.monto_usd * iva_rate
             self.monto_total_bs = self.monto_bs + self.monto_iva_bs

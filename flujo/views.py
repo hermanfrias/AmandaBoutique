@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth
-from .models import MovimientoCaja, CotizacionDolar
-from .forms import MovimientoCajaForm, CotizacionDolarForm
+from .models import MovimientoCaja, CotizacionDolar, ConfiguracionIVA
+from .forms import MovimientoCajaForm, CotizacionDolarForm, ConfiguracionIVAForm
 
 @login_required
 def listar_movimientos(request):
@@ -156,6 +156,49 @@ def eliminar_cotizacion(request, id):
     cotizacion.delete()
     messages.success(request, 'Cotización eliminada correctamente')
     return redirect('listar_cotizaciones')
+
+
+# ==================== VISTAS PARA CONFIGURACION IVA ====================
+
+@login_required
+def listar_configuraciones_iva(request):
+    configuraciones = ConfiguracionIVA.objects.all()
+    return render(request, 'flujo/listar_configuraciones_iva.html', {'configuraciones': configuraciones})
+
+@login_required
+@permission_required('flujo.add_configuracioniva', raise_exception=True)
+def crear_configuracion_iva(request):
+    if request.method == 'POST':
+        form = ConfiguracionIVAForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Configuración de IVA guardada correctamente')
+            return redirect('listar_configuraciones_iva')
+    else:
+        form = ConfiguracionIVAForm()
+    return render(request, 'flujo/crear_configuracion_iva.html', {'form': form})
+
+@login_required
+@permission_required('flujo.change_configuracioniva', raise_exception=True)
+def editar_configuracion_iva(request, id):
+    configuracion = ConfiguracionIVA.objects.get(id=id)
+    if request.method == 'POST':
+        form = ConfiguracionIVAForm(request.POST, instance=configuracion)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Configuración de IVA actualizada correctamente')
+            return redirect('listar_configuraciones_iva')
+    else:
+        form = ConfiguracionIVAForm(instance=configuracion)
+    return render(request, 'flujo/editar_configuracion_iva.html', {'form': form, 'configuracion': configuracion})
+
+@login_required
+@permission_required('flujo.delete_configuracioniva', raise_exception=True)
+def eliminar_configuracion_iva(request, id):
+    configuracion = ConfiguracionIVA.objects.get(id=id)
+    configuracion.delete()
+    messages.success(request, 'Configuración de IVA eliminada correctamente')
+    return redirect('listar_configuraciones_iva')
 
 @login_required
 def dashboard_flujo(request):
