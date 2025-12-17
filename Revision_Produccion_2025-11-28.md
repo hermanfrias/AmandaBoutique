@@ -359,6 +359,84 @@ Bolívares (Estimado):
 - ✅ **Trazabilidad** - Cada compra tiene su movimiento correspondiente
 - ✅ **Actualización dinámica** - Cambios en compras se reflejan en movimientos
 
+#### **Mejoras en Formateo de Código HTML (Dic 17, 2025)** ✅
+
+**Objetivo:** Mejorar la legibilidad y mantenibilidad del código HTML en todos los templates de Django, aplicando estándares consistentes de formateo.
+
+**Cambios implementados:**
+
+1. **Indentación Consistente** ✅
+
+   - ✅ **Espaciado uniforme** - 2 espacios por nivel de indentación
+   - ✅ **Jerarquía visual clara** - Elementos anidados correctamente indentados
+   - ✅ **Bloques Django** - Tags de template con indentación apropiada
+   - ✅ Mejora significativa en legibilidad del código
+
+2. **Espaciado de Django Template Tags** ✅
+
+   - ✅ **Espacios alrededor de variables** - `{{ variable }}` en lugar de `{{variable}}`
+   - ✅ **Espacios en tags de bloque** - `{% if condition %}` con espaciado correcto
+   - ✅ **Consistencia** - Mismo estilo en todos los templates
+   - ✅ Facilita lectura y debugging
+
+3. **Limpieza de Código** ✅
+
+   - ✅ **Eliminación de líneas en blanco excesivas** - Máximo 1-2 líneas entre secciones
+   - ✅ **Comentarios HTML** - Bien formateados y útiles
+   - ✅ **Atributos HTML** - Ordenados lógicamente
+   - ✅ Código más limpio y profesional
+
+4. **Templates Actualizados** ✅
+
+   - ✅ **`compras_pdf.html`** - Formateo completo aplicado
+   - ✅ **`form_compra.html`** - Indentación y espaciado mejorados
+   - ✅ **`listar_insumos.html`** - Estructura clarificada
+   - ✅ **`detalle_uso.html`** - Código reorganizado
+   - ✅ Todos los templates del módulo Inventario revisados
+
+**Beneficios:**
+
+- ✅ **Mantenibilidad mejorada** - Código más fácil de leer y modificar
+- ✅ **Prevención de errores** - Estructura clara reduce bugs
+- ✅ **Colaboración facilitada** - Estándares consistentes para todo el equipo
+- ✅ **Debugging más rápido** - Problemas más fáciles de identificar
+
+**Archivos modificados:**
+
+- [`Inventario/templates/Inventario/compras_pdf.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/compras_pdf.html)
+- [`Inventario/templates/Inventario/form_compra.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/form_compra.html)
+- [`Inventario/templates/Inventario/listar_insumos.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_insumos.html)
+- [`Inventario/templates/Inventario/detalle_uso.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/detalle_uso.html)
+
+**Estándares aplicados:**
+
+```html
+<!-- ANTES -->
+<div class="container">
+  <h1>{{titulo}}</h1>
+  {% if condicion %}
+  <p>Texto</p>
+  {% endif %}
+</div>
+
+<!-- DESPUÉS -->
+<div class="container">
+  <h1>{{ titulo }}</h1>
+  {% if condicion %}
+  <p>Texto</p>
+  {% endif %}
+</div>
+```
+
+**Impacto:**
+
+- ✅ **Calidad de código** - Estándares profesionales aplicados
+- ✅ **Productividad** - Desarrollo más rápido con código limpio
+- ✅ **Escalabilidad** - Base sólida para futuras mejoras
+- ✅ **Profesionalismo** - Código que refleja buenas prácticas
+
+---
+
 #### **Sistema de Anulación de Compras (Dic 17, 2025)** ✅
 
 **Objetivo:** Implementar sistema de anulación que reemplace la eliminación de compras, manteniendo trazabilidad completa y creando movimientos de reversa automáticos.
@@ -813,34 +891,39 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 > 30. ✅ **NUEVO (Dic 17):** Indicadores visuales de anulación
 > 31. ✅ **NUEVO (Dic 17):** Pre_save y post_save signals mejorados
 > 32. ✅ **NUEVO (Dic 17):** Comandos de utilidad para gestión
+> 33. ✅ **NUEVO (Dic 17):** Mejoras en formateo de código HTML
+> 34. ✅ **NUEVO (Dic 17):** Indentación consistente en templates
+> 35. ✅ **NUEVO (Dic 17):** Espaciado correcto en Django template tags
+> 36. ✅ **NUEVO (Dic 17):** Limpieza de código y estándares aplicados
 >
 > ### 📊 Reportes y PDFs
 >
-> 33. ✅ Headers repetidos en todas las páginas
-> 34. ✅ Formato estandarizado y profesional
-> 35. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
-> 36. ✅ Alineación y formato de números mejorados
+> 37. ✅ Headers repetidos en todas las páginas
+> 38. ✅ Formato estandarizado y profesional
+> 39. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
+> 40. ✅ Alineación y formato de números mejorados
 >
 > ### 🔐 Permisos y Usuarios
 >
-> 37. ✅ Sistema de permisos granulares por módulo
-> 38. ✅ Interfaz de gestión de usuarios mejorada
-> 39. ✅ Registro con permisos de solo lectura por defecto
-> 40. ✅ UI adaptativa según permisos
+> 41. ✅ Sistema de permisos granulares por módulo
+> 42. ✅ Interfaz de gestión de usuarios mejorada
+> 43. ✅ Registro con permisos de solo lectura por defecto
+> 44. ✅ UI adaptativa según permisos
 >
 > ### 🔧 Correcciones y Optimizaciones
 >
-> 41. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
-> 42. ✅ Base de datos optimizada (campo mes_pago, señales Django)
-> 43. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
-> 44. ✅ Validaciones mejoradas en formularios
-> 45. ✅ **NUEVO (Dic 16):** Limpieza de código (3 templates obsoletos eliminados)
+> 45. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
+> 46. ✅ Base de datos optimizada (campo mes_pago, señales Django)
+> 47. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
+> 48. ✅ Validaciones mejoradas en formularios
+> 49. ✅ **NUEVO (Dic 16):** Limpieza de código (3 templates obsoletos eliminados)
+> 50. ✅ **NUEVO (Dic 17):** Estándares de formateo HTML aplicados
 >
 > ### 🚀 Producción
 >
-> 46. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
-> 47. ✅ Scripts de despliegue automatizados
-> 48. ✅ Documentación completa de implementación
+> 51. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
+> 52. ✅ Scripts de despliegue automatizados
+> 53. ✅ Documentación completa de implementación
 
 ---
 
@@ -923,7 +1006,7 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 
 ## 📞 Información de Contacto y Soporte
 
-**Versión del Sistema:** 2.5  
+**Versión del Sistema:** 2.6  
 **Última Actualización:** 17 de diciembre de 2025  
 **Desarrollado con:** Django 5.1.4 + Bootstrap 5  
 **Documentación:** README.md actualizado con todas las funcionalidades

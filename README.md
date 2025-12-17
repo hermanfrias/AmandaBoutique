@@ -441,6 +441,6 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.5  
-**Última actualización**: 17 de diciembre de 2024 - Sistema de Anulación de Compras  
+**Versión**: 2.6  
+**Última actualización**: 17 de diciembre de 2024 - Mejoras en Formateo de Código  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5

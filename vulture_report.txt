@@ -1,6 +1,0 @@
-BoutiqueApp\tests.py:1: unused import 'TestCase' (90% confidence)
-ClientesApp\tests.py:1: unused import 'TestCase' (90% confidence)
-flujo\tests.py:1: unused import 'TestCase' (90% confidence)
-flujo\views.py:232: unused import 'get_column_letter' (90% confidence)
-LoginApp\tests.py:1: unused import 'TestCase' (90% confidence)
-ProveedoresApp\tests.py:1: unused import 'TestCase' (90% confidence)
