@@ -59,7 +59,7 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
           type="text"
           id="searchInput"
           class="form-control"
-          placeholder="Buscar por insumo (tiempo real)..."
+          placeholder="Buscar por número de factura (tiempo real)..."
         />
         <button class="btn btn-pink" type="button" id="clearSearch">
           Limpiar
@@ -70,7 +70,7 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
 
   {% if messages %} {% for message in messages %}
   <div
-    class="alert alert-{{ message.tags }} alert-dismissible fade show"
+    class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
     role="alert"
   >
     {{ message }}
@@ -87,51 +87,55 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
     <table class="table table-striped table-hover">
       <thead>
         <tr>
+          <th>Nº Factura</th>
           <th>Fecha</th>
-          <th>Insumo</th>
-          <th class="text-end">Cantidad</th>
           <th>Moneda</th>
-          <th class="text-end">Monto</th>
           <th class="text-center">IVA</th>
+          <th class="text-center">Ítems</th>
+          <th class="text-end">Subtotal Bs</th>
+          <th class="text-end">Subtotal USD</th>
           <th class="text-end">Total Bs</th>
           <th class="text-end">Total USD</th>
           <th class="text-center" style="white-space: nowrap">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {% for compra in compras %}
+        {% for grupo in compras_agrupadas %}
         <tr>
-          <td>{{ compra.fecha_compra|date:"d/m/Y" }}</td>
-          <td>{{ compra.insumo.codigo }} - {{ compra.insumo.descripcion }}</td>
-          <td class="text-end">{{ compra.cantidad|floatformat:2 }}</td>
-          <td>{{ compra.get_moneda_display }}</td>
-          <td class="text-end">{{ compra.monto|floatformat:2 }}</td>
+          <td>{{ grupo.numero_factura }}</td>
+          <td>{{ grupo.fecha_compra|date:"d/m/Y" }}</td>
+          <td>{{ grupo.moneda }}</td>
           <td class="text-center">
-            {% if compra.aplicar_iva %}
+            {% if grupo.aplicar_iva %}
             <span class="badge bg-success">Sí</span>
             {% else %}
             <span class="badge bg-secondary">No</span>
             {% endif %}
           </td>
-          <td class="text-end">{{ compra.monto_total_bs|floatformat:2 }}</td>
-          <td class="text-end">${{ compra.monto_total_usd|floatformat:2 }}</td>
+          <td class="text-center">
+            <span class="badge bg-info">{{ grupo.cantidad_items }}</span>
+          </td>
+          <td class="text-end">{{ grupo.subtotal_bs|floatformat:2 }}</td>
+          <td class="text-end">${{ grupo.subtotal_usd|floatformat:2 }}</td>
+          <td class="text-end">{{ grupo.total_bs|floatformat:2 }}</td>
+          <td class="text-end">${{ grupo.total_usd|floatformat:2 }}</td>
           <td class="text-center">
             <a
-              href="{% url 'detalle_compra' compra.pk %}"
+              href="{% url 'detalle_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
               class="btn btn-sm btn-ver"
               title="Ver Detalle"
             >
               Ver
             </a>
             <a
-              href="{% url 'editar_compra' compra.pk %}"
+              href="{% url 'editar_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
               class="btn btn-sm btn-editar"
               title="Editar"
             >
               Editar
             </a>
             <a
-              href="{% url 'eliminar_compra' compra.pk %}"
+              href="{% url 'eliminar_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
               class="btn btn-sm btn-eliminar"
               title="Eliminar"
             >
@@ -141,7 +145,7 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
         </tr>
         {% empty %}
         <tr>
-          <td colspan="9" class="text-center">No hay compras registradas.</td>
+          <td colspan="10" class="text-center">No hay compras registradas.</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -156,9 +160,9 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
     const rows = document.querySelectorAll("tbody tr");
 
     rows.forEach((row) => {
-      const insumoCell = row.cells[1]; // Columna de Insumo
-      if (insumoCell) {
-        const text = insumoCell.textContent.toLowerCase();
+      const facturaCell = row.cells[0]; // Columna de Número de Factura
+      if (facturaCell) {
+        const text = facturaCell.textContent.toLowerCase();
         row.style.display = text.includes(searchTerm) ? "" : "none";
       }
     });

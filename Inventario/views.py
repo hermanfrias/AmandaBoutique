@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
 from .models import ExistenciaInsumo, CompraInsumo, UsoInsumo, DetalleUsoInsumo
-from .forms import ExistenciaInsumoForm, CompraInsumoForm, UsoInsumoForm, DetalleUsoInsumoFormSet
+from .forms import ExistenciaInsumoForm, CompraInsumoForm, CompraInsumoDetalleFormSet, UsoInsumoForm, DetalleUsoInsumoFormSet
 
 
 # ==================== VISTAS PARA EXISTENCIA INSUMO ====================
@@ -116,20 +116,64 @@ def detalle_insumo(request, pk):
 
 @login_required
 def listar_compras(request):
-    compras = CompraInsumo.objects.all()
+    from django.db.models import Sum, Q
+    from collections import defaultdict
     
-    # Filtros por fecha
-    fecha_desde = request.GET.get('fecha_desde', '')
-    fecha_hasta = request.GET.get('fecha_hasta', '')
+    # Obtener filtros de fecha
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
+    
+    # Filtrar compras
+    compras = CompraInsumo.objects.all()
     
     if fecha_desde:
         compras = compras.filter(fecha_compra__gte=fecha_desde)
-    
     if fecha_hasta:
         compras = compras.filter(fecha_compra__lte=fecha_hasta)
     
+    # Agrupar por número de factura
+    compras_agrupadas = []
+    facturas_procesadas = set()
+    
+    for compra in compras.order_by('-fecha_compra', 'numero_factura'):
+        # Crear una clave única para agrupar (numero_factura + fecha)
+        clave = f"{compra.numero_factura or 'SIN_FACTURA'}_{compra.fecha_compra}"
+        
+        if clave not in facturas_procesadas:
+            facturas_procesadas.add(clave)
+            
+            # Obtener todas las compras con el mismo numero_factura y fecha
+            if compra.numero_factura:
+                items = CompraInsumo.objects.filter(
+                    numero_factura=compra.numero_factura,
+                    fecha_compra=compra.fecha_compra
+                )
+            else:
+                # Si no tiene número de factura, solo agrupar esta compra individual
+                items = CompraInsumo.objects.filter(pk=compra.pk)
+            
+            # Calcular totales del grupo
+            total_bs = sum(item.monto_total_bs or 0 for item in items)
+            total_usd = sum(item.monto_total_usd or 0 for item in items)
+            subtotal_bs = sum(item.monto_bs or 0 for item in items)
+            subtotal_usd = sum(item.monto_usd or 0 for item in items)
+            
+            compras_agrupadas.append({
+                'numero_factura': compra.numero_factura or '-',
+                'fecha_compra': compra.fecha_compra,
+                'moneda': compra.moneda,
+                'aplicar_iva': compra.aplicar_iva,
+                'cantidad_items': items.count(),
+                'subtotal_bs': subtotal_bs,
+                'subtotal_usd': subtotal_usd,
+                'total_bs': total_bs,
+                'total_usd': total_usd,
+                'items': list(items),  # Lista de CompraInsumo para acceder a los IDs
+                'primer_item_id': items.first().pk,  # Para el botón de ver/editar
+            })
+    
     context = {
-        'compras': compras,
+        'compras_agrupadas': compras_agrupadas,
         'fecha_desde': fecha_desde,
         'fecha_hasta': fecha_hasta,
     }
@@ -139,18 +183,143 @@ def listar_compras(request):
 @login_required
 def crear_compra(request):
     if request.method == 'POST':
-        form = CompraInsumoForm(request.POST)
-        if form.is_valid():
+        # Datos del encabezado (campos que se repiten)
+        numero_factura = request.POST.get('numero_factura')
+        fecha_compra_str = request.POST.get('fecha_compra')
+        moneda = request.POST.get('moneda')
+        aplicar_iva = request.POST.get('aplicar_iva') == 'on'
+        
+        # Validar campos requeridos
+        if not fecha_compra_str or not moneda:
+            messages.error(request, 'Debe completar todos los campos del encabezado (Fecha de Compra y Moneda).')
+            formset = CompraInsumoDetalleFormSet(request.POST)
+            context = {
+                'formset': formset,
+                'accion': 'Registrar',
+                'numero_factura': numero_factura,
+                'fecha_compra': fecha_compra_str,
+                'moneda': moneda,
+                'aplicar_iva': aplicar_iva,
+            }
+            return render(request, 'Inventario/form_compra.html', context)
+        
+        # Convertir fecha de string a date
+        from datetime import datetime
+        try:
+            fecha_compra = datetime.strptime(fecha_compra_str, '%Y-%m-%d').date()
+        except ValueError:
+            messages.error(request, 'Formato de fecha inválido.')
+            formset = CompraInsumoDetalleFormSet(request.POST)
+            context = {
+                'formset': formset,
+                'accion': 'Registrar',
+                'numero_factura': numero_factura,
+                'fecha_compra': fecha_compra_str,
+                'moneda': moneda,
+                'aplicar_iva': aplicar_iva,
+            }
+            return render(request, 'Inventario/form_compra.html', context)
+        
+        # Validar que existe cotización para la fecha
+        from flujo.models import CotizacionDolar
+        if not CotizacionDolar.objects.filter(fecha=fecha_compra).exists():
+            messages.error(
+                request,
+                f'No existe cotización del dólar para la fecha {fecha_compra.strftime("%d/%m/%Y")}. '
+                'Por favor registre la cotización del día primero en el módulo de Flujo de Caja.'
+            )
+            formset = CompraInsumoDetalleFormSet(request.POST)
+            context = {
+                'formset': formset,
+                'accion': 'Registrar',
+                'numero_factura': numero_factura,
+                'fecha_compra': fecha_compra_str,
+                'moneda': moneda,
+                'aplicar_iva': aplicar_iva,
+            }
+            return render(request, 'Inventario/form_compra.html', context)
+        
+        formset = CompraInsumoDetalleFormSet(request.POST)
+        
+        if formset.is_valid():
             try:
-                form.save()
+                compras_creadas = []
+                
+                # Crear una CompraInsumo por cada línea del formset
+                for form in formset:
+                    if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
+                        compra = CompraInsumo(
+                            numero_factura=numero_factura,
+                            fecha_compra=fecha_compra,
+                            moneda=moneda,
+                            aplicar_iva=aplicar_iva,
+                            insumo=form.cleaned_data['insumo'],
+                            cantidad=form.cleaned_data['cantidad'],
+                            monto=form.cleaned_data['monto'],
+                        )
+                        print(f"🔵 Antes de guardar CompraInsumo: {compra.insumo}")
+                        compra.save()
+                        print(f"🟢 Después de guardar CompraInsumo ID: {compra.pk}")
+                        compras_creadas.append(compra)
+                
+                if not compras_creadas:
+                    messages.error(request, 'Debe agregar al menos un insumo.')
+                    context = {
+                        'formset': formset,
+                        'accion': 'Registrar',
+                        'numero_factura': numero_factura,
+                        'fecha_compra': fecha_compra_str,
+                        'moneda': moneda,
+                        'aplicar_iva': aplicar_iva,
+                    }
+                    return render(request, 'Inventario/form_compra.html', context)
+                
+                total_compras = len(compras_creadas)
+                total_usd = sum(c.monto_total_usd for c in compras_creadas)
+                
+                messages.success(
+                    request,
+                    f'Se registraron {total_compras} compra(s) exitosamente. Total: ${total_usd:.2f} USD'
+                )
                 return redirect('listar_compras')
+            except ValidationError as e:
+                messages.error(request, f'Error de validación: {e}')
+                context = {
+                    'formset': formset,
+                    'accion': 'Registrar',
+                    'numero_factura': numero_factura,
+                    'fecha_compra': fecha_compra_str,
+                    'moneda': moneda,
+                    'aplicar_iva': aplicar_iva,
+                }
+                return render(request, 'Inventario/form_compra.html', context)
             except Exception as e:
-                messages.error(request, f'Error al guardar la compra: {str(e)}')
+                messages.error(request, f'Error al registrar las compras: {str(e)}')
+                context = {
+                    'formset': formset,
+                    'accion': 'Registrar',
+                    'numero_factura': numero_factura,
+                    'fecha_compra': fecha_compra_str,
+                    'moneda': moneda,
+                    'aplicar_iva': aplicar_iva,
+                }
+                return render(request, 'Inventario/form_compra.html', context)
+        else:
+            messages.error(request, f'Errores en el formulario: {formset.errors}')
+            context = {
+                'formset': formset,
+                'accion': 'Registrar',
+                'numero_factura': numero_factura,
+                'fecha_compra': fecha_compra_str,
+                'moneda': moneda,
+                'aplicar_iva': aplicar_iva,
+            }
+            return render(request, 'Inventario/form_compra.html', context)
     else:
-        form = CompraInsumoForm()
+        formset = CompraInsumoDetalleFormSet()
     
     context = {
-        'form': form,
+        'formset': formset,
         'accion': 'Registrar',
     }
     return render(request, 'Inventario/form_compra.html', context)
@@ -159,11 +328,13 @@ def crear_compra(request):
 @login_required
 def editar_compra(request, pk):
     compra = get_object_or_404(CompraInsumo, pk=pk)
+    
     if request.method == 'POST':
         form = CompraInsumoForm(request.POST, instance=compra)
         if form.is_valid():
             try:
                 form.save()
+                messages.success(request, 'Compra actualizada exitosamente.')
                 return redirect('listar_compras')
             except Exception as e:
                 messages.error(request, f'Error al actualizar la compra: {str(e)}')
@@ -175,14 +346,19 @@ def editar_compra(request, pk):
         'accion': 'Editar',
         'compra': compra,
     }
-    return render(request, 'Inventario/form_compra.html', context)
+    return render(request, 'Inventario/form_compra_editar.html', context)
 
 
 @login_required
 def eliminar_compra(request, pk):
     compra = get_object_or_404(CompraInsumo, pk=pk)
     if request.method == 'POST':
+        # Restaurar inventario antes de eliminar
+        compra.insumo.existencia -= compra.cantidad
+        compra.insumo.save()
+        
         compra.delete()
+        messages.success(request, 'Compra eliminada exitosamente.')
         return redirect('listar_compras')
     
     context = {
@@ -442,3 +618,7 @@ def insumos_pdf(request):
         print(error_msg)
         print("=" * 80)
         return HttpResponse(f"<pre>{error_msg}</pre>", status=500)
+
+
+# ==================== IMPORTAR VISTAS DE COMPRAS AGRUPADAS ====================
+from .views_grupo_compras import detalle_compra_grupo, editar_compra_grupo, eliminar_compra_grupo

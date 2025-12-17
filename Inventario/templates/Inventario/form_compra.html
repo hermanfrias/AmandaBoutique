@@ -1,85 +1,158 @@
-{% extends 'BoutiqueApp/base.html' %} {% block title %}{{ accion }} Compra -
-Amanda Mateo Boutique{% endblock %} {% block content %}
+{% extends 'BoutiqueApp/base.html' %} 
+{% block title %}{{ accion }} Compra de Insumos - Amanda Mateo Boutique {% endblock %}
+{% block content %}
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-10">
       <div class="card">
         <div class="card-header">
-          <h3>{{ accion }} Compra de Insumo</h3>
+          <h3>{{ accion }} Compra de Insumos</h3>
         </div>
         <div class="card-body">
-          <form method="post">
-            {% csrf_token %} {% if form.non_field_errors %}
-            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          <form method="post" id="compraForm">
+            {% csrf_token %}
+
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
             {% endif %}
 
-            <div class="mb-3">
-              <label for="{{ form.insumo.id_for_label }}" class="form-label">
-                {{ form.insumo.label }}
-              </label>
-              {{ form.insumo }} {% if form.insumo.errors %}
-              <div class="text-danger">{{ form.insumo.errors }}</div>
-              {% endif %}
+            <div class="alert alert-info">
+              <strong>Nota:</strong> Los campos de encabezado (Número de
+              Factura, Fecha, Moneda, IVA) se aplicarán a todos los insumos que
+              agregues a continuación.
             </div>
 
-            <div class="mb-3">
-              <label
-                for="{{ form.fecha_compra.id_for_label }}"
-                class="form-label"
-              >
-                {{ form.fecha_compra.label }}
-              </label>
-              {{ form.fecha_compra }} {% if form.fecha_compra.errors %}
-              <div class="text-danger">{{ form.fecha_compra.errors }}</div>
-              {% endif %}
-              <small class="form-text text-muted">
-                Debe existir una cotización del dólar para esta fecha.
-              </small>
-            </div>
-
-            <div class="mb-3">
-              <label for="{{ form.cantidad.id_for_label }}" class="form-label">
-                {{ form.cantidad.label }}
-              </label>
-              {{ form.cantidad }} {% if form.cantidad.errors %}
-              <div class="text-danger">{{ form.cantidad.errors }}</div>
-              {% endif %}
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="{{ form.moneda.id_for_label }}" class="form-label">
-                  {{ form.moneda.label }}
-                </label>
-                {{ form.moneda }} {% if form.moneda.errors %}
-                <div class="text-danger">{{ form.moneda.errors }}</div>
-                {% endif %}
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label for="numero_factura" class="form-label"
+                  >Número de Factura</label
+                >
+                <input
+                  type="text"
+                  name="numero_factura"
+                  id="numero_factura"
+                  class="form-control"
+                  placeholder="Ej: F-001234"
+                  value="{{ numero_factura|default:'' }}"
+                />
               </div>
-
-              <div class="col-md-6 mb-3">
-                <label for="{{ form.monto.id_for_label }}" class="form-label">
-                  {{ form.monto.label }}
-                </label>
-                {{ form.monto }} {% if form.monto.errors %}
-                <div class="text-danger">{{ form.monto.errors }}</div>
-                {% endif %}
+              <div class="col-md-6">
+                <label for="fecha_compra" class="form-label"
+                  >Fecha de Compra</label
+                >
+                <input
+                  type="date"
+                  name="fecha_compra"
+                  id="fecha_compra"
+                  class="form-control"
+                  value="{{ fecha_compra|default:'' }}"
+                  required
+                />
                 <small class="form-text text-muted">
-                  Ingrese el monto en la moneda seleccionada.
+                  Debe existir una cotización del dólar para esta fecha.
                 </small>
               </div>
             </div>
 
-            <div class="mb-3 form-check">
-              {{ form.aplicar_iva }}
-              <label
-                class="form-check-label"
-                for="{{ form.aplicar_iva.id_for_label }}"
-              >
-                {{ form.aplicar_iva.label }}
-              </label>
-              {% if form.aplicar_iva.errors %}
-              <div class="text-danger">{{ form.aplicar_iva.errors }}</div>
-              {% endif %}
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label for="moneda" class="form-label">Moneda</label>
+                <select name="moneda" id="moneda" class="form-select" required>
+                  <option value="">---------</option>
+                  <option value="Bs" {% if moneda == 'Bs' %}selected{% endif %}>Bolívares</option>
+                  <option value="$" {% if moneda == '$' %}selected{% endif %}>Dólares</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check mt-4">
+                  <input
+                    type="checkbox"
+                    name="aplicar_iva"
+                    id="aplicar_iva"
+                    class="form-check-input"
+                    {% if aplicar_iva %}checked{% endif %}
+                  />
+                  <label class="form-check-label" for="aplicar_iva">
+                    Aplicar IVA (16%)
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <hr />
+            <h5 class="mb-3">Insumos Comprados</h5>
+
+            {{ formset.management_form }}
+
+            <div id="formset-container">
+              {% for form in formset %}
+              <div class="formset-form border rounded p-3 mb-3">
+                <div class="row">
+                  <div class="col-md-5">
+                    <label
+                      for="{{ form.insumo.id_for_label }}"
+                      class="form-label"
+                    >
+                      {{ form.insumo.label }}
+                    </label>
+                    {{ form.insumo }}
+                    {% if form.insumo.errors %}
+                    <div class="text-danger">{{ form.insumo.errors }}</div>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-3">
+                    <label
+                      for="{{ form.cantidad.id_for_label }}"
+                      class="form-label"
+                    >
+                      {{ form.cantidad.label }}
+                    </label>
+                    {{ form.cantidad }}
+                    {% if form.cantidad.errors %}
+                    <div class="text-danger">{{ form.cantidad.errors }}</div>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-3">
+                    <label
+                      for="{{ form.monto.id_for_label }}"
+                      class="form-label"
+                    >
+                      {{ form.monto.label }}
+                    </label>
+                    {{ form.monto }}
+                    {% if form.monto.errors %}
+                    <div class="text-danger">{{ form.monto.errors }}</div>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-1 d-flex align-items-end">
+                    {% if not forloop.first %}
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm remove-form"
+                    >
+                      Eliminar
+                    </button>
+                    {% endif %}
+                  </div>
+                </div>
+                {{ form.id }}
+                {% if form.DELETE %}
+                <div class="d-none">{{ form.DELETE }}</div>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-4">
+              <button type="button" class="btn btn-secondary" id="add-form">
+                + Agregar Insumo
+              </button>
             </div>
 
             <div class="alert alert-info">
@@ -120,9 +193,13 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-  $(document).ready(function () {
-    // Inicializar Select2 en el campo de insumo
-    $("#id_insumo").select2({
+  document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("formset-container");
+    const addButton = document.getElementById("add-form");
+    const totalForms = document.querySelector("#id_form-TOTAL_FORMS");
+
+    // Inicializar Select2 en todos los campos de insumo existentes
+    $(".insumo-select").select2({
       theme: "bootstrap-5",
       placeholder: "Buscar insumo por código o descripción...",
       allowClear: true,
@@ -136,7 +213,113 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
         },
       },
     });
+
+    // Función para actualizar los índices de los formularios
+    function updateFormIndexes() {
+      const forms = container.querySelectorAll(".formset-form");
+      forms.forEach((form, index) => {
+        const inputs = form.querySelectorAll("input, select");
+        inputs.forEach((input) => {
+          if (input.name) {
+            input.name = input.name.replace(/form-\d+-/, `form-${index}-`);
+            input.id = input.id.replace(/id_form-\d+-/, `id_form-${index}-`);
+          }
+        });
+
+        const labels = form.querySelectorAll("label");
+        labels.forEach((label) => {
+          if (label.htmlFor) {
+            label.htmlFor = label.htmlFor.replace(
+              /id_form-\d+-/,
+              `id_form-${index}-`
+            );
+          }
+        });
+      });
+      totalForms.value = forms.length;
+    }
+
+    // Agregar nuevo formulario
+    addButton.addEventListener("click", function () {
+      const forms = container.querySelectorAll(".formset-form");
+      const lastForm = forms[forms.length - 1];
+      
+      // Destruir Select2 en el formulario que vamos a clonar
+      const selectToClone = lastForm.querySelector(".insumo-select");
+      if (selectToClone) {
+        $(selectToClone).select2("destroy");
+      }
+      
+      // Clonar el formulario
+      const newForm = lastForm.cloneNode(true);
+
+      // Limpiar valores del nuevo formulario
+      const inputs = newForm.querySelectorAll("input, select");
+      inputs.forEach((input) => {
+        if (input.type !== "hidden") {
+          input.value = "";
+        }
+      });
+
+      // Eliminar cualquier elemento Select2 residual (span.select2)
+      const select2Containers = newForm.querySelectorAll(".select2-container");
+      select2Containers.forEach((container) => container.remove());
+
+      // Agregar botón de eliminar si no existe
+      const deleteBtn = newForm.querySelector(".remove-form");
+      if (!deleteBtn) {
+        const col = newForm.querySelector(".col-md-1");
+        col.innerHTML = '<button type="button" class="btn btn-danger btn-sm remove-form">Eliminar</button>';
+      }
+
+      container.appendChild(newForm);
+      updateFormIndexes();
+
+      // Reinicializar Select2 en TODOS los selects (el original y el nuevo)
+      $(".insumo-select").each(function() {
+        // Destruir si ya existe
+        if ($(this).hasClass("select2-hidden-accessible")) {
+          $(this).select2("destroy");
+        }
+        // Inicializar
+        $(this).select2({
+          theme: "bootstrap-5",
+          placeholder: "Buscar insumo por código o descripción...",
+          allowClear: true,
+          width: "100%",
+          language: {
+            noResults: function () {
+              return "No se encontraron resultados";
+            },
+            searching: function () {
+              return "Buscando...";
+            },
+          },
+        });
+      });
+
+      // Agregar event listener al nuevo botón de eliminar
+      const newDeleteBtn = newForm.querySelector(".remove-form");
+      if (newDeleteBtn) {
+        newDeleteBtn.addEventListener("click", function () {
+          newForm.remove();
+          updateFormIndexes();
+        });
+      }
+    });
+
+    // Eliminar formulario
+    container.addEventListener("click", function (e) {
+      if (e.target.classList.contains("remove-form")) {
+        const forms = container.querySelectorAll(".formset-form");
+        if (forms.length > 1) {
+          e.target.closest(".formset-form").remove();
+          updateFormIndexes();
+        } else {
+          alert("Debe haber al menos un insumo.");
+        }
+      }
+    });
   });
 </script>
-
 {% endblock %}

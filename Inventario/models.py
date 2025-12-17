@@ -68,6 +68,7 @@ class CompraInsumo(models.Model):
     ]
     
     insumo = models.ForeignKey(ExistenciaInsumo, on_delete=models.CASCADE, related_name='compras')
+    numero_factura = models.CharField(max_length=50, blank=True, null=True, verbose_name='Número de Factura')
     fecha_compra = models.DateField()
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)
     moneda = models.CharField(max_length=2, choices=MONEDAS)
@@ -140,7 +141,9 @@ class CompraInsumo(models.Model):
             except CompraInsumo.DoesNotExist:
                 cantidad_anterior = Decimal('0')
         
+        print(f"💾 CompraInsumo.save() llamado - PK antes: {self.pk}")
         super().save(*args, **kwargs)
+        print(f"💾 CompraInsumo.save() completado - PK después: {self.pk}")
         
         # Actualizar el insumo automáticamente
         if self.cantidad > 0:
@@ -263,4 +266,3 @@ class DetalleUsoInsumo(models.Model):
     
     def __str__(self):
         return f"{self.insumo.codigo} - {self.cantidad} {self.insumo.medida}"
-

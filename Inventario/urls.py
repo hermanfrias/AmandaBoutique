@@ -14,8 +14,13 @@ urlpatterns = [
     path('compras/', views.listar_compras, name='listar_compras'),
     path('compras/crear/', views.crear_compra, name='crear_compra'),
     path('compras/<int:pk>/editar/', views.editar_compra, name='editar_compra'),
+    path('compras/<int:pk>/detalle/', views.detalle_compra, name='detalle_compra'),
     path('compras/<int:pk>/eliminar/', views.eliminar_compra, name='eliminar_compra'),
-    path('compras/<int:pk>/', views.detalle_compra, name='detalle_compra'),
+    
+    # URLs para operaciones agrupadas por factura
+    path('compras/grupo/<str:numero_factura>/<str:fecha>/detalle/', views.detalle_compra_grupo, name='detalle_compra_grupo'),
+    path('compras/grupo/<str:numero_factura>/<str:fecha>/editar/', views.editar_compra_grupo, name='editar_compra_grupo'),
+    path('compras/grupo/<str:numero_factura>/<str:fecha>/eliminar/', views.eliminar_compra_grupo, name='eliminar_compra_grupo'),
     path('compras/pdf/', views.compras_pdf, name='compras_pdf'),
     
     # URLs para UsoInsumo

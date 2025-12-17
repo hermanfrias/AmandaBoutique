@@ -1,7 +1,7 @@
 # Revisión del Proyecto Amanda Boutique en Producción
 
 **Fecha de Creación:** 28 de noviembre de 2025  
-**Última Actualización:** 15 de diciembre de 2025  
+**Última Actualización:** 16 de diciembre de 2025  
 **Servidor:** 192.168.1.193:8000 (Producción) / 192.168.1.193:9000 (AsoTunapuy)  
 **Servicio:** DjangoServidor (NSSM)
 
@@ -259,6 +259,105 @@ Bolívares (Estimado):
 - ✅ **Datos precisos** - Bug de edición corregido, inventario confiable
 - ✅ **Reportes exactos** - PDF con cálculos correctos
 - ✅ **UI consistente** - Botones estandarizados en todo el módulo
+
+#### **Compras Agrupadas por Factura (Dic 16, 2025)** ✅
+
+**Objetivo:** Refactorizar el módulo de compras para agrupar ítems por número de factura, permitiendo gestión de facturas completas.
+
+**Cambios implementados:**
+
+1. **Agrupación de Compras** ✅
+
+   - ✅ **Vista de lista agrupada** - Compras organizadas por `numero_factura` + `fecha_compra`
+   - ✅ **Cálculo de totales por grupo** - Subtotales, IVA y totales agregados
+   - ✅ **Contador de ítems** - Muestra cantidad de ítems por factura
+   - ✅ **Filtros y búsqueda** - Por rango de fechas y número de factura
+
+2. **Nuevas Vistas de Grupo** ✅
+
+   - ✅ **`detalle_compra_grupo`** - Muestra todos los ítems de una factura
+   - ✅ **`editar_compra_grupo`** - Edita múltiples ítems con formset
+   - ✅ **`eliminar_compra_grupo`** - Elimina factura completa con confirmación
+
+3. **Nuevos Templates** ✅
+
+   - ✅ **`detalle_compra_grupo.html`** - Detalle completo de factura
+   - ✅ **`editar_compra_grupo.html`** - Formulario de edición con formset
+   - ✅ **`eliminar_compra_grupo.html`** - Confirmación de eliminación
+
+4. **Funcionalidad de Edición Mejorada** ✅
+
+   - ✅ **Editar cantidades y montos** - Por ítem individual
+   - ✅ **Eliminar ítems individuales** - Checkbox de eliminación en formset
+   - ✅ **Validación de formset** - Manejo de errores mejorado
+   - ✅ **Actualización de inventario** - Ajuste automático al editar/eliminar
+
+5. **Limpieza de Código** ✅
+
+   - ✅ **Templates eliminados** - 3 templates obsoletos removidos:
+     - `detalle_compra.html` (reemplazado por `detalle_compra_grupo.html`)
+     - `form_compra_editar.html` (reemplazado por `editar_compra_grupo.html`)
+     - `eliminar_compra.html` (reemplazado por `eliminar_compra_grupo.html`)
+   - ✅ **Vistas mantenidas** - Vistas antiguas conservadas para Django Admin
+
+6. **Campo Editable en Admin** ✅
+
+   - ✅ **`numero_factura` en CompraInsumoAdmin** - Ahora editable desde el admin de Django
+
+**Archivos creados:**
+
+- [`Inventario/views_grupo_compras.py`](file:///E:/AmandaBoutique/Inventario/views_grupo_compras.py) - Vistas de grupo
+- [`Inventario/templates/Inventario/detalle_compra_grupo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/detalle_compra_grupo.html)
+- [`Inventario/templates/Inventario/editar_compra_grupo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/editar_compra_grupo.html)
+- [`Inventario/templates/Inventario/eliminar_compra_grupo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/eliminar_compra_grupo.html)
+
+**Archivos modificados:**
+
+- [`Inventario/views.py`](file:///E:/AmandaBoutique/Inventario/views.py) - Imports de vistas de grupo
+- [`Inventario/admin.py`](file:///E:/AmandaBoutique/Inventario/admin.py) - Campo `numero_factura` editable
+- [`Inventario/templates/Inventario/listar_compras.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_compras.html) - Vista agrupada
+
+**Archivos eliminados:**
+
+- `Inventario/templates/Inventario/detalle_compra.html`
+- `Inventario/templates/Inventario/form_compra_editar.html`
+- `Inventario/templates/Inventario/eliminar_compra.html`
+
+#### **Movimientos de Caja Automáticos (Dic 16, 2025)** ✅
+
+**Objetivo:** Crear automáticamente registros en `MovimientoCaja` al guardar compras de insumos.
+
+**Implementación:**
+
+1. **Django Signal** ✅
+
+   - ✅ **Archivo creado:** [`Inventario/signals.py`](file:///E:/AmandaBoutique/Inventario/signals.py)
+   - ✅ **Signal `post_save`** - Se ejecuta al guardar `CompraInsumo`
+   - ✅ **Función:** `crear_o_actualizar_movimiento_caja`
+
+2. **Comportamiento** ✅
+
+   - ✅ **Compra nueva** - Crea `MovimientoCaja` con:
+     - Descripción: "Compra insumos varios"
+     - Tipo: "Gasto"
+     - Tipo de movimiento: "Compra de Insumos"
+     - Método de pago: "Efectivo"
+     - Moneda: La misma de la compra (Bs o $)
+     - Monto: Total con IVA de la compra
+     - Fecha: Fecha de la compra
+   - ✅ **Compra editada** - Actualiza el movimiento existente con nuevo monto
+
+3. **Registro de Signals** ✅
+
+   - ✅ **Archivo modificado:** [`Inventario/apps.py`](file:///E:/AmandaBoutique/Inventario/apps.py)
+   - ✅ **Método `ready()`** - Importa signals al iniciar la app
+
+**Impacto:**
+
+- ✅ **Automatización completa** - No requiere intervención manual
+- ✅ **Sincronización** - Inventario y flujo de caja siempre sincronizados
+- ✅ **Trazabilidad** - Cada compra tiene su movimiento correspondiente
+- ✅ **Actualización dinámica** - Cambios en compras se reflejan en movimientos
 
 ### 📊 Reportes y PDFs (Dic 7-9)
 
@@ -537,7 +636,8 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 
 ## ✨ Resumen de Mejoras Recientes
 
-> [!IMPORTANT] > **Cambios implementados (Nov 28 - Dic 15, 2025):**
+> [!IMPORTANT]
+> **Cambios implementados (Nov 28 - Dic 16, 2025):**
 >
 > ### 🎨 Estandarización y Diseño
 >
@@ -568,33 +668,39 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 > 19. ✅ **NUEVO (Dic 15):** Select2 para búsqueda rápida de insumos
 > 20. ✅ **NUEVO (Dic 15):** Corrección de bug en edición de compras
 > 21. ✅ **NUEVO (Dic 15):** Cálculo correcto de valor total en PDF
+> 22. ✅ **NUEVO (Dic 16):** Compras agrupadas por número de factura
+> 23. ✅ **NUEVO (Dic 16):** Edición de múltiples ítems con formset
+> 24. ✅ **NUEVO (Dic 16):** Eliminación de ítems individuales
+> 25. ✅ **NUEVO (Dic 16):** Movimientos de caja automáticos
+> 26. ✅ **NUEVO (Dic 16):** Sincronización inventario-flujo de caja
 >
 > ### 📊 Reportes y PDFs
 >
-> 22. ✅ Headers repetidos en todas las páginas
-> 23. ✅ Formato estandarizado y profesional
-> 24. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
-> 25. ✅ Alineación y formato de números mejorados
+> 27. ✅ Headers repetidos en todas las páginas
+> 28. ✅ Formato estandarizado y profesional
+> 29. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
+> 30. ✅ Alineación y formato de números mejorados
 >
 > ### 🔐 Permisos y Usuarios
 >
-> 26. ✅ Sistema de permisos granulares por módulo
-> 27. ✅ Interfaz de gestión de usuarios mejorada
-> 28. ✅ Registro con permisos de solo lectura por defecto
-> 29. ✅ UI adaptativa según permisos
+> 31. ✅ Sistema de permisos granulares por módulo
+> 32. ✅ Interfaz de gestión de usuarios mejorada
+> 33. ✅ Registro con permisos de solo lectura por defecto
+> 34. ✅ UI adaptativa según permisos
 >
 > ### 🔧 Correcciones y Optimizaciones
 >
-> 30. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
-> 31. ✅ Base de datos optimizada (campo mes_pago, señales Django)
-> 32. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
-> 33. ✅ Validaciones mejoradas en formularios
+> 35. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
+> 36. ✅ Base de datos optimizada (campo mes_pago, señales Django)
+> 37. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
+> 38. ✅ Validaciones mejoradas en formularios
+> 39. ✅ **NUEVO (Dic 16):** Limpieza de código (3 templates obsoletos eliminados)
 >
 > ### 🚀 Producción
 >
-> 34. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
-> 35. ✅ Scripts de despliegue automatizados
-> 36. ✅ Documentación completa de implementación
+> 40. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
+> 41. ✅ Scripts de despliegue automatizados
+> 42. ✅ Documentación completa de implementación
 
 ---
 
@@ -677,8 +783,8 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 
 ## 📞 Información de Contacto y Soporte
 
-**Versión del Sistema:** 2.3  
-**Última Actualización:** 15 de diciembre de 2025  
+**Versión del Sistema:** 2.4  
+**Última Actualización:** 16 de diciembre de 2025  
 **Desarrollado con:** Django 5.1.4 + Bootstrap 5  
 **Documentación:** README.md actualizado con todas las funcionalidades
 
@@ -713,5 +819,5 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
 
 ---
 
-**Documento actualizado:** 15 de diciembre de 2025  
+**Documento actualizado:** 16 de diciembre de 2025  
 **Próxima revisión:** Enero 2026

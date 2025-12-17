@@ -13,16 +13,16 @@ class ExistenciaInsumoAdmin(admin.ModelAdmin):
 
 @admin.register(CompraInsumo)
 class CompraInsumoAdmin(admin.ModelAdmin):
-    list_display = ['fecha_compra', 'insumo', 'cantidad', 'moneda', 'monto', 'aplicar_iva', 'monto_total_usd']
-    list_filter = ['moneda', 'aplicar_iva', 'fecha_compra']
-    search_fields = ['insumo__codigo', 'insumo__descripcion']
+    list_display = ['numero_factura', 'fecha_compra', 'insumo', 'cantidad', 'moneda', 'monto', 'aplicar_iva', 'monto_total_usd']
+    list_filter = ['numero_factura', 'moneda', 'aplicar_iva', 'fecha_compra']
+    search_fields = ['numero_factura', 'insumo__codigo', 'insumo__descripcion']
     readonly_fields = ['monto_bs', 'monto_usd', 'monto_iva_bs', 'monto_iva_usd', 'monto_total_bs', 'monto_total_usd']
     ordering = ['-fecha_compra']
     date_hierarchy = 'fecha_compra'
     
     fieldsets = (
         ('Información General', {
-            'fields': ('insumo', 'fecha_compra', 'cantidad')
+            'fields': ('numero_factura', 'insumo', 'fecha_compra', 'cantidad')
         }),
         ('Información de Pago', {
             'fields': ('moneda', 'monto', 'aplicar_iva')

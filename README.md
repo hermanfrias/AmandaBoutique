@@ -77,7 +77,9 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - Fecha de creación
   - **Filtros avanzados** - Por categoría y proveedor en listado
 - **Compras de Insumos**
-  - Registro de compras con fecha
+  - **Agrupación por factura** - Compras organizadas por número de factura y fecha
+  - **Creación de múltiples ítems** - Formset para agregar varios insumos en una factura
+  - Registro de compras con número de factura opcional
   - **Selector de insumos con búsqueda** - Integración con Select2 para búsqueda rápida
   - Cantidad y moneda (Bolívares o Dólares)
   - Opción de aplicar IVA (16%)
@@ -86,6 +88,12 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - **Actualización automática**: Al registrar una compra:
     - Se suma la cantidad al inventario
     - Se calcula el costo unitario: `monto_total_usd / cantidad`
+    - **Se crea automáticamente un MovimientoCaja** en el módulo de flujo
+  - **Gestión de grupos de compras**:
+    - Ver detalle completo de factura con todos sus ítems
+    - Editar cantidades y montos de ítems individuales
+    - Eliminar ítems individuales de una factura
+    - Eliminar factura completa con confirmación
   - **Corrección de bug**: Editar compra ahora ajusta correctamente el inventario
 - **Uso de Insumos**
   - Registro de consumo de insumos con descripción
@@ -102,6 +110,12 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - Alertas de stock mínimo (visual)
   - **Exportación a PDF** - Reporte completo de inventario con valor total
   - **Cálculo correcto de valor total** - Suma de (existencia × costo unitario)
+- **Integración con Flujo de Caja**
+  - **Creación automática de movimientos** - Cada compra genera un MovimientoCaja
+  - **Actualización automática** - Al editar compra, se actualiza el movimiento
+  - Descripción: "Compra insumos varios"
+  - Tipo: "Gasto"
+  - Método de pago: "Efectivo"
 
 ### 🔐 Sistema de Permisos de Usuario
 
@@ -416,6 +430,6 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.3  
-**Última actualización**: 15 de diciembre de 2024 - Mejoras del Módulo de Inventario  
+**Versión**: 2.4  
+**Última actualización**: 16 de diciembre de 2024 - Compras Agrupadas y Movimientos Automáticos  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5

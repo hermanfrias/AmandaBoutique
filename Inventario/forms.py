@@ -30,9 +30,10 @@ class ExistenciaInsumoForm(forms.ModelForm):
 class CompraInsumoForm(forms.ModelForm):
     class Meta:
         model = CompraInsumo
-        fields = ['insumo', 'fecha_compra', 'cantidad', 'moneda', 'monto', 'aplicar_iva']
+        fields = ['insumo', 'numero_factura', 'fecha_compra', 'cantidad', 'moneda', 'monto', 'aplicar_iva']
         widgets = {
             'insumo': forms.Select(attrs={'class': 'form-select'}),
+            'numero_factura': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: F-001234'}),
             'fecha_compra': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'class': 'form-control'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'moneda': forms.Select(attrs={'class': 'form-select'}),
@@ -41,6 +42,7 @@ class CompraInsumoForm(forms.ModelForm):
         }
         labels = {
             'insumo': 'Insumo',
+            'numero_factura': 'Número de Factura',
             'fecha_compra': 'Fecha de Compra',
             'cantidad': 'Cantidad',
             'moneda': 'Moneda',
@@ -67,6 +69,41 @@ class CompraInsumoForm(forms.ModelForm):
                 )
         
         return cleaned_data
+
+
+# Formulario para líneas de detalle en creación por lotes
+class CompraInsumoDetalleForm(forms.Form):
+    insumo = forms.ModelChoiceField(
+        queryset=ExistenciaInsumo.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select insumo-select'}),
+        label='Insumo'
+    )
+    cantidad = forms.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={'class': 'form-control cantidad-input', 'step': '0.01', 'min': '0.01'}),
+        label='Cantidad'
+    )
+    monto = forms.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={'class': 'form-control monto-input', 'step': '0.01', 'min': '0.01'}),
+        label='Monto'
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['insumo'].label_from_instance = lambda obj: f"{obj.codigo} - {obj.descripcion}"
+
+
+# Formset para crear múltiples compras
+CompraInsumoDetalleFormSet = forms.formset_factory(
+    CompraInsumoDetalleForm,
+    extra=3,
+    can_delete=True,
+    min_num=1,
+    validate_min=True,
+)
 
 
 class UsoInsumoForm(forms.ModelForm):

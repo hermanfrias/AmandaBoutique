@@ -1,0 +1,172 @@
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Editar Compra - Amanda
+Mateo Boutique{% endblock %} {% block content %}
+<div class="container mt-5">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Editar Compra - Factura {{ numero_factura }}</h2>
+    </div>
+    <div class="col text-end">
+      <a href="{% url 'listar_compras' %}" class="btn btn-volver"> Cancelar </a>
+    </div>
+  </div>
+
+  {% if messages %} {% for message in messages %}
+  <div
+    class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+    role="alert"
+  >
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %} {% endif %} {% if formset.non_field_errors %}
+  <div class="alert alert-danger">
+    <h5>Errores del Formset:</h5>
+    {{ formset.non_field_errors }}
+  </div>
+  {% endif %} {% if formset.errors %}
+  <div class="alert alert-warning">
+    <h5>Errores de Formularios:</h5>
+    <pre>{{ formset.errors }}</pre>
+  </div>
+  {% endif %}
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4>Información General (Solo Lectura)</h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <p><strong>Número de Factura:</strong> {{ numero_factura }}</p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <strong>Fecha de Compra:</strong> {{ fecha_compra|date:"d/m/Y" }}
+          </p>
+        </div>
+        <div class="col-md-4">
+          <p>
+            <strong>Nota:</strong>
+            <span class="text-muted">
+              Puede editar cantidades y montos, o marcar ítems para eliminar
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form method="post">
+    {% csrf_token %} {{ formset.management_form }}
+
+    <div class="card">
+      <div class="card-header">
+        <h4>Ítems de la Compra</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th style="width: 5%">Eliminar</th>
+                <th style="width: 40%">Insumo</th>
+                <th style="width: 20%">Cantidad</th>
+                <th style="width: 20%">Monto</th>
+                <th style="width: 15%">Total USD</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for form in formset %}
+              <tr>
+                <td class="text-center">{{ form.DELETE }} {{ form.id }}</td>
+                <td>
+                  {{ form.insumo }} {% if form.insumo.errors %}
+                  <div class="text-danger small">{{ form.insumo.errors }}</div>
+                  {% endif %}
+                </td>
+                <td>
+                  {{ form.cantidad }} {% if form.cantidad.errors %}
+                  <div class="text-danger small">
+                    {{ form.cantidad.errors }}
+                  </div>
+                  {% endif %}
+                </td>
+                <td>
+                  {{ form.monto }} {% if form.monto.errors %}
+                  <div class="text-danger small">{{ form.monto.errors }}</div>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="text-muted small"
+                    >Se calcula automáticamente</span
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert alert-info mt-3">
+          <strong>Nota:</strong>
+          <ul class="mb-0">
+            <li>
+              Marque la casilla "Eliminar" para quitar un ítem de la factura
+            </li>
+            <li>Los totales se recalcularán automáticamente al guardar</li>
+            <li>Las existencias se ajustarán según los cambios realizados</li>
+          </ul>
+        </div>
+
+        <div class="mt-4 text-center">
+          <button type="submit" class="btn btn-pink">Guardar Cambios</button>
+          <a href="{% url 'listar_compras' %}" class="btn btn-volver">
+            Cancelar
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  /* Estilos para los campos del formset */
+  #id_form-0-insumo,
+  #id_form-1-insumo,
+  #id_form-2-insumo,
+  #id_form-3-insumo,
+  #id_form-4-insumo,
+  #id_form-5-insumo,
+  #id_form-6-insumo,
+  #id_form-7-insumo,
+  #id_form-8-insumo,
+  #id_form-9-insumo,
+  select[name$="-insumo"] {
+    width: 100%;
+  }
+
+  input[name$="-cantidad"],
+  input[name$="-monto"] {
+    width: 100%;
+  }
+
+  select[name$="-moneda"] {
+    width: 100%;
+  }
+
+  input[type="checkbox"][name$="-DELETE"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  input[type="checkbox"][name$="-aplicar_iva"] {
+    width: 20px;
+    height: 20px;
+  }
+</style>
+{% endblock %}
