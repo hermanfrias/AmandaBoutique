@@ -147,9 +147,14 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
       </thead>
       <tbody>
         {% for m in movimientos %}
-        <tr>
+        <tr {% if "REVERSA" in m.descripcion %}style="background-color: #fff3cd;"{% endif %}>
           <td class="col-fecha">{{ m.fecha|date:"d/m/Y" }}</td>
-          <td class="col-descripcion text-start">{{ m.descripcion }}</td>
+          <td class="col-descripcion text-start">
+            {{ m.descripcion }}
+            {% if "REVERSA" in m.descripcion %}
+            <span class="badge bg-warning text-dark ms-1">REVERSA</span>
+            {% endif %}
+          </td>
           <td class="col-tipo">{{ m.tipo }}</td>
           <td class="col-tipo-mov">{{ m.tipo_movimiento|default:"-" }}</td>
           <td class="col-metodo">{{ m.metodo_pago|default:"-" }}</td>

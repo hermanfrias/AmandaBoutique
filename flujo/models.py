@@ -35,6 +35,8 @@ class MovimientoCaja(models.Model):
     monto_usd = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     tipo_movimiento = models.CharField(max_length=20, choices=TIPO_MOVIMIENTO, blank=True, null=True)
     metodo_pago = models.CharField(max_length=20, choices=METODO_PAGO, blank=True, null=True)
+    numero_factura = models.CharField(max_length=50, blank=True, null=True, verbose_name='Número de Factura', help_text='Número de factura asociado (para compras de insumos)')
+
 
 
     class Meta:

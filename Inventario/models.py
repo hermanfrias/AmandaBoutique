@@ -82,6 +82,10 @@ class CompraInsumo(models.Model):
     monto_iva_usd = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, editable=False)
     monto_total_bs = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, editable=False)
     monto_total_usd = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, editable=False)
+    
+    # Campos de anulación
+    anulada = models.BooleanField(default=False, verbose_name='Anulada', help_text='Indica si esta compra ha sido anulada')
+    fecha_anulacion = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de Anulación')
 
     class Meta:
         ordering = ['-fecha_compra']
@@ -96,6 +100,36 @@ class CompraInsumo(models.Model):
                 f'No existe cotización del dólar para la fecha {self.fecha_compra.strftime("%d/%m/%Y")}. '
                 'Por favor registre la cotización del día primero.'
             )
+    
+    def anular(self):
+        """Anula esta compra, revierte inventario y marca como anulada"""
+        from django.utils import timezone
+        
+        if self.anulada:
+            raise ValidationError('Esta compra ya está anulada')
+        
+        # Marcar como anulada
+        self.anulada = True
+        self.fecha_anulacion = timezone.now()
+        
+        print(f"🔴 ANULAR: Iniciando anulación de compra ID: {self.pk}")
+        print(f"   Factura: {self.numero_factura}")
+        print(f"   Insumo: {self.insumo.codigo}")
+        
+        # Revertir inventario (restar la cantidad que se había sumado)
+        self.insumo.existencia -= self.cantidad
+        self.insumo.save()
+        print(f"   ✅ Inventario revertido")
+        
+        # Marcar que acabamos de anular (para que el signal lo detecte)
+        self._acabamos_de_anular = True
+        
+        # Guardar (el signal creará el movimiento de reversa)
+        print(f"   💾 Guardando compra anulada...")
+        self.save()
+        print(f"   ✅ Compra guardada. Anulada={self.anulada}, Fecha={self.fecha_anulacion}")
+
+
 
     def save(self, *args, **kwargs):
         from flujo.models import CotizacionDolar

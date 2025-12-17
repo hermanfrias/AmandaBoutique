@@ -1,0 +1,101 @@
+{% extends 'BoutiqueApp/base.html' %}
+{% block title %}Anular Compra - Amanda Mateo Boutique{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Anular Compra - Factura {{ numero_factura }}</h2>
+    </div>
+    <div class="col text-end">
+      <a href="{% url 'listar_compras' %}" class="btn btn-volver">Cancelar</a>
+    </div>
+  </div>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="alert alert-warning">
+    <h4 class="alert-heading">⚠️ Anulación de Compra</h4>
+    <p>
+      Está a punto de anular <strong>{{ compras.count }} compra(s)</strong> asociadas a la factura
+      <strong>{{ numero_factura }}</strong> del <strong>{{ fecha_compra|date:"d/m/Y" }}</strong>.
+    </p>
+    <hr />
+    <p class="mb-0"><strong>Consecuencias de esta acción:</strong></p>
+    <ul>
+      <li>Las compras quedarán marcadas como <strong>ANULADAS</strong> (no se eliminarán)</li>
+      <li>Las existencias de los insumos se revertirán (se restarán las cantidades compradas)</li>
+      <li>Se crearán <strong>movimientos de reversa</strong> en el flujo de caja para compensar los gastos originales</li>
+      <li>Los registros permanecerán visibles para auditoría</li>
+    </ul>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <h4>Resumen de la Compra a Anular</h4>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p><strong>Número de Factura:</strong> {{ numero_factura }}</p>
+          <p><strong>Fecha de Compra:</strong> {{ fecha_compra|date:"d/m/Y" }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Cantidad de Ítems:</strong> {{ compras.count }}</p>
+          <p><strong>Total USD:</strong> ${{ total_usd|floatformat:2 }}</p>
+        </div>
+      </div>
+
+      <h5>Ítems que se anularán:</h5>
+      <div class="table-responsive">
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th class="text-end">Cantidad</th>
+              <th>Medida</th>
+              <th class="text-end">Total USD</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for compra in compras %}
+            <tr>
+              <td>{{ compra.insumo.codigo }}</td>
+              <td>{{ compra.insumo.descripcion }}</td>
+              <td class="text-end">{{ compra.cantidad|floatformat:2 }}</td>
+              <td>{{ compra.insumo.medida }}</td>
+              <td class="text-end">${{ compra.monto_total_usd|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr class="table-active">
+              <td colspan="4" class="text-end"><strong>Total:</strong></td>
+              <td class="text-end"><strong>${{ total_usd|floatformat:2 }}</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="text-center">
+      <button type="submit" class="btn btn-eliminar btn-lg">
+        Confirmar Anulación
+      </button>
+      <a href="{% url 'listar_compras' %}" class="btn btn-volver btn-lg">
+        Cancelar
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

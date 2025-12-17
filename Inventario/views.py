@@ -158,6 +158,9 @@ def listar_compras(request):
             subtotal_bs = sum(item.monto_bs or 0 for item in items)
             subtotal_usd = sum(item.monto_usd or 0 for item in items)
             
+            # Verificar si todas las compras están anuladas
+            todas_anuladas = all(item.anulada for item in items)
+            
             compras_agrupadas.append({
                 'numero_factura': compra.numero_factura or '-',
                 'fecha_compra': compra.fecha_compra,
@@ -170,7 +173,9 @@ def listar_compras(request):
                 'total_usd': total_usd,
                 'items': list(items),  # Lista de CompraInsumo para acceder a los IDs
                 'primer_item_id': items.first().pk,  # Para el botón de ver/editar
+                'anulada': todas_anuladas,  # Indicador de anulación
             })
+
     
     context = {
         'compras_agrupadas': compras_agrupadas,
@@ -350,21 +355,27 @@ def editar_compra(request, pk):
 
 
 @login_required
-def eliminar_compra(request, pk):
+def anular_compra(request, pk):
+    """Anula una compra individual (reemplaza eliminar_compra)"""
     compra = get_object_or_404(CompraInsumo, pk=pk)
-    if request.method == 'POST':
-        # Restaurar inventario antes de eliminar
-        compra.insumo.existencia -= compra.cantidad
-        compra.insumo.save()
-        
-        compra.delete()
-        messages.success(request, 'Compra eliminada exitosamente.')
+    
+    if compra.anulada:
+        messages.warning(request, 'Esta compra ya está anulada.')
         return redirect('listar_compras')
+    
+    if request.method == 'POST':
+        try:
+            compra.anular()
+            messages.success(request, f'Compra anulada exitosamente. Se ha creado un movimiento de reversa en el flujo de caja.')
+            return redirect('listar_compras')
+        except Exception as e:
+            messages.error(request, f'Error al anular la compra: {str(e)}')
     
     context = {
         'compra': compra,
     }
-    return render(request, 'Inventario/eliminar_compra.html', context)
+    return render(request, 'Inventario/anular_compra.html', context)
+
 
 
 @login_required
@@ -621,4 +632,5 @@ def insumos_pdf(request):
 
 
 # ==================== IMPORTAR VISTAS DE COMPRAS AGRUPADAS ====================
-from .views_grupo_compras import detalle_compra_grupo, editar_compra_grupo, eliminar_compra_grupo
+from .views_grupo_compras import detalle_compra_grupo, editar_compra_grupo, anular_compra_grupo
+

@@ -1,7 +1,7 @@
 # Revisión del Proyecto Amanda Boutique en Producción
 
 **Fecha de Creación:** 28 de noviembre de 2025  
-**Última Actualización:** 16 de diciembre de 2025  
+**Última Actualización:** 17 de diciembre de 2025  
 **Servidor:** 192.168.1.193:8000 (Producción) / 192.168.1.193:9000 (AsoTunapuy)  
 **Servicio:** DjangoServidor (NSSM)
 
@@ -359,6 +359,141 @@ Bolívares (Estimado):
 - ✅ **Trazabilidad** - Cada compra tiene su movimiento correspondiente
 - ✅ **Actualización dinámica** - Cambios en compras se reflejan en movimientos
 
+#### **Sistema de Anulación de Compras (Dic 17, 2025)** ✅
+
+**Objetivo:** Implementar sistema de anulación que reemplace la eliminación de compras, manteniendo trazabilidad completa y creando movimientos de reversa automáticos.
+
+**Cambios implementados:**
+
+1. **Modelo CompraInsumo Actualizado** ✅
+
+   - ✅ **Campo `anulada`** - Boolean para marcar compras anuladas
+   - ✅ **Campo `fecha_anulacion`** - DateTime para registro de cuándo se anuló
+   - ✅ **Método `anular()`** - Maneja todo el proceso de anulación:
+     - Marca como anulada
+     - Revierte inventario automáticamente
+     - Dispara signal para crear movimiento de reversa
+   - ✅ **Migración:** `0004_comprainsumo_anulada_comprainsumo_fecha_anulacion.py`
+
+2. **Modelo MovimientoCaja Actualizado** ✅
+
+   - ✅ **Campo `numero_factura`** - Vinculación directa con facturas
+   - ✅ Permite búsquedas precisas y creación de reversas
+   - ✅ **Migración:** `0003_movimientocaja_numero_factura.py`
+
+3. **Signals Mejorados** ✅
+
+   - ✅ **`pre_save` signal** - Captura estado anterior de `anulada`
+   - ✅ **`post_save` signal actualizado** - Detecta anulaciones y crea reversas
+   - ✅ **Lógica de detección robusta:**
+     - Compara estado anterior vs actual
+     - Si cambió de `False` a `True` → Crea movimiento de reversa
+     - Evita duplicados verificando estado previo
+   - ✅ **Movimiento de reversa:**
+     - Tipo: "Ingreso" (compensa el gasto original)
+     - Descripción: "REVERSA - Anulación Factura [NÚMERO]"
+     - Mismo monto que la compra original
+     - Mismo número de factura para vinculación
+
+4. **Vistas Actualizadas** ✅
+
+   - ✅ **`anular_compra`** - Anula compra individual
+   - ✅ **`anular_compra_grupo`** - Anula factura completa
+   - ✅ Reemplazan vistas de eliminación
+   - ✅ Confirmación antes de anular
+   - ✅ Mensajes informativos al usuario
+
+5. **Templates Nuevos** ✅
+
+   - ✅ **`anular_compra.html`** - Confirmación de anulación individual
+   - ✅ **`anular_compra_grupo.html`** - Confirmación de anulación de factura
+   - ✅ Muestran advertencias y detalles antes de anular
+
+6. **Templates Actualizados** ✅
+
+   - ✅ **`listar_compras.html`** - Indicadores visuales:
+     - Badge rojo "ANULADA" para compras anuladas
+     - Fila tachada con opacidad reducida
+     - Botones Editar/Anular ocultos para compras anuladas
+     - Solo muestra botón "Ver" para compras anuladas
+   - ✅ **`detalle_compra_grupo.html`** - Botón "Anular" agregado
+   - ✅ **`listar_movimientos.html`** - Indicadores de reversa:
+     - Badge amarillo "REVERSA" para movimientos de reversa
+     - Fondo amarillo claro (#fff3cd) en filas de reversa
+     - Fácil identificación visual
+
+7. **URLs Actualizadas** ✅
+
+   - ✅ Rutas de eliminación reemplazadas por rutas de anulación
+   - ✅ `anular_compra/<int:pk>/`
+   - ✅ `anular_compra_grupo/<str:numero_factura>/<str:fecha>/`
+
+8. **Admin de Django Configurado** ✅
+
+   - ✅ **Permisos de eliminación** - Solo superusuarios pueden eliminar
+   - ✅ **Acción personalizada** - "Anular compras seleccionadas"
+   - ✅ **Columna de estado** - Muestra badge de anulación
+   - ✅ **Filtro** - Por estado anulada/activa
+   - ✅ **Campos readonly** - `anulada` y `fecha_anulacion`
+
+9. **Herramientas de Utilidad** ✅
+
+   - ✅ **`revertir_anulacion.py`** - Management command para revertir anulaciones
+   - ✅ **`crear_reversas_faltantes.py`** - Crea reversas para compras anuladas sin reversa
+   - ✅ **`limpiar_datos_prueba.py`** - Elimina compras anuladas y movimientos de prueba
+   - ✅ **`diagnostico_anulaciones.py`** - Diagnóstico de estado de anulaciones
+
+**Archivos modificados:**
+
+- [`Inventario/models.py`](file:///E:/AmandaBoutique/Inventario/models.py) - Campos y método `anular()`
+- [`Inventario/signals.py`](file:///E:/AmandaBoutique/Inventario/signals.py) - Pre_save y post_save
+- [`Inventario/views_grupo_compras.py`](file:///E:/AmandaBoutique/Inventario/views_grupo_compras.py) - Vista de anulación
+- [`Inventario/urls.py`](file:///E:/AmandaBoutique/Inventario/urls.py) - Rutas actualizadas
+- [`Inventario/admin.py`](file:///E:/AmandaBoutique/Inventario/admin.py) - Permisos y acción
+- [`flujo/models.py`](file:///E:/AmandaBoutique/flujo/models.py) - Campo `numero_factura`
+
+**Archivos creados:**
+
+- [`Inventario/templates/Inventario/anular_compra.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/anular_compra.html)
+- [`Inventario/templates/Inventario/anular_compra_grupo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/anular_compra_grupo.html)
+- [`Inventario/management/commands/revertir_anulacion.py`](file:///E:/AmandaBoutique/Inventario/management/commands/revertir_anulacion.py)
+- [`Inventario/management/commands/crear_reversas_faltantes.py`](file:///E:/AmandaBoutique/Inventario/management/commands/crear_reversas_faltantes.py)
+- [`Inventario/management/commands/limpiar_datos_prueba.py`](file:///E:/AmandaBoutique/Inventario/management/commands/limpiar_datos_prueba.py)
+- [`Inventario/management/commands/diagnostico_anulaciones.py`](file:///E:/AmandaBoutique/Inventario/management/commands/diagnostico_anulaciones.py)
+
+**Flujo completo de anulación:**
+
+```
+1. Usuario hace clic en "Anular" en listado de compras
+2. Se muestra template de confirmación con detalles
+3. Usuario confirma anulación
+4. Vista llama a compra.anular():
+   a. Marca anulada = True
+   b. Establece fecha_anulacion = now()
+   c. Revierte inventario (resta cantidad)
+   d. Guarda la compra
+5. Pre_save signal captura estado anterior (anulada=False)
+6. Post_save signal detecta cambio de False a True
+7. Post_save crea MovimientoCaja de reversa:
+   - Tipo: Ingreso
+   - Descripción: "REVERSA - Anulación Factura [NÚMERO]"
+   - Monto: Mismo que compra original
+   - Fecha: Fecha de la compra
+8. Usuario ve mensaje de éxito
+9. Listado muestra badge "ANULADA"
+10. Movimientos de caja muestra badge "REVERSA"
+```
+
+**Impacto:**
+
+- ✅ **Trazabilidad completa** - Nunca se pierde información
+- ✅ **Auditoría** - Historial completo de operaciones
+- ✅ **Integridad financiera** - Movimientos compensados automáticamente
+- ✅ **Inventario preciso** - Reversión automática de cantidades
+- ✅ **Indicadores visuales** - Fácil identificación de anulaciones
+- ✅ **Seguridad** - Solo superusuarios pueden eliminar permanentemente
+- ✅ **Comandos de utilidad** - Herramientas para gestión y diagnóstico
+
 ### 📊 Reportes y PDFs (Dic 7-9)
 
 #### **Mejoras en Generación de PDFs** ✅
@@ -636,8 +771,7 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 
 ## ✨ Resumen de Mejoras Recientes
 
-> [!IMPORTANT]
-> **Cambios implementados (Nov 28 - Dic 16, 2025):**
+> [!IMPORTANT] > **Cambios implementados (Nov 28 - Dic 16, 2025):**
 >
 > ### 🎨 Estandarización y Diseño
 >
@@ -670,37 +804,43 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 > 21. ✅ **NUEVO (Dic 15):** Cálculo correcto de valor total en PDF
 > 22. ✅ **NUEVO (Dic 16):** Compras agrupadas por número de factura
 > 23. ✅ **NUEVO (Dic 16):** Edición de múltiples ítems con formset
-> 24. ✅ **NUEVO (Dic 16):** Eliminación de ítems individuales
+> 24. ✅ **NUEVO (Dic 16):** Anulación de ítems individuales
 > 25. ✅ **NUEVO (Dic 16):** Movimientos de caja automáticos
 > 26. ✅ **NUEVO (Dic 16):** Sincronización inventario-flujo de caja
+> 27. ✅ **NUEVO (Dic 17):** Sistema de anulación de compras
+> 28. ✅ **NUEVO (Dic 17):** Movimientos de reversa automáticos
+> 29. ✅ **NUEVO (Dic 17):** Trazabilidad completa (no elimina, anula)
+> 30. ✅ **NUEVO (Dic 17):** Indicadores visuales de anulación
+> 31. ✅ **NUEVO (Dic 17):** Pre_save y post_save signals mejorados
+> 32. ✅ **NUEVO (Dic 17):** Comandos de utilidad para gestión
 >
 > ### 📊 Reportes y PDFs
 >
-> 27. ✅ Headers repetidos en todas las páginas
-> 28. ✅ Formato estandarizado y profesional
-> 29. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
-> 30. ✅ Alineación y formato de números mejorados
+> 33. ✅ Headers repetidos en todas las páginas
+> 34. ✅ Formato estandarizado y profesional
+> 35. ✅ Nuevos reportes financieros (Estado de Cuenta Bancaria/Efectivo)
+> 36. ✅ Alineación y formato de números mejorados
 >
 > ### 🔐 Permisos y Usuarios
 >
-> 31. ✅ Sistema de permisos granulares por módulo
-> 32. ✅ Interfaz de gestión de usuarios mejorada
-> 33. ✅ Registro con permisos de solo lectura por defecto
-> 34. ✅ UI adaptativa según permisos
+> 37. ✅ Sistema de permisos granulares por módulo
+> 38. ✅ Interfaz de gestión de usuarios mejorada
+> 39. ✅ Registro con permisos de solo lectura por defecto
+> 40. ✅ UI adaptativa según permisos
 >
 > ### 🔧 Correcciones y Optimizaciones
 >
-> 35. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
-> 36. ✅ Base de datos optimizada (campo mes_pago, señales Django)
-> 37. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
-> 38. ✅ Validaciones mejoradas en formularios
-> 39. ✅ **NUEVO (Dic 16):** Limpieza de código (3 templates obsoletos eliminados)
+> 41. ✅ Múltiples bugs corregidos (TemplateSyntaxError, campos duplicados, etc.)
+> 42. ✅ Base de datos optimizada (campo mes_pago, señales Django)
+> 43. ✅ Formato de fechas estandarizado (dd/mm/yyyy)
+> 44. ✅ Validaciones mejoradas en formularios
+> 45. ✅ **NUEVO (Dic 16):** Limpieza de código (3 templates obsoletos eliminados)
 >
 > ### 🚀 Producción
 >
-> 40. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
-> 41. ✅ Scripts de despliegue automatizados
-> 42. ✅ Documentación completa de implementación
+> 46. ✅ Dos servicios NSSM configurados (AmandaBoutique:8000, AsoTunapuy:9000)
+> 47. ✅ Scripts de despliegue automatizados
+> 48. ✅ Documentación completa de implementación
 
 ---
 
@@ -783,8 +923,8 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 
 ## 📞 Información de Contacto y Soporte
 
-**Versión del Sistema:** 2.4  
-**Última Actualización:** 16 de diciembre de 2025  
+**Versión del Sistema:** 2.5  
+**Última Actualización:** 17 de diciembre de 2025  
 **Desarrollado con:** Django 5.1.4 + Bootstrap 5  
 **Documentación:** README.md actualizado con todas las funcionalidades
 
@@ -808,6 +948,18 @@ C:\nssm\nssm.exe start DjangoServidor
 
 # Reiniciar servicio
 C:\nssm\nssm.exe restart DjangoServidor
+
+# Crear reversas para compras anuladas sin reversa
+python manage.py crear_reversas_faltantes
+
+# Revertir anulación de una factura específica
+python manage.py revertir_anulacion [NUMERO_FACTURA]
+
+# Limpiar datos de prueba (compras anuladas y movimientos)
+python manage.py limpiar_datos_prueba --confirmar
+
+# Diagnóstico de anulaciones
+python manage.py diagnostico_anulaciones
 ```
 
 ### Backup de Base de Datos
@@ -819,5 +971,5 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
 
 ---
 
-**Documento actualizado:** 16 de diciembre de 2025  
+**Documento actualizado:** 17 de diciembre de 2025  
 **Próxima revisión:** Enero 2026

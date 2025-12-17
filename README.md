@@ -89,11 +89,19 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
     - Se suma la cantidad al inventario
     - Se calcula el costo unitario: `monto_total_usd / cantidad`
     - **Se crea automáticamente un MovimientoCaja** en el módulo de flujo
+  - **Sistema de anulación** (reemplaza eliminación):
+    - Anular compras individuales o facturas completas
+    - Mantiene registros para auditoría (no elimina)
+    - Revierte automáticamente el inventario
+    - **Crea movimientos de reversa** en flujo de caja
+    - Indicadores visuales: Badge "ANULADA" en compras
+    - Indicadores visuales: Badge "REVERSA" en movimientos
+    - Trazabilidad completa de operaciones
   - **Gestión de grupos de compras**:
     - Ver detalle completo de factura con todos sus ítems
     - Editar cantidades y montos de ítems individuales
-    - Eliminar ítems individuales de una factura
-    - Eliminar factura completa con confirmación
+    - Anular ítems individuales de una factura
+    - Anular factura completa con confirmación
   - **Corrección de bug**: Editar compra ahora ajusta correctamente el inventario
 - **Uso de Insumos**
   - Registro de consumo de insumos con descripción
@@ -113,9 +121,12 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
 - **Integración con Flujo de Caja**
   - **Creación automática de movimientos** - Cada compra genera un MovimientoCaja
   - **Actualización automática** - Al editar compra, se actualiza el movimiento
-  - Descripción: "Compra insumos varios"
-  - Tipo: "Gasto"
+  - **Movimientos de reversa** - Al anular compra, se crea movimiento de compensación
+  - Descripción: "Compra insumos - Factura [NÚMERO]"
+  - Descripción reversa: "REVERSA - Anulación Factura [NÚMERO]"
+  - Tipo: "Gasto" (compra) / "Ingreso" (reversa)
   - Método de pago: "Efectivo"
+  - Campo `numero_factura` para vinculación directa
 
 ### 🔐 Sistema de Permisos de Usuario
 
@@ -430,6 +441,6 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.4  
-**Última actualización**: 16 de diciembre de 2024 - Compras Agrupadas y Movimientos Automáticos  
+**Versión**: 2.5  
+**Última actualización**: 17 de diciembre de 2024 - Sistema de Anulación de Compras  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5

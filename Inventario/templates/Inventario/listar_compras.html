@@ -101,8 +101,20 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
       </thead>
       <tbody>
         {% for grupo in compras_agrupadas %}
-        <tr>
-          <td>{{ grupo.numero_factura }}</td>
+        <tr
+          {%
+          if
+          grupo.anulada
+          %}style="opacity: 0.6; text-decoration: line-through;"
+          {%
+          endif
+          %}
+        >
+          <td>
+            {{ grupo.numero_factura }} {% if grupo.anulada %}
+            <span class="badge bg-danger ms-2">ANULADA</span>
+            {% endif %}
+          </td>
           <td>{{ grupo.fecha_compra|date:"d/m/Y" }}</td>
           <td>{{ grupo.moneda }}</td>
           <td class="text-center">
@@ -127,6 +139,7 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
             >
               Ver
             </a>
+            {% if not grupo.anulada %}
             <a
               href="{% url 'editar_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
               class="btn btn-sm btn-editar"
@@ -135,12 +148,15 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
               Editar
             </a>
             <a
-              href="{% url 'eliminar_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
+              href="{% url 'anular_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
               class="btn btn-sm btn-eliminar"
-              title="Eliminar"
+              title="Anular"
             >
-              Eliminar
+              Anular
             </a>
+            {% else %}
+            <span class="badge bg-secondary">Anulada</span>
+            {% endif %}
           </td>
         </tr>
         {% empty %}

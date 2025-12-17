@@ -13,12 +13,13 @@ class ExistenciaInsumoAdmin(admin.ModelAdmin):
 
 @admin.register(CompraInsumo)
 class CompraInsumoAdmin(admin.ModelAdmin):
-    list_display = ['numero_factura', 'fecha_compra', 'insumo', 'cantidad', 'moneda', 'monto', 'aplicar_iva', 'monto_total_usd']
-    list_filter = ['numero_factura', 'moneda', 'aplicar_iva', 'fecha_compra']
+    list_display = ['numero_factura', 'fecha_compra', 'insumo', 'cantidad', 'moneda', 'monto', 'aplicar_iva', 'monto_total_usd', 'estado_anulacion']
+    list_filter = ['numero_factura', 'moneda', 'aplicar_iva', 'anulada', 'fecha_compra']
     search_fields = ['numero_factura', 'insumo__codigo', 'insumo__descripcion']
-    readonly_fields = ['monto_bs', 'monto_usd', 'monto_iva_bs', 'monto_iva_usd', 'monto_total_bs', 'monto_total_usd']
+    readonly_fields = ['monto_bs', 'monto_usd', 'monto_iva_bs', 'monto_iva_usd', 'monto_total_bs', 'monto_total_usd', 'anulada', 'fecha_anulacion']
     ordering = ['-fecha_compra']
     date_hierarchy = 'fecha_compra'
+    actions = ['anular_compras_seleccionadas']
     
     fieldsets = (
         ('Información General', {
@@ -31,7 +32,49 @@ class CompraInsumoAdmin(admin.ModelAdmin):
             'fields': ('monto_bs', 'monto_usd', 'monto_iva_bs', 'monto_iva_usd', 'monto_total_bs', 'monto_total_usd'),
             'classes': ('collapse',),
         }),
+        ('Estado de Anulación', {
+            'fields': ('anulada', 'fecha_anulacion'),
+            'classes': ('collapse',),
+        }),
     )
+    
+    def estado_anulacion(self, obj):
+        """Muestra el estado de anulación con badge"""
+        if obj.anulada:
+            return f'🚫 ANULADA ({obj.fecha_anulacion.strftime("%d/%m/%Y %H:%M")})'
+        return '✅ Activa'
+    estado_anulacion.short_description = 'Estado'
+    
+    def has_delete_permission(self, request, obj=None):
+        """Permite eliminación solo a superusuarios (para pruebas en desarrollo)"""
+        return request.user.is_superuser
+    
+    def anular_compras_seleccionadas(self, request, queryset):
+        """Acción personalizada para anular compras desde el admin"""
+        anuladas = 0
+        ya_anuladas = 0
+        errores = 0
+        
+        for compra in queryset:
+            if compra.anulada:
+                ya_anuladas += 1
+            else:
+                try:
+                    compra.anular()
+                    anuladas += 1
+                except Exception as e:
+                    errores += 1
+                    self.message_user(request, f'Error al anular compra {compra.pk}: {str(e)}', level='ERROR')
+        
+        if anuladas > 0:
+            self.message_user(request, f'{anuladas} compra(s) anulada(s) exitosamente. Se crearon movimientos de reversa.', level='SUCCESS')
+        if ya_anuladas > 0:
+            self.message_user(request, f'{ya_anuladas} compra(s) ya estaban anuladas.', level='WARNING')
+        if errores > 0:
+            self.message_user(request, f'{errores} error(es) al anular compras.', level='ERROR')
+    
+    anular_compras_seleccionadas.short_description = "Anular compras seleccionadas"
+
 
 
 class DetalleUsoInsumoInline(admin.TabularInline):

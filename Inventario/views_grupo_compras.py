@@ -107,8 +107,8 @@ def editar_compra_grupo(request, numero_factura, fecha):
 
 
 @login_required
-def eliminar_compra_grupo(request, numero_factura, fecha):
-    """Vista para eliminar todas las compras de una factura"""
+def anular_compra_grupo(request, numero_factura, fecha):
+    """Anula todas las compras de una factura (reemplaza eliminar_compra_grupo)"""
     from datetime import datetime
     
     # Convertir fecha de string a date
@@ -124,20 +124,35 @@ def eliminar_compra_grupo(request, numero_factura, fecha):
         messages.error(request, 'No se encontraron compras con ese número de factura y fecha.')
         return redirect('listar_compras')
     
+    # Verificar si ya están anuladas
+    if compras.filter(anulada=True).exists():
+        messages.warning(request, 'Algunas o todas las compras de esta factura ya están anuladas.')
+        return redirect('listar_compras')
+    
     if request.method == 'POST':
         try:
             cantidad = compras.count()
+            print(f"\n{'='*80}")
+            print(f"🟢 VISTA: Iniciando anulación de {cantidad} compra(s) de factura {numero_factura}")
+            print(f"{'='*80}\n")
             
-            # Restaurar inventario para cada compra antes de eliminar
-            for compra in compras:
-                compra.insumo.existencia -= compra.cantidad
-                compra.insumo.save()
+            # Anular cada compra (esto revertirá inventario y creará movimientos de reversa)
+            for i, compra in enumerate(compras, 1):
+                print(f"\n--- Anulando compra {i}/{cantidad} ---")
+                compra.anular()
+                print(f"--- Compra {i} anulada ---\n")
             
-            compras.delete()
-            messages.success(request, f'Se eliminaron {cantidad} compra(s) exitosamente y se actualizó el inventario.')
+            print(f"\n{'='*80}")
+            print(f"🟢 VISTA: Anulación completada exitosamente")
+            print(f"{'='*80}\n")
+            
+            messages.success(request, f'Se anularon {cantidad} compra(s) exitosamente. Se han creado movimientos de reversa en el flujo de caja.')
             return redirect('listar_compras')
         except Exception as e:
-            messages.error(request, f'Error al eliminar las compras: {str(e)}')
+            print(f"\n❌ ERROR EN VISTA: {type(e).__name__}: {str(e)}")
+            import traceback
+            print(traceback.format_exc())
+            messages.error(request, f'Error al anular las compras: {str(e)}')
     
     # Calcular total para mostrar
     total_usd = sum(c.monto_total_usd or 0 for c in compras)
@@ -148,4 +163,5 @@ def eliminar_compra_grupo(request, numero_factura, fecha):
         'compras': compras,
         'total_usd': total_usd,
     }
-    return render(request, 'Inventario/eliminar_compra_grupo.html', context)
+    return render(request, 'Inventario/anular_compra_grupo.html', context)
+
