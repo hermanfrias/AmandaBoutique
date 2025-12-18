@@ -1,15 +1,6 @@
 {% extends 'BoutiqueApp/base.html' %} {% block title %}Detalle de Compra -
 Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
-  <div class="row mb-4">
-    <div class="col">
-      <h2>Detalle de Compra - Factura {{ numero_factura }}</h2>
-    </div>
-    <div class="col text-end">
-      <a href="{% url 'listar_compras' %}" class="btn btn-volver"> Volver </a>
-    </div>
-  </div>
-
   <div class="card mb-4">
     <div class="card-header">
       <h4>Información General</h4>
@@ -136,20 +127,13 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
         </div>
       </div>
 
-      <div class="mt-4 text-center">
+      <div class="text-center mt-4">
         <a
           href="{% url 'editar_compra_grupo' numero_factura fecha_compra %}"
-          class="btn btn-editar"
+          class="btn btn-editar px-4 py-2 me-2"
+          >Editar</a
         >
-          Editar
-        </a>
-        <a
-          href="{% url 'anular_compra_grupo' numero_factura fecha_compra %}"
-          class="btn btn-eliminar"
-        >
-          Anular
-        </a>
-        <a href="{% url 'listar_compras' %}" class="btn btn-volver"> Volver </a>
+        <a href="{% url 'listar_compras' %}" class="btn btn-volver">Volver</a>
       </div>
     </div>
   </div>

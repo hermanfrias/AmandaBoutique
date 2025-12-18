@@ -111,6 +111,11 @@ def editar_movimiento(request, id):
     return render(request, 'flujo/editar_movimiento.html', {'form': form, 'movimiento': movimiento})
 
 @login_required
+def ver_movimiento(request, id):
+    movimiento = MovimientoCaja.objects.get(id=id)
+    return render(request, 'flujo/ver_movimiento.html', {'movimiento': movimiento})
+
+@login_required
 @permission_required('flujo.delete_movimientocaja', raise_exception=True)
 def eliminar_movimiento(request, id):
     movimiento = MovimientoCaja.objects.get(id=id)

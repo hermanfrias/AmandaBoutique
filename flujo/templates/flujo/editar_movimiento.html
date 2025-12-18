@@ -8,10 +8,8 @@
   <form method="POST" class="mx-auto" style="max-width: 500px">
     {% csrf_token %} {{ form.as_p }}
     <div class="text-center mt-4">
-      <button type="submit" class="btn btn-editar px-4 py-2 me-2">
-        Guardar
-      </button>
-      <a href="{% url 'listar_movimientos' %}" class="btn btn-volver px-4 py-2"
+      <button type="submit" class="btn btn-pink btn-sm me-2">Guardar</button>
+      <a href="{% url 'listar_movimientos' %}" class="btn btn-editar btn-sm"
         >Volver</a
       >
     </div>

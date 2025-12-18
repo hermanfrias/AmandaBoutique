@@ -1,32 +1,41 @@
-{% extends "BoutiqueApp/base.html" %}
-{% block content %}
+{% extends "BoutiqueApp/base.html" %} {% block content %}
 <div class="container my-5">
-    <h2 class="text-center mb-4" style="color: #B76E79; font-weight: bold;">
-        Actualizar Proveedor</h2>
-    <div class="card shadow-lg mx-auto p-4"
-        style="max-width: 700px; border: 2px solid #F8C8DC; border-radius: 15px; background-color: #fff;">
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            <!-- Mostrar los campos del formulario manualmente para personalización -->
-            {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label" 
-                    style="color: #B76E79; font-weight: bold;">
-                    {{ field.label }}
-                </label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="text-danger small">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-            {% endfor %}
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-editar px-4 py-2 me-2">Guardar</button>
-                <a href="{% url 'proveedores_list' %}" class='btn btn-volver px-4 py-2'>Volver</a>
-            </div>
-        </form>
-    </div>
+  <h2 class="text-center mb-4" style="color: #b76e79; font-weight: bold">
+    Actualizar Proveedor
+  </h2>
+  <div
+    class="card shadow-lg mx-auto p-4"
+    style="
+      max-width: 700px;
+      border: 2px solid #f8c8dc;
+      border-radius: 15px;
+      background-color: #fff;
+    "
+  >
+    <form method="POST">
+      {% csrf_token %} {{ form.non_field_errors }}
+      <!-- Mostrar los campos del formulario manualmente para personalización -->
+      {% for field in form %}
+      <div class="mb-3">
+        <label
+          for="{{ field.id_for_label }}"
+          class="form-label"
+          style="color: #b76e79; font-weight: bold"
+        >
+          {{ field.label }}
+        </label>
+        {{ field }} {% if field.errors %}
+        <div class="text-danger small">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-pink btn-sm me-2">Guardar</button>
+        <a href="{% url 'proveedores_list' %}" class="btn btn-editar btn-sm"
+          >Volver</a
+        >
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
-

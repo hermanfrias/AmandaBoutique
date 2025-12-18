@@ -1,31 +1,44 @@
-{% extends "BoutiqueApp/base.html" %} {% load static %} {% block title %}Flujo
-de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
+{% extends "BoutiqueApp/base.html" %}
+{% load static %}
+{% block title %}Flujo de Caja | Amanda Mateo Boutique{% endblock %}
+{% block content %}
 <link rel="stylesheet" href="{% static 'flujo/css/flujo.css' %}" />
 <div class="container py-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-pink fw-bold">Movimientos de Caja</h2>
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-cash-register me-2"></i>Movimientos de Caja
+    </h2>
     <div class="btn-group-catalogo">
       {% if perms.flujo.add_movimientocaja %}
-      <a href="{% url 'crear_movimiento' %}" class="btn btn-listar">Agregar</a>
+      <a href="{% url 'crear_movimiento' %}" class="btn btn-listar">
+        <i class="fas fa-plus me-1"></i>Agregar
+      </a>
       {% endif %}
-      <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
+      <a href="{% url 'index' %}" class="btn btn-volver">
+        <i class="fas fa-arrow-left me-1"></i>Volver
+      </a>
       <button
         type="button"
         class="btn btn-pink"
         data-bs-toggle="modal"
         data-bs-target="#modalExportar"
       >
-        Exportar
+        <i class="fas fa-file-export me-1"></i>Exportar
       </button>
     </div>
   </div>
   
   <!-- Formulario de Filtros -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
+  <div class="card shadow-sm mb-4" style="border: none; background: linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);">
+    <div class="card-body p-4">
+      <h5 class="text-pink fw-bold mb-3">
+        <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+      </h5>
       <form method="get" action="{% url 'listar_movimientos' %}" class="row g-3">
         <div class="col-md-2">
-          <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
+          <label for="fecha_inicio" class="form-label fw-semibold">
+            <i class="fas fa-calendar-alt me-1"></i>Fecha Inicio
+          </label>
           <input
             type="date"
             class="form-control"
@@ -35,7 +48,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
           />
         </div>
         <div class="col-md-2">
-          <label for="fecha_fin" class="form-label">Fecha Fin</label>
+          <label for="fecha_fin" class="form-label fw-semibold">
+            <i class="fas fa-calendar-check me-1"></i>Fecha Fin
+          </label>
           <input
             type="date"
             class="form-control"
@@ -45,7 +60,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
           />
         </div>
         <div class="col-md-2">
-          <label for="tipo" class="form-label">Tipo</label>
+          <label for="tipo" class="form-label fw-semibold">
+            <i class="fas fa-exchange-alt me-1"></i>Tipo
+          </label>
           <select class="form-select" id="tipo" name="tipo">
             <option value="Todos" {% if tipo_filtro == 'Todos' %}selected{% endif %}>Todos</option>
             <option value="Ingreso" {% if tipo_filtro == 'Ingreso' %}selected{% endif %}>Ingreso</option>
@@ -53,7 +70,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
           </select>
         </div>
         <div class="col-md-2">
-          <label for="tipo_movimiento" class="form-label">Tipo Mov.</label>
+          <label for="tipo_movimiento" class="form-label fw-semibold">
+            <i class="fas fa-tags me-1"></i>Tipo Mov.
+          </label>
           <select class="form-select" id="tipo_movimiento" name="tipo_movimiento">
             <option value="Todos" {% if tipo_movimiento_filtro == 'Todos' %}selected{% endif %}>Todos</option>
             <option value="Venta" {% if tipo_movimiento_filtro == 'Venta' %}selected{% endif %}>Venta</option>
@@ -64,7 +83,9 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
           </select>
         </div>
         <div class="col-md-2">
-          <label for="metodo_pago" class="form-label">Método Pago</label>
+          <label for="metodo_pago" class="form-label fw-semibold">
+            <i class="fas fa-credit-card me-1"></i>Método Pago
+          </label>
           <select class="form-select" id="metodo_pago" name="metodo_pago">
             <option value="Todos" {% if metodo_pago_filtro == 'Todos' %}selected{% endif %}>Todos</option>
             <option value="Efectivo" {% if metodo_pago_filtro == 'Efectivo' %}selected{% endif %}>Efectivo</option>
@@ -75,49 +96,63 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
           </select>
         </div>
         <div class="col-md-2">
-          <label for="moneda" class="form-label">Moneda</label>
+          <label for="moneda" class="form-label fw-semibold">
+            <i class="fas fa-dollar-sign me-1"></i>Moneda
+          </label>
           <select class="form-select" id="moneda" name="moneda">
             <option value="Todos" {% if moneda_filtro == 'Todos' %}selected{% endif %}>Todos</option>
             <option value="Bs" {% if moneda_filtro == 'Bs' %}selected{% endif %}>Bolívares</option>
             <option value="$" {% if moneda_filtro == '$' %}selected{% endif %}>Dólares</option>
           </select>
         </div>
-        <div class="col-md-12 d-flex justify-content-center mt-3">
-          <button type="submit" class="btn btn-pink px-5">
-            <i class="fas fa-search"></i> Buscar
+        <div class="col-md-12 d-flex justify-content-center mt-4">
+          <button type="submit" class="btn btn-pink px-5 shadow-sm" style="border-radius: 25px;">
+            <i class="fas fa-search me-2"></i>Buscar Movimientos
           </button>
         </div>
       </form>
     </div>
   </div>
   
-  <div class="table-responsive shadow-sm rounded">
+  <div class="table-responsive shadow-lg rounded" style="border-radius: 15px; overflow: hidden;">
     <style>
       .table-movimientos {
         font-size: 0.9rem;
       }
       .table-movimientos th {
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+        color: white;
         font-weight: 600;
         white-space: nowrap;
         vertical-align: middle;
+        border: none;
+        padding: 12px 8px;
       }
       .table-movimientos td {
         vertical-align: middle;
+        padding: 10px 8px;
+      }
+      .table-movimientos tbody tr {
+        transition: all 0.2s ease;
+      }
+      .table-movimientos tbody tr:hover {
+        background-color: #fff5f7 !important;
+        transform: scale(1.01);
+        box-shadow: 0 2px 8px rgba(183, 110, 121, 0.15);
       }
       .col-fecha { width: 90px; }
       .col-descripcion { 
-        max-width: 180px; 
+        max-width: 200px; 
         word-wrap: break-word;
         white-space: normal;
       }
-      .col-tipo { width: 80px; }
-      .col-tipo-mov { width: 130px; }
-      .col-metodo { width: 120px; }
+      .col-tipo { width: 90px; }
+      .col-tipo-mov { width: 140px; }
+      .col-metodo { width: 130px; }
       .col-moneda { width: 70px; }
-      .col-monto { width: 110px; }
-      .col-monto-usd { width: 110px; }
-      .col-acciones { width: 180px; }
+      .col-monto { width: 120px; }
+      .col-monto-usd { width: 120px; }
+      .col-acciones { width: 200px; }
       .btn-action-group {
         display: flex;
         gap: 5px;
@@ -130,39 +165,89 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
         white-space: nowrap;
         min-width: 70px;
       }
+      .badge-ingreso {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+      }
+      .badge-gasto {
+        background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+      }
+      .badge-reversa {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        color: #000;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+      }
+      .row-reversa {
+        background: linear-gradient(90deg, #fff9e6 0%, #fffbf0 100%) !important;
+        border-left: 4px solid #ffc107;
+      }
+      .monto-positivo {
+        color: #28a745;
+        font-weight: 600;
+      }
+      .monto-negativo {
+        color: #dc3545;
+        font-weight: 600;
+      }
     </style>
     <table class="table table-striped table-bordered table-hover table-movimientos">
       <thead>
         <tr>
           <th class="col-fecha">Fecha</th>
           <th class="col-descripcion text-start">Descripción</th>
-          <th class="col-tipo">Tipo</th>
+          <th class="col-tipo text-center">Tipo</th>
           <th class="col-tipo-mov">Tipo Mov.</th>
           <th class="col-metodo">Método Pago</th>
-          <th class="col-moneda">Moneda</th>
+          <th class="col-moneda text-center">Moneda</th>
           <th class="col-monto text-end">Monto</th>
           <th class="col-monto-usd text-end">Monto USD</th>
-          <th class="col-acciones">Acciones</th>
+          <th class="col-acciones text-center">Acciones</th>
         </tr>
       </thead>
       <tbody>
         {% for m in movimientos %}
-        <tr {% if "REVERSA" in m.descripcion %}style="background-color: #fff3cd;"{% endif %}>
+        <tr {% if "REVERSA" in m.descripcion %}class="row-reversa"{% endif %}>
           <td class="col-fecha">{{ m.fecha|date:"d/m/Y" }}</td>
           <td class="col-descripcion text-start">
             {{ m.descripcion }}
             {% if "REVERSA" in m.descripcion %}
-            <span class="badge bg-warning text-dark ms-1">REVERSA</span>
+            <span class="badge-reversa ms-1">REVERSA</span>
             {% endif %}
           </td>
-          <td class="col-tipo">{{ m.tipo }}</td>
+          <td class="col-tipo text-center">
+            {% if m.tipo == "Ingreso" %}
+            <span class="badge-ingreso">{{ m.tipo }}</span>
+            {% else %}
+            <span class="badge-gasto">{{ m.tipo }}</span>
+            {% endif %}
+          </td>
           <td class="col-tipo-mov">{{ m.tipo_movimiento|default:"-" }}</td>
           <td class="col-metodo">{{ m.metodo_pago|default:"-" }}</td>
-          <td class="col-moneda">{{ m.moneda }}</td>
-          <td class="col-monto text-end">{{ m.monto }}</td>
-          <td class="col-monto-usd text-end">{{ m.monto_usd }}</td>
+          <td class="col-moneda text-center">{{ m.moneda }}</td>
+          <td class="col-monto text-end {% if m.tipo == 'Ingreso' %}monto-positivo{% else %}monto-negativo{% endif %}">
+            {{ m.monto|floatformat:2 }}
+          </td>
+          <td class="col-monto-usd text-end {% if m.tipo == 'Ingreso' %}monto-positivo{% else %}monto-negativo{% endif %}">
+            ${{ m.monto_usd|floatformat:2 }}
+          </td>
           <td class="col-acciones">
             <div class="btn-action-group">
+              <a href="{% url 'ver_movimiento' m.id %}" class="btn btn-sm btn-ver btn-action">
+                Ver
+              </a>
               {% if perms.flujo.change_movimientocaja %}
               <a href="{% url 'editar_movimiento' m.id %}" class="btn btn-sm btn-editar btn-action">
                 Editar
@@ -186,26 +271,45 @@ de Caja | Amanda Mateo Boutique{% endblock %} {% block content %}
   </div>
 
   <!-- Totales -->
-  <div class="card shadow-sm mt-4">
-    <div class="card-body">
-      <h5 class="text-pink fw-bold mb-3">Totales</h5>
-      <div class="row">
+  <div class="card shadow-lg mt-4" style="border: none; border-radius: 15px; overflow: hidden;">
+    <div class="card-header" style="background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%); border: none;">
+      <h5 class="text-white fw-bold mb-0">
+        <i class="fas fa-calculator me-2"></i>Resumen Financiero
+      </h5>
+    </div>
+    <div class="card-body p-4">
+      <div class="row g-4">
         <div class="col-md-4">
-          <div class="p-3 bg-light rounded">
-            <p class="mb-1 text-muted small">Total en Bolívares</p>
-            <h4 class="mb-0 text-dark">Bs {{ total_bs|floatformat:2 }}</h4>
+          <div class="p-4 rounded shadow-sm" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #2196f3;">
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-coins fa-2x text-primary me-3"></i>
+              <div>
+                <p class="mb-0 text-muted small fw-semibold">Total en Bolívares</p>
+                <h4 class="mb-0 fw-bold text-primary">Bs {{ total_bs|floatformat:2 }}</h4>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="p-3 bg-light rounded">
-            <p class="mb-1 text-muted small">Total en Dólares</p>
-            <h4 class="mb-0 text-success">$ {{ total_usd|floatformat:2 }}</h4>
+          <div class="p-4 rounded shadow-sm" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 4px solid #4caf50;">
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-dollar-sign fa-2x text-success me-3"></i>
+              <div>
+                <p class="mb-0 text-muted small fw-semibold">Total en Dólares</p>
+                <h4 class="mb-0 fw-bold text-success">${{ total_usd|floatformat:2 }}</h4>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="p-3 bg-light rounded">
-            <p class="mb-1 text-muted small">Total USD (Convertido)</p>
-            <h4 class="mb-0 text-primary">$ {{ total_usd_converted|floatformat:2 }}</h4>
+          <div class="p-4 rounded shadow-sm" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 4px solid #ff9800;">
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-chart-line fa-2x text-warning me-3"></i>
+              <div>
+                <p class="mb-0 text-muted small fw-semibold">Total Registros</p>
+                <h4 class="mb-0 fw-bold text-warning">{{ movimientos|length }}</h4>
+              </div>
+            </div>
           </div>
         </div>
       </div>
