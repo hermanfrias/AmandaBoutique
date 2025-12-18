@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Listado Detallado de Compras</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 10pt;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+        font-size: 18pt;
+        margin-bottom: 5px;
+      }
+      h2 {
+        text-align: center;
+        color: #666;
+        font-size: 12pt;
+        margin-top: 0;
+        margin-bottom: 20px;
+      }
+      .info-section {
+        margin-bottom: 15px;
+        font-size: 9pt;
+      }
+      .info-section p {
+        margin: 3px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 9pt;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 6px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .text-end {
+        text-align: right;
+      }
+      .totales {
+        margin-top: 15px;
+        font-weight: bold;
+        font-size: 10pt;
+      }
+      .anulada {
+        opacity: 0.6;
+        text-decoration: line-through;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 6px;
+        font-size: 8pt;
+        font-weight: bold;
+        border-radius: 3px;
+      }
+      .badge-danger {
+        background-color: #dc3545;
+        color: white;
+      }
+      .badge-success {
+        background-color: #28a745;
+        color: white;
+      }
+      .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Amanda Mateo Boutique</h1>
+    <h2>Listado Detallado de Compras de Insumos</h2>
+
+    <div class="info-section">
+      {% if fecha_desde or fecha_hasta or insumo_filtro %}
+      <p><strong>Filtros aplicados:</strong></p>
+      {% if fecha_desde %}
+      <p>Desde: {{ fecha_desde }}</p>
+      {% endif %} {% if fecha_hasta %}
+      <p>Hasta: {{ fecha_hasta }}</p>
+      {% endif %} {% if insumo_filtro %}
+      <p>Insumo: {{ insumo_filtro }}</p>
+      {% endif %} {% else %}
+      <p><strong>Mostrando todas las compras</strong></p>
+      {% endif %}
+      <p>
+        <strong>Fecha de generación:</strong> {{ fecha_generacion|date:"d/m/Y"
+        }}
+      </p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nº Factura</th>
+          <th>Fecha</th>
+          <th>Insumo</th>
+          <th class="text-center">Cant.</th>
+          <th class="text-end">Monto</th>
+          <th>Moneda</th>
+          <th class="text-center">IVA</th>
+          <th class="text-end">Total Bs</th>
+          <th class="text-end">Total USD</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for compra in compras %}
+        <tr {% if compra.anulada %}class="anulada" {% endif %}>
+          <td>
+            {{ compra.numero_factura|default:"-" }} {% if compra.anulada %}
+            <span class="badge badge-danger">ANULADA</span>
+            {% endif %}
+          </td>
+          <td>{{ compra.fecha_compra|date:"d/m/Y" }}</td>
+          <td>{{ compra.insumo.descripcion }}</td>
+          <td class="text-center">{{ compra.cantidad }}</td>
+          <td class="text-end">{{ compra.monto|floatformat:2 }}</td>
+          <td>{{ compra.moneda }}</td>
+          <td class="text-center">
+            {% if compra.aplicar_iva %}
+            <span class="badge badge-success">Sí</span>
+            {% else %}
+            <span class="badge badge-secondary">No</span>
+            {% endif %}
+          </td>
+          <td class="text-end">{{ compra.monto_total_bs|floatformat:2 }}</td>
+          <td class="text-end">${{ compra.monto_total_usd|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-center">No hay compras registradas.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totales">
+      <p>Total de compras (activas): {{ total_compras }}</p>
+      <p>Total en Bs: {{ total_bs|floatformat:2 }}</p>
+      <p>Total en USD: ${{ total_usd|floatformat:2 }}</p>
+    </div>
+  </body>
+</html>

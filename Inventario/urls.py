@@ -12,6 +12,7 @@ urlpatterns = [
     
     # URLs para CompraInsumo
     path('compras/', views.listar_compras, name='listar_compras'),
+    path('compras/detallado/', views.listar_compras_detallado, name='listar_compras_detallado'),
     path('compras/crear/', views.crear_compra, name='crear_compra'),
     path('compras/<int:pk>/editar/', views.editar_compra, name='editar_compra'),
     path('compras/<int:pk>/detalle/', views.detalle_compra, name='detalle_compra'),
@@ -22,6 +23,7 @@ urlpatterns = [
     path('compras/grupo/<str:numero_factura>/<str:fecha>/editar/', views.editar_compra_grupo, name='editar_compra_grupo'),
     path('compras/grupo/<str:numero_factura>/<str:fecha>/anular/', views.anular_compra_grupo, name='anular_compra_grupo'),
     path('compras/pdf/', views.compras_pdf, name='compras_pdf'),
+    path('compras/detallado/pdf/', views.compras_detallado_pdf, name='compras_detallado_pdf'),
     
     # URLs para UsoInsumo
     path('usos/', views.listar_usos, name='listar_usos'),

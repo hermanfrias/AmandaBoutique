@@ -186,6 +186,33 @@ def listar_compras(request):
 
 
 @login_required
+def listar_compras_detallado(request):
+    """Lista todas las compras sin agrupar por factura"""
+    # Obtener filtros de fecha
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
+    insumo_filtro = request.GET.get('insumo', '')
+    
+    # Filtrar compras
+    compras = CompraInsumo.objects.all().order_by('-fecha_compra', 'numero_factura')
+    
+    if fecha_desde:
+        compras = compras.filter(fecha_compra__gte=fecha_desde)
+    if fecha_hasta:
+        compras = compras.filter(fecha_compra__lte=fecha_hasta)
+    if insumo_filtro:
+        compras = compras.filter(insumo__descripcion__icontains=insumo_filtro)
+    
+    context = {
+        'compras': compras,
+        'fecha_desde': fecha_desde,
+        'fecha_hasta': fecha_hasta,
+        'insumo_filtro': insumo_filtro,
+    }
+    return render(request, 'Inventario/listar_compras_detallado.html', context)
+
+
+@login_required
 def crear_compra(request):
     if request.method == 'POST':
         # Datos del encabezado (campos que se repiten)
@@ -472,6 +499,66 @@ def compras_pdf(request):
 
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="listado_compras.pdf"'
+
+        css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
+
+        HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+            response, stylesheets=[CSS(css_path)]
+        )
+        return response
+    except Exception as e:
+        error_msg = f"Error generando PDF: {str(e)}\n\nTraceback:\n{traceback.format_exc()}"
+        print("=" * 80)
+        print(error_msg)
+        print("=" * 80)
+        return HttpResponse(f"<pre>{error_msg}</pre>", status=500)
+
+
+@login_required
+def compras_detallado_pdf(request):
+    from django.template.loader import render_to_string
+    from django.http import HttpResponse
+    from weasyprint import HTML, CSS
+    from django.conf import settings
+    from decimal import Decimal
+    import os
+    import traceback
+    import datetime
+
+    try:
+        # Obtener filtros de fecha
+        fecha_desde = request.GET.get('fecha_desde', '')
+        fecha_hasta = request.GET.get('fecha_hasta', '')
+        insumo_filtro = request.GET.get('insumo', '')
+        
+        # Filtrar compras
+        compras = CompraInsumo.objects.all().order_by('-fecha_compra', 'numero_factura')
+        
+        if fecha_desde:
+            compras = compras.filter(fecha_compra__gte=fecha_desde)
+        if fecha_hasta:
+            compras = compras.filter(fecha_compra__lte=fecha_hasta)
+        if insumo_filtro:
+            compras = compras.filter(insumo__descripcion__icontains=insumo_filtro)
+        
+        # Calcular totales generales (excluyendo anuladas)
+        total_compras = compras.filter(anulada=False).count()
+        total_bs_general = sum(c.monto_total_bs or 0 for c in compras if not c.anulada)
+        total_usd_general = sum(c.monto_total_usd or 0 for c in compras if not c.anulada)
+        
+        html_string = render_to_string('Inventario/compras_detallado_pdf.html', {
+            'compras': compras,
+            'total_compras': total_compras,
+            'total_bs': total_bs_general,
+            'total_usd': total_usd_general,
+            'fecha_desde': fecha_desde,
+            'fecha_hasta': fecha_hasta,
+            'insumo_filtro': insumo_filtro,
+            'fecha_generacion': datetime.date.today(),
+        })
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="listado_compras_detallado.pdf"'
 
         css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
 

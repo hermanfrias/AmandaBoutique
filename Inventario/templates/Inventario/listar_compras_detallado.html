@@ -1,17 +1,17 @@
-{% extends 'BoutiqueApp/base.html' %} 
-{% block title %}Listado de Compras - Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Listado Detallado de
+Compras - Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row mb-4">
     <div class="col">
-      <h2>Listado de Compras de Insumos</h2>
+      <h2>Listado Detallado de Compras de Insumos</h2>
+      <p class="text-muted">Vista individual de cada compra sin agrupar</p>
     </div>
     <div class="col text-end">
-      <a href="{% url 'listar_compras_detallado' %}" class="btn btn-info btn-sm me-2">
-        Vista Detallada
+      <a href="{% url 'listar_compras' %}" class="btn btn-pink btn-sm me-2">
+        Vista Agrupada
       </a>
       <a
-        href="{% url 'compras_pdf' %}?{% if fecha_desde %}fecha_desde={{ fecha_desde }}&{% endif %}{% if fecha_hasta %}fecha_hasta={{ fecha_hasta }}{% endif %}"
+        href="{% url 'compras_detallado_pdf' %}?{% if fecha_desde %}fecha_desde={{ fecha_desde }}&{% endif %}{% if fecha_hasta %}fecha_hasta={{ fecha_hasta }}&{% endif %}{% if insumo_filtro %}insumo={{ insumo_filtro }}{% endif %}"
         class="btn btn-pink btn-sm me-2"
         target="_blank"
       >
@@ -24,11 +24,11 @@
     </div>
   </div>
 
-  <!-- Filtros por Fecha -->
+  <!-- Filtros -->
   <div class="card mb-4">
     <div class="card-body">
       <form method="get" class="row g-3">
-        <div class="col-md-5">
+        <div class="col-md-4">
           <label for="fecha_desde" class="form-label">Desde</label>
           <input
             type="date"
@@ -38,7 +38,7 @@
             value="{{ fecha_desde }}"
           />
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
           <label for="fecha_hasta" class="form-label">Hasta</label>
           <input
             type="date"
@@ -48,8 +48,19 @@
             value="{{ fecha_hasta }}"
           />
         </div>
-        <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn btn-pink w-100">Filtrar</button>
+        <div class="col-md-4">
+          <label for="insumo" class="form-label">Insumo</label>
+          <input
+            type="text"
+            name="insumo"
+            id="insumo"
+            class="form-control"
+            placeholder="Descripción del insumo"
+            value="{{ insumo_filtro }}"
+          />
+        </div>
+        <div class="col-md-12 d-flex justify-content-end">
+          <button type="submit" class="btn btn-pink">Filtrar</button>
         </div>
       </form>
     </div>
@@ -63,7 +74,7 @@
           type="text"
           id="searchInput"
           class="form-control"
-          placeholder="Buscar por número de factura (tiempo real)..."
+          placeholder="Buscar por insumo o número de factura..."
         />
         <button class="btn btn-pink" type="button" id="clearSearch">
           Limpiar
@@ -72,8 +83,7 @@
     </div>
   </div>
 
-  {% if messages %}
-  {% for message in messages %}
+  {% if messages %} {% for message in messages %}
   <div
     class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
     role="alert"
@@ -86,8 +96,7 @@
       aria-label="Close"
     ></button>
   </div>
-  {% endfor %}
-  {% endif %}
+  {% endfor %} {% endif %}
 
   <div class="table-responsive">
     <table class="table table-striped table-hover">
@@ -95,63 +104,64 @@
         <tr>
           <th>Nº Factura</th>
           <th>Fecha</th>
+          <th>Insumo</th>
+          <th class="text-center">Cantidad</th>
+          <th class="text-end">Monto</th>
           <th>Moneda</th>
           <th class="text-center">IVA</th>
-          <th class="text-center">Ítems</th>
-          <th class="text-end">Subtotal Bs</th>
-          <th class="text-end">Subtotal USD</th>
           <th class="text-end">Total Bs</th>
           <th class="text-end">Total USD</th>
           <th class="text-center" style="white-space: nowrap">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {% for grupo in compras_agrupadas %}
+        {% for compra in compras %}
         <tr
-          {% if grupo.anulada %}
-          style="opacity: 0.6; text-decoration: line-through;"
-          {% endif %}
+          {%
+          if
+          compra.anulada
+          %}style="opacity: 0.6; text-decoration: line-through;"
+          {%
+          endif
+          %}
         >
           <td>
-            {{ grupo.numero_factura }}
-            {% if grupo.anulada %}
+            {{ compra.numero_factura|default:"-" }} {% if compra.anulada %}
             <span class="badge bg-danger ms-2">ANULADA</span>
             {% endif %}
           </td>
-          <td>{{ grupo.fecha_compra|date:"d/m/Y" }}</td>
-          <td>{{ grupo.moneda }}</td>
+          <td>{{ compra.fecha_compra|date:"d/m/Y" }}</td>
+          <td>{{ compra.insumo.descripcion }}</td>
+          <td class="text-center">{{ compra.cantidad }}</td>
+          <td class="text-end">{{ compra.monto|floatformat:2 }}</td>
+          <td>{{ compra.moneda }}</td>
           <td class="text-center">
-            {% if grupo.aplicar_iva %}
+            {% if compra.aplicar_iva %}
             <span class="badge bg-success">Sí</span>
             {% else %}
             <span class="badge bg-secondary">No</span>
             {% endif %}
           </td>
-          <td class="text-center">
-            <span class="badge bg-info">{{ grupo.cantidad_items }}</span>
-          </td>
-          <td class="text-end">{{ grupo.subtotal_bs|floatformat:2 }}</td>
-          <td class="text-end">${{ grupo.subtotal_usd|floatformat:2 }}</td>
-          <td class="text-end">{{ grupo.total_bs|floatformat:2 }}</td>
-          <td class="text-end">${{ grupo.total_usd|floatformat:2 }}</td>
+          <td class="text-end">{{ compra.monto_total_bs|floatformat:2 }}</td>
+          <td class="text-end">${{ compra.monto_total_usd|floatformat:2 }}</td>
           <td class="text-center">
             <a
-              href="{% url 'detalle_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
+              href="{% url 'detalle_compra' compra.pk %}"
               class="btn btn-sm btn-ver"
               title="Ver Detalle"
             >
               Ver
             </a>
-            {% if not grupo.anulada %}
+            {% if not compra.anulada %}
             <a
-              href="{% url 'editar_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
+              href="{% url 'editar_compra' compra.pk %}"
               class="btn btn-sm btn-editar"
               title="Editar"
             >
               Editar
             </a>
             <a
-              href="{% url 'anular_compra_grupo' grupo.numero_factura grupo.fecha_compra %}"
+              href="{% url 'anular_compra' compra.pk %}"
               class="btn btn-sm btn-eliminar"
               title="Anular"
             >
@@ -180,8 +190,12 @@
 
     rows.forEach((row) => {
       const facturaCell = row.cells[0]; // Columna de Número de Factura
-      if (facturaCell) {
-        const text = facturaCell.textContent.toLowerCase();
+      const insumoCell = row.cells[2]; // Columna de Insumo
+      if (facturaCell && insumoCell) {
+        const text =
+          facturaCell.textContent.toLowerCase() +
+          " " +
+          insumoCell.textContent.toLowerCase();
         row.style.display = text.includes(searchTerm) ? "" : "none";
       }
     });
