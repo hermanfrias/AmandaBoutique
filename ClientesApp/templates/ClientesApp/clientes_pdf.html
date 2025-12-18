@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Listado de Clientes | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 11px;
+      }
+      td.text-center {
+        text-align: center;
+      }
+      th {
+        background-color: #fdebf2;
+        color: #8a556b;
+      }
+      h1 {
+        color: #b76e79;
+        text-align: center;
+      }
+      p.subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      .totales {
+        margin-top: 30px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Listado de Clientes<br />
+        {% if buscar %} Filtro aplicado: Búsqueda por nombre "{{ buscar }}"<br />
+        {% endif %} Fecha de generación: {{ fecha_generacion|date:"d/m/Y" }}
+      </p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Identificación</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Dirección</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cliente in clientes %}
+        <tr>
+          <td>{{ cliente.identificacion }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.apellido }}</td>
+          <td>{{ cliente.telefono }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.direccion }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">No hay clientes registrados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totales">
+      <p>Total de clientes: {{ total_clientes }}</p>
+    </div>
+  </body>
+</html>

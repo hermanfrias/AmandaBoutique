@@ -1,49 +1,55 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Catálogo | Amanda Mateo Boutique</title>
-<link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Catálogo | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
+  </head>
 
-<body>
-<header>
-    <h1>Amanda Mateo Boutique</h1>
-    <p>Catálogo de Productos</p>
-</header>
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Catálogo de Productos<br />
+        Fecha de generación: {% now "d/m/Y" %}
+      </p>
+    </header>
 
-<table>
-    <thead>
+    <table>
+      <thead>
         <tr>
-            <th>Imagen</th>
-            <th>Código</th>
-            <th>Modelo</th>
-            <th>Estilo</th>
-            <th>Precio</th>
+          <th>Imagen</th>
+          <th>Código</th>
+          <th>Modelo</th>
+          <th>Estilo</th>
+          <th>Precio</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for item in catalogos %}
         <tr>
-            <td>
-                {% if item.imagen_modelo %}
-                <img src="{{ item.imagen_modelo.url }}">
-                {% else %}
-                <span>Sin imagen</span>
-                {% endif %}
-            </td>
-            <td>{{ item.codigo }}</td>
-            <td>{{ item.modelo }}</td>
-            <td>{{ item.estilo }}</td>
-            <td>${{ item.precio }}</td>
+          <td>
+            {% if item.imagen_modelo %}
+            <img src="{{ item.imagen_modelo.url }}" />
+            {% else %}
+            <span>Sin imagen</span>
+            {% endif %}
+          </td>
+          <td>{{ item.codigo }}</td>
+          <td>{{ item.modelo }}</td>
+          <td>{{ item.estilo }}</td>
+          <td>${{ item.precio }}</td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
 
-<footer>
-    <p>Amanda Mateo Boutique | Todos los derechos reservados © {{ now|date:"Y" }}</p>
-</footer>
-</body>
+    <footer>
+      <p>
+        Amanda Mateo Boutique | Todos los derechos reservados © {{ now|date:"Y"
+        }}
+      </p>
+    </footer>
+  </body>
 </html>

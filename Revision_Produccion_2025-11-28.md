@@ -1,7 +1,7 @@
 # Revisión del Proyecto Amanda Boutique en Producción
 
 **Fecha de Creación:** 28 de noviembre de 2025  
-**Última Actualización:** 17 de diciembre de 2025  
+**Última Actualización:** 18 de diciembre de 2025  
 **Servidor:** 192.168.1.193:8000 (Producción) / 192.168.1.193:9000 (AsoTunapuy)  
 **Servicio:** DjangoServidor (NSSM)
 
@@ -22,7 +22,186 @@ El servicio está corriendo correctamente y configurado para usar Waitress como 
 
 ---
 
-## 📋 Cambios Recientes Implementados (Nov 28 - Dic 15, 2025)
+## 📋 Cambios Recientes Implementados (Nov 28 - Dic 18, 2025)
+
+### 🐛 Correcciones de Bugs (Dic 18, 2025)
+
+#### **Corrección de Tachado en Vista Agrupada de Compras** ✅
+
+**Problema identificado:** En la vista agrupada de compras (`listar_compras.html`), todas las compras aparecían con tachado en lugar de solo las anuladas.
+
+**Causa:** Sintaxis de Django template fragmentada incorrectamente en múltiples líneas:
+
+```html
+<!-- ANTES (Incorrecto) -->
+<tr
+  {%
+  if
+  grupo.anulada
+  %}
+  style="opacity: 0.6; text-decoration: line-through"
+  {%
+  endif
+  %}
+></tr>
+```
+
+**Solución implementada:**
+
+```html
+<!-- DESPUÉS (Correcto) -->
+<tr
+  {%
+  if
+  grupo.anulada
+  %}style="opacity: 0.6; text-decoration: line-through"
+  {%
+  endif
+  %}
+></tr>
+```
+
+**Archivo modificado:**
+
+- [`Inventario/templates/Inventario/listar_compras.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_compras.html) - Líneas 109-119
+
+**Impacto:**
+
+- ✅ **Visualización correcta** - Solo compras anuladas aparecen tachadas
+- ✅ **Indicadores precisos** - Badge "ANULADA" solo en registros anulados
+- ✅ **UX mejorada** - Diferenciación clara entre compras activas y anuladas
+
+---
+
+### 📦 Mejoras en Módulo de Uso de Insumos (Dic 18, 2025)
+
+#### **Filtros Avanzados y Exportación PDF** ✅
+
+**Objetivo:** Agregar capacidad de filtrado y exportación a PDF en el listado de Uso de Insumos.
+
+**Cambios implementados:**
+
+1. **Vista `listar_usos` Mejorada** ✅
+
+   - ✅ **Filtro por rango de fechas** - `fecha_desde` y `fecha_hasta`
+   - ✅ **Filtro por descripción** - Búsqueda con `icontains` (insensible a mayúsculas)
+   - ✅ **Ordenamiento** - Por fecha de uso descendente
+   - ✅ **Persistencia de filtros** - Valores mantenidos en formulario
+
+2. **Nueva Vista `usos_pdf`** ✅
+
+   - ✅ **Generación de PDF** - Usando WeasyPrint
+   - ✅ **Filtros aplicables** - Mismos filtros que la vista de listado
+   - ✅ **Cálculo de totales** - Cantidad de usos y costo total en USD
+   - ✅ **Formato profesional** - Consistente con otros PDFs del sistema
+
+3. **Template `listar_usos.html` Actualizado** ✅
+
+   - ✅ **Formulario de filtros** - Card con campos de fecha y descripción
+   - ✅ **Botón "Imprimir PDF"** - Pasa filtros activos a la URL
+   - ✅ **Botón "Volver"** - Navegación consistente
+   - ✅ **Botón "Limpiar Filtros"** - Resetea búsqueda
+
+4. **Nuevo Template `usos_pdf.html`** ✅
+   - ✅ **Header informativo** - Título y filtros aplicados
+   - ✅ **Tabla de datos** - Fecha, Descripción, Costo Total USD
+   - ✅ **Sección de totales** - Total de usos y costo acumulado
+   - ✅ **Estilos consistentes** - Paleta rosa del sistema
+
+**Archivos modificados:**
+
+- [`Inventario/views.py`](file:///E:/AmandaBoutique/Inventario/views.py) - Vista `listar_usos` (líneas 579-603) y nueva vista `usos_pdf` (líneas 711-771)
+- [`Inventario/urls.py`](file:///E:/AmandaBoutique/Inventario/urls.py) - Ruta `usos/pdf/` agregada
+- [`Inventario/templates/Inventario/listar_usos.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_usos.html) - Filtros y botones
+
+**Archivos creados:**
+
+- [`Inventario/templates/Inventario/usos_pdf.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/usos_pdf.html)
+
+**Nota:** Existe un error de sintaxis pendiente en `usos_pdf.html` (línea 61) que el usuario corregirá manualmente.
+
+**Impacto:**
+
+- ✅ **Búsqueda eficiente** - Filtros facilitan localización de usos específicos
+- ✅ **Reportes personalizados** - PDF con datos filtrados
+- ✅ **Trazabilidad mejorada** - Fácil seguimiento de consumo de insumos
+- ✅ **Análisis de costos** - Totales calculados automáticamente
+
+---
+
+### 👥 Exportación PDF para Módulo de Clientes (Dic 18, 2025)
+
+#### **Implementación de Exportación a PDF** ✅
+
+**Objetivo:** Agregar funcionalidad de exportación a PDF para el listado de clientes con soporte de filtros.
+
+**Cambios implementados:**
+
+1. **Nueva Vista `clientes_pdf`** ✅
+
+   - ✅ **Vista basada en funciones** - Complementa las vistas basadas en clases existentes
+   - ✅ **Filtro de búsqueda** - Parámetro `buscar` opcional
+   - ✅ **Ordenamiento** - Por apellido y nombre
+   - ✅ **Cálculo de totales** - Contador de clientes
+   - ✅ **Generación con WeasyPrint** - PDF profesional
+
+2. **Template `clientes_list.html` Actualizado** ✅
+
+   - ✅ **Botón "Imprimir PDF"** - Estilo rosa, tamaño pequeño
+   - ✅ **Pasa filtro de búsqueda** - URL incluye parámetro `buscar`
+   - ✅ **Abre en nueva pestaña** - `target="_blank"`
+
+3. **Nuevo Template `clientes_pdf.html`** ✅
+
+   - ✅ **Campos completos** - Identificación, Nombre, Apellido, Teléfono, Correo, Dirección
+   - ✅ **Filtro visible** - Muestra búsqueda aplicada si existe
+   - ✅ **Total de clientes** - Contador en sección de totales
+   - ✅ **Diseño consistente** - Paleta y estilos del sistema
+
+4. **URLs Corregidas** ✅
+   - ✅ **Problema inicial** - Error 500 por orden incorrecto de rutas
+   - ✅ **Causa** - Ruta genérica `<str:identificacion>/` capturaba "pdf" como ID
+   - ✅ **Solución** - Mover `pdf/export/` ANTES de rutas genéricas
+   - ✅ **Orden correcto:**
+     ```python
+     path('', ClientesListView.as_view(), name='clientes_list'),
+     path('pdf/export/', clientes_pdf, name='clientes_pdf'),  # ← Antes
+     path('crear/', ClientesCreateView.as_view(), name='clientes_create'),
+     path('<str:identificacion>/editar/', ...),  # ← Después
+     ```
+
+**Archivos modificados:**
+
+- [`ClientesApp/views.py`](file:///E:/AmandaBoutique/ClientesApp/views.py) - Nueva función `clientes_pdf` (líneas 52-98)
+- [`ClientesApp/urls.py`](file:///E:/AmandaBoutique/ClientesApp/urls.py) - Ruta PDF agregada en orden correcto
+- [`ClientesApp/templates/ClientesApp/clientes_list.html`](file:///E:/AmandaBoutique/ClientesApp/templates/ClientesApp/clientes_list.html) - Botón PDF
+
+**Archivos creados:**
+
+- [`ClientesApp/templates/ClientesApp/clientes_pdf.html`](file:///E:/AmandaBoutique/ClientesApp/templates/ClientesApp/clientes_pdf.html)
+
+**Verificación realizada:**
+
+- ✅ Página de clientes carga sin errores
+- ✅ Botón "Imprimir PDF" visible y estilizado correctamente
+- ✅ PDF se genera sin errores
+- ✅ Filtro de búsqueda funciona correctamente
+- ✅ PDF muestra filtro aplicado cuando existe
+
+**Impacto:**
+
+- ✅ **Reportes de clientes** - Exportación rápida para impresión
+- ✅ **Filtrado efectivo** - PDF con clientes específicos
+- ✅ **Documentación** - Respaldo físico de base de clientes
+- ✅ **Consistencia** - Mismo patrón que otros módulos
+
+**Lección aprendida:**
+
+- ⚠️ **Orden de URLs crítico** - Rutas específicas deben ir antes de rutas genéricas con parámetros variables en Django
+
+---
+
+## 📋 Cambios Recientes Implementados (Nov 28 - Dic 17, 2025)
 
 ### 🎨 Estandarización de UI y Diseño (Dic 6-14)
 

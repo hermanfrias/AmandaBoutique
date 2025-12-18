@@ -1,59 +1,53 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Listado Detallado de Compras</title>
+    <title>Listado Detallado de Compras | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        font-size: 10pt;
-      }
-      h1 {
-        text-align: center;
-        color: #333;
-        font-size: 18pt;
-        margin-bottom: 5px;
-      }
-      h2 {
-        text-align: center;
-        color: #666;
-        font-size: 12pt;
-        margin-top: 0;
-        margin-bottom: 20px;
-      }
-      .info-section {
-        margin-bottom: 15px;
-        font-size: 9pt;
-      }
-      .info-section p {
-        margin: 3px 0;
-      }
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 9pt;
+        margin-top: 20px;
       }
       th,
       td {
         border: 1px solid #ddd;
-        padding: 6px;
+        padding: 8px;
         text-align: left;
+        font-size: 11px;
       }
-      th {
-        background-color: #f2f2f2;
-        font-weight: bold;
-      }
-      .text-center {
+      td.text-center {
         text-align: center;
       }
-      .text-end {
+      td.text-end {
         text-align: right;
       }
+      th.text-center {
+        text-align: center;
+      }
+      th.text-end {
+        text-align: right;
+      }
+      th {
+        background-color: #fdebf2;
+        color: #8a556b;
+      }
+      h1 {
+        color: #b76e79;
+        text-align: center;
+      }
+      p.subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
       .totales {
-        margin-top: 15px;
+        margin-top: 30px;
         font-weight: bold;
-        font-size: 10pt;
+        font-size: 14px;
       }
       .anulada {
         opacity: 0.6;
@@ -62,7 +56,7 @@
       .badge {
         display: inline-block;
         padding: 2px 6px;
-        font-size: 8pt;
+        font-size: 9px;
         font-weight: bold;
         border-radius: 3px;
       }
@@ -80,27 +74,27 @@
       }
     </style>
   </head>
-  <body>
-    <h1>Amanda Mateo Boutique</h1>
-    <h2>Listado Detallado de Compras de Insumos</h2>
 
-    <div class="info-section">
-      {% if fecha_desde or fecha_hasta or insumo_filtro %}
-      <p><strong>Filtros aplicados:</strong></p>
-      {% if fecha_desde %}
-      <p>Desde: {{ fecha_desde }}</p>
-      {% endif %} {% if fecha_hasta %}
-      <p>Hasta: {{ fecha_hasta }}</p>
-      {% endif %} {% if insumo_filtro %}
-      <p>Insumo: {{ insumo_filtro }}</p>
-      {% endif %} {% else %}
-      <p><strong>Mostrando todas las compras</strong></p>
-      {% endif %}
-      <p>
-        <strong>Fecha de generación:</strong> {{ fecha_generacion|date:"d/m/Y"
-        }}
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Listado Detallado de Compras de Insumos<br />
+        {% if fecha_desde or fecha_hasta or insumo_filtro %}
+          Filtros aplicados:
+          {% if fecha_desde %}
+            Desde {{ fecha_desde|date:"d/m/Y" }}
+          {% endif %}
+          {% if fecha_hasta %}
+            Hasta {{ fecha_hasta|date:"d/m/Y" }}
+          {% endif %}
+          {% if insumo_filtro %}
+            - Insumo: {{ insumo_filtro }}
+          {% endif %}
+          <br />
+        {% endif %} Fecha de generación: {{ fecha_generacion|date:"d/m/Y" }}
       </p>
-    </div>
+    </header>
 
     <table>
       <thead>

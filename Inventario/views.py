@@ -578,9 +578,27 @@ def compras_detallado_pdf(request):
 
 @login_required
 def listar_usos(request):
-    usos = UsoInsumo.objects.all()
+    """Lista todos los usos de insumos con filtros opcionales"""
+    # Obtener filtros
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
+    descripcion_filtro = request.GET.get('descripcion', '')
+    
+    # Filtrar usos
+    usos = UsoInsumo.objects.all().order_by('-fecha_uso')
+    
+    if fecha_desde:
+        usos = usos.filter(fecha_uso__gte=fecha_desde)
+    if fecha_hasta:
+        usos = usos.filter(fecha_uso__lte=fecha_hasta)
+    if descripcion_filtro:
+        usos = usos.filter(descripcion__icontains=descripcion_filtro)
+    
     context = {
         'usos': usos,
+        'fecha_desde': fecha_desde,
+        'fecha_hasta': fecha_hasta,
+        'descripcion_filtro': descripcion_filtro,
     }
     return render(request, 'Inventario/listar_usos.html', context)
 
@@ -675,6 +693,7 @@ def detalle_uso(request, pk):
     return render(request, 'Inventario/detalle_uso.html', context)
 
 
+
 @login_required
 def eliminar_uso(request, pk):
     uso = get_object_or_404(UsoInsumo, pk=pk)
@@ -688,6 +707,65 @@ def eliminar_uso(request, pk):
         'uso': uso,
     }
     return render(request, 'Inventario/eliminar_uso.html', context)
+
+
+@login_required
+def usos_pdf(request):
+    """Genera PDF del listado de uso de insumos con filtros opcionales"""
+    from django.template.loader import render_to_string
+    from django.http import HttpResponse
+    from weasyprint import HTML, CSS
+    from django.conf import settings
+    from decimal import Decimal
+    import os
+    import traceback
+    import datetime
+
+    try:
+        # Obtener filtros
+        fecha_desde = request.GET.get('fecha_desde', '')
+        fecha_hasta = request.GET.get('fecha_hasta', '')
+        descripcion_filtro = request.GET.get('descripcion', '')
+        
+        # Filtrar usos
+        usos = UsoInsumo.objects.all().order_by('-fecha_uso')
+        
+        if fecha_desde:
+            usos = usos.filter(fecha_uso__gte=fecha_desde)
+        if fecha_hasta:
+            usos = usos.filter(fecha_uso__lte=fecha_hasta)
+        if descripcion_filtro:
+            usos = usos.filter(descripcion__icontains=descripcion_filtro)
+        
+        # Calcular totales
+        total_usos = usos.count()
+        total_costo_usd = sum(uso.costo_total_usd or Decimal('0') for uso in usos)
+        
+        html_string = render_to_string('Inventario/usos_pdf.html', {
+            'usos': usos,
+            'total_usos': total_usos,
+            'total_costo_usd': total_costo_usd,
+            'fecha_desde': fecha_desde,
+            'fecha_hasta': fecha_hasta,
+            'descripcion_filtro': descripcion_filtro,
+            'fecha_generacion': datetime.date.today(),
+        })
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="listado_usos_insumos.pdf"'
+
+        css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
+
+        HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+            response, stylesheets=[CSS(css_path)]
+        )
+        return response
+    except Exception as e:
+        error_msg = f"Error generando PDF: {str(e)}\n\nTraceback:\n{traceback.format_exc()}"
+        print("=" * 80)
+        print(error_msg)
+        print("=" * 80)
+        return HttpResponse(f"<pre>{error_msg}</pre>", status=500)
 
 
 # ==================== VISTA PARA PDF DE INSUMOS ====================

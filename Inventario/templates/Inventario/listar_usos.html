@@ -1,13 +1,65 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}Uso de Insumos - Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Uso de Insumos - Amanda
+Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row mb-4">
     <div class="col">
       <h2>Uso de Insumos</h2>
     </div>
     <div class="col text-end">
-      <a href="{% url 'crear_uso' %}" class="btn btn-pink">Registrar Uso</a>
+      <a
+        href="{% url 'usos_pdf' %}?{% if fecha_desde %}fecha_desde={{ fecha_desde }}&{% endif %}{% if fecha_hasta %}fecha_hasta={{ fecha_hasta }}&{% endif %}{% if descripcion_filtro %}descripcion={{ descripcion_filtro }}{% endif %}"
+        class="btn btn-pink btn-sm me-2"
+        target="_blank"
+      >
+        Imprimir PDF
+      </a>
+      <a href="{% url 'crear_uso' %}" class="btn btn-listar">Registrar Uso</a>
+      <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
+    </div>
+  </div>
+
+  <!-- Filtros por Fecha y Descripción -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="get" class="row g-3">
+        <div class="col-md-4">
+          <label for="fecha_desde" class="form-label">Desde</label>
+          <input
+            type="date"
+            name="fecha_desde"
+            id="fecha_desde"
+            class="form-control"
+            value="{{ fecha_desde }}"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="fecha_hasta" class="form-label">Hasta</label>
+          <input
+            type="date"
+            name="fecha_hasta"
+            id="fecha_hasta"
+            class="form-control"
+            value="{{ fecha_hasta }}"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="descripcion" class="form-label">Descripción</label>
+          <input
+            type="text"
+            name="descripcion"
+            id="descripcion"
+            class="form-control"
+            placeholder="Buscar por descripción..."
+            value="{{ descripcion_filtro }}"
+          />
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-pink">Filtrar</button>
+          <a href="{% url 'listar_usos' %}" class="btn btn-secondary ms-2"
+            >Limpiar Filtros</a
+          >
+        </div>
+      </form>
     </div>
   </div>
 

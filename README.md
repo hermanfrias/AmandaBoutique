@@ -22,7 +22,8 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
 
 - Registro completo de clientes
 - Historial de interacciones
-- Búsqueda y filtrado
+- Búsqueda y filtrado por nombre
+- **Exportación a PDF** - Listado completo con filtros aplicados
 - Permisos de acceso configurables
 
 ### 🏢 Gestión de Proveedores
@@ -106,11 +107,13 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
 - **Uso de Insumos**
   - Registro de consumo de insumos con descripción
   - Formulario dinámico para agregar múltiples insumos
+  - **Filtros avanzados** - Por rango de fechas y descripción
   - **Actualización automática**: Al registrar un uso:
     - Se resta la cantidad del inventario
     - Se calcula el costo total del uso
   - Validación de existencia suficiente
   - Restauración automática de stock al eliminar un uso
+  - **Exportación a PDF** - Reporte de usos con filtros aplicados
 - **Reportes y Seguimiento**
   - Historial de compras por insumo
   - Historial de usos por insumo
@@ -397,7 +400,7 @@ Los filtros se pueden combinar para búsquedas precisas.
 
 ### Exportación de Datos
 
-- **PDF**: Catálogo (lista y tarjetas), Movimientos de caja
+- **PDF**: Catálogo (lista y tarjetas), Movimientos de caja, Inventario de insumos, Uso de insumos, Listado de clientes
 - **Excel**: Movimientos de caja con filtros
 
 ### Dashboard Financiero
@@ -441,6 +444,6 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.6  
-**Última actualización**: 17 de diciembre de 2024 - Mejoras en Formateo de Código  
+**Versión**: 2.7  
+**Última actualización**: 18 de diciembre de 2024 - Exportación PDF y Filtros  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5

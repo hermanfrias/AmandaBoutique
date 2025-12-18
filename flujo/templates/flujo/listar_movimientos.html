@@ -107,7 +107,7 @@
         </div>
         <div class="col-md-12 d-flex justify-content-center mt-4">
           <button type="submit" class="btn btn-pink px-5 shadow-sm" style="border-radius: 25px;">
-            <i class="fas fa-search me-2"></i>Buscar Movimientos
+            <i class="fas fa-filter me-2"></i>Filtrar
           </button>
         </div>
       </form>
@@ -152,18 +152,21 @@
       .col-moneda { width: 70px; }
       .col-monto { width: 120px; }
       .col-monto-usd { width: 120px; }
-      .col-acciones { width: 200px; }
+      .col-acciones { 
+        width: 250px;
+        min-width: 250px;
+      }
       .btn-action-group {
         display: flex;
         gap: 5px;
         justify-content: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
       }
       .btn-action {
-        padding: 6px 12px;
+        padding: 6px 10px;
         font-size: 0.85rem;
         white-space: nowrap;
-        min-width: 70px;
+        min-width: 65px;
       }
       .badge-ingreso {
         background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
@@ -368,13 +371,13 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Cancelar
+        <button type="button" class="btn btn-editar btn-sm" data-bs-dismiss="modal">
+          Volver
         </button>
-        <button type="button" class="btn btn-success" onclick="exportarExcel()">
+        <button type="button" class="btn btn-pink btn-sm" onclick="exportarExcel()">
           Exportar Excel
         </button>
-        <button type="button" class="btn btn-pink" onclick="exportarPDF()">
+        <button type="button" class="btn btn-pink btn-sm" onclick="exportarPDF()">
           Imprimir PDF
         </button>
       </div>

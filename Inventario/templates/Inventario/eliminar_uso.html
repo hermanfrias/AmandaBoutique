@@ -1,6 +1,5 @@
-{% extends 'BoutiqueApp/base.html' %} 
-{% block title %}Eliminar Uso - Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Eliminar Uso - Amanda
+Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-8">
@@ -19,7 +18,8 @@
             <li><strong>Fecha:</strong> {{ uso.fecha_uso|date:"d/m/Y" }}</li>
             <li><strong>Descripción:</strong> {{ uso.descripcion }}</li>
             <li>
-              <strong>Costo Total:</strong> ${{ uso.costo_total_usd|floatformat:2 }}
+              <strong>Costo Total:</strong> ${{
+              uso.costo_total_usd|floatformat:2 }}
             </li>
           </ul>
 
@@ -35,11 +35,11 @@
 
           <form method="post" class="mt-4">
             {% csrf_token %}
-            <div class="d-flex justify-content-between">
-              <a href="{% url 'listar_usos' %}" class="btn btn-secondary">
-                Cancelar
+            <div class="d-flex justify-content-center gap-2">
+              <a href="{% url 'listar_usos' %}" class="btn btn-editar btn-sm">
+                Volver
               </a>
-              <button type="submit" class="btn btn-danger">
+              <button type="submit" class="btn btn-eliminar btn-sm">
                 Confirmar Eliminación
               </button>
             </div>
