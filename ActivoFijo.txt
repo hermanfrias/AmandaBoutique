@@ -1,0 +1,20 @@
+Gracias por todo, ahora quier crear el modulo de ActivoFijo en la app de Inventario, con los siguintes campos:
+
+1. numero_inventario que se crearia automaticamente como ejemplo AF00001 ... AF00002
+2. fecha_adquisicion 
+3. tipo_activo
+4. Marca
+5. Modelo
+6. Serial
+7. modeda bs o $
+8. valor_adquisicion
+9. depreciacion_anual
+10. depreciacion_acumulada
+11. valor_actual
+12. estado
+13. fecha_mantenimiento
+14. descripcion_mantenimiento
+
+con sus respectivos metodos, getters y setters, constructor y toString. templates para la creacion, edicion, listado y detalle. y cualquiera otra sugerencias que creas prudente. Gracias
+
+

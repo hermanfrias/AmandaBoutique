@@ -1,7 +1,7 @@
 # Revisión del Proyecto Amanda Boutique en Producción
 
 **Fecha de Creación:** 28 de noviembre de 2025  
-**Última Actualización:** 18 de diciembre de 2025  
+**Última Actualización:** 20 de diciembre de 2025  
 **Servidor:** 192.168.1.193:8000 (Producción) / 192.168.1.193:9000 (AsoTunapuy)  
 **Servicio:** DjangoServidor (NSSM)
 
@@ -22,7 +22,161 @@ El servicio está corriendo correctamente y configurado para usar Waitress como 
 
 ---
 
-## 📋 Cambios Recientes Implementados (Nov 28 - Dic 18, 2025)
+## 📋 Cambios Recientes Implementados (Nov 28 - Dic 20, 2025)
+
+### 🎨 Estandarización Completa de Plantillas (Dic 20, 2025) ✅
+
+#### **Objetivo:** Crear consistencia visual total en todo el proyecto usando `listar_movimientos.html` como modelo de referencia.
+
+**Cambios implementados:**
+
+1. **Nuevo Archivo CSS Centralizado** ✅
+
+   - ✅ **Archivo creado:** [`BoutiqueApp/static/BoutiqueApp/css/boutique_standard.css`](file:///E:/AmandaBoutique/BoutiqueApp/static/BoutiqueApp/css/boutique_standard.css)
+   - ✅ **Contenido:** ~350 líneas de estilos estandarizados
+   - ✅ **Componentes incluidos:**
+     - Estilos de tablas con gradientes
+     - Grupos de botones de acción
+     - Cards de filtros con gradientes
+     - Badges personalizados
+     - Encabezados de página
+     - Cajas de resumen
+     - Modales
+     - Layouts de formularios
+
+2. **Integración en Base Template** ✅
+
+   - ✅ **Archivo modificado:** [`BoutiqueApp/templates/BoutiqueApp/base.html`](file:///E:/AmandaBoutique/BoutiqueApp/templates/BoutiqueApp/base.html)
+   - ✅ Referencia a `boutique_standard.css` agregada
+   - ✅ Estilos disponibles globalmente
+
+3. **Plantillas Estandarizadas (20 archivos)** ✅
+
+   **Módulo Inventario (3 plantillas):**
+
+   - ✅ [`listar_insumos.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_insumos.html)
+   - ✅ [`listar_compras.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_compras.html)
+   - ✅ [`listar_usos.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_usos.html)
+
+   **Módulo Clientes (1 plantilla):**
+
+   - ✅ [`clientes_list.html`](file:///E:/AmandaBoutique/ClientesApp/templates/ClientesApp/clientes_list.html)
+
+   **Módulo Proveedores (1 plantilla):**
+
+   - ✅ [`proveedores_list.html`](file:///E:/AmandaBoutique/ProveedoresApp/templates/ProveedoresApp/proveedores_list.html)
+
+   **Módulo Citas (1 plantilla):**
+
+   - ✅ [`listar_citas.html`](file:///E:/AmandaBoutique/citas/templates/citas/listar_citas.html)
+
+   **Módulo Flujo de Caja (11 plantillas):**
+
+   - ✅ [`listar_cotizaciones.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/listar_cotizaciones.html)
+   - ✅ [`listar_configuraciones_iva.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/listar_configuraciones_iva.html)
+   - ✅ [`listar_movimientos.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/listar_movimientos.html)
+   - ✅ [`crear_cotizacion.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/crear_cotizacion.html)
+   - ✅ [`crear_movimiento.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/crear_movimiento.html)
+   - ✅ [`crear_configuracion_iva.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/crear_configuracion_iva.html)
+   - ✅ [`editar_cotizacion.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/editar_cotizacion.html)
+   - ✅ [`editar_movimiento.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/editar_movimiento.html)
+   - ✅ [`editar_configuracion_iva.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/editar_configuracion_iva.html)
+   - ✅ [`ver_movimiento.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/ver_movimiento.html)
+   - ✅ [`dashboard.html`](file:///E:/AmandaBoutique/flujo/templates/flujo/dashboard.html)
+
+   **Módulo Catálogo (1 plantilla):**
+
+   - ✅ [`listar_catalogo.html`](file:///E:/AmandaBoutique/BoutiqueApp/templates/BoutiqueApp/listar_catalogo.html)
+
+4. **Características de Diseño Aplicadas** ✅
+
+   **Encabezados estandarizados:**
+
+   ```html
+   <h2 class="text-pink fw-bold"><i class="fas fa-[icon] me-2"></i>[Título]</h2>
+   ```
+
+   **Cards de filtros/búsqueda:**
+
+   - Gradiente de fondo: `linear-gradient(135deg, #fff5f7 0%, #ffffff 100%)`
+   - Títulos con iconos FontAwesome
+   - Padding consistente (p-4)
+   - Bordes redondeados sin borde visible
+
+   **Tablas con gradiente:**
+
+   - Encabezado: `linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%)`
+   - Efecto hover en filas:
+     - Fondo: `#fff5f7`
+     - Elevación: `transform: scale(1.01)`
+     - Sombra: `box-shadow: 0 2px 8px rgba(183, 110, 121, 0.15)`
+   - Bordes redondeados (15px)
+   - Sombra elevada (shadow-lg)
+
+   **Botones de acción agrupados:**
+
+   ```html
+   <div class="btn-action-group">
+     <a class="btn btn-sm btn-ver btn-action">Ver</a>
+     <a class="btn btn-sm btn-editar btn-action">Editar</a>
+     <a class="btn btn-sm btn-eliminar btn-action">Eliminar</a>
+   </div>
+   ```
+
+   - Tamaño consistente (btn-sm)
+   - Espaciado uniforme (gap: 5px)
+   - Sin salto de línea (nowrap)
+   - Ancho mínimo (65px)
+
+   **Iconos FontAwesome agregados:**
+
+   - Encabezados de página
+   - Botones principales (Agregar, Volver, Exportar)
+   - Títulos de secciones de filtros
+
+5. **Resolución de Conflicto CSS** ✅
+
+   **Problema identificado:**
+
+   - Archivo `staticfiles/flujo/css/flujo.css` sobrescribía `.btn-pink`
+   - Color conflictivo: `#c4296a` (rosa fucsia)
+   - Color estándar: `#e6b2c6` (rosa pastel)
+
+   **Solución implementada:**
+
+   - ✅ Eliminadas todas las referencias a `flujo.css` de 11 plantillas del módulo flujo
+   - ✅ Archivo `staticfiles/flujo/css/flujo.css` eliminado
+   - ✅ Todos los botones `.btn-pink` ahora usan el color estándar consistentemente
+
+6. **Limpieza para Producción** ✅
+
+   - ✅ Eliminados todos los directorios `__pycache__/`
+   - ✅ Eliminados todos los archivos `*.pyc`
+   - ✅ Eliminados todos los archivos `*.log`
+   - ✅ Ejecutado `collectstatic` exitosamente
+
+**Colores Preservados (Sin Cambios):**
+
+Todos los colores se mantuvieron exactamente como estaban definidos en `estilos.css`:
+
+- `btn-ver`: `#e6b2c6` (rosa pastel)
+- `btn-editar`: `#b76e79` (rosa medio)
+- `btn-eliminar`: `#f28ca3` (rosa coral)
+- `btn-listar`: `#b76e79` (rosa medio)
+- `btn-volver`: `#ffb6c1` (rosa claro)
+- `btn-pink`: `#e6b2c6` (rosa pastel)
+
+**Impacto:**
+
+- ✅ **Consistencia visual total** - Mismo diseño en todos los módulos
+- ✅ **Experiencia de usuario mejorada** - Interfaz predecible y profesional
+- ✅ **Mantenibilidad** - Estilos centralizados fáciles de actualizar
+- ✅ **Colores uniformes** - Sin conflictos ni inconsistencias
+- ✅ **Diseño moderno** - Gradientes, sombras y efectos hover
+- ✅ **Accesibilidad** - Botones agrupados y bien espaciados
+- ✅ **Preparado para producción** - Archivos temporales eliminados
+
+---
 
 ### 🐛 Correcciones de Bugs (Dic 18, 2025)
 

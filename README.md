@@ -444,6 +444,30 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.7  
-**Última actualización**: 18 de diciembre de 2024 - Exportación PDF y Filtros  
+## Estandarización de Plantillas (Actualización Diciembre 2025)
+
+### Sistema de Estilos Centralizado
+
+**Archivo CSS Estándar:** `BoutiqueApp/static/BoutiqueApp/css/boutique_standard.css`
+
+- Estilos centralizados para tablas, botones, cards y formularios
+- Gradientes rosa consistentes (#b76e79 → #d4a5ae)
+- Efectos hover estandarizados
+
+**Módulos Estandarizados (20 plantillas):**
+
+- ✅ Flujo de Caja, Clientes, Citas, Catálogo, Proveedores, Inventario
+
+**Mejoras Implementadas:**
+
+- Encabezados con iconos FontAwesome
+- Cards de filtros con gradiente rosa suave
+- Tablas con gradiente en encabezado y efecto hover
+- Botones de acción agrupados y consistentes
+- Resolución de conflictos CSS (eliminado `flujo.css`)
+
+---
+
+**Versión**: 2.8  
+**Última actualización**: 20 de diciembre de 2025 - Estandarización de Plantillas  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5
