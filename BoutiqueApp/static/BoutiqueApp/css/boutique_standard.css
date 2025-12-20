@@ -1,0 +1,364 @@
+/* ============================================
+   AMANDA BOUTIQUE - ESTILOS ESTÁNDAR
+   Archivo CSS centralizado para estandarización
+   de tablas, botones y componentes
+   ============================================ */
+
+/* ============================================
+   TABLAS ESTÁNDAR
+   ============================================ */
+
+/* Estilos base para todas las tablas estandarizadas */
+.table-standard th {
+  background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: middle;
+  border: none;
+  padding: 12px 8px;
+}
+
+.table-standard td {
+  vertical-align: middle;
+  padding: 10px 8px;
+}
+
+.table-standard tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table-standard tbody tr:hover {
+  background-color: #fff5f7 !important;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(183, 110, 121, 0.15);
+}
+
+/* Contenedor de tabla con sombra y bordes redondeados */
+.table-container-standard {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   BOTONES DE ACCIÓN EN TABLAS
+   ============================================ */
+
+/* Grupo de botones de acción */
+.btn-action-group {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.btn-action {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  min-width: 65px;
+}
+
+/* Responsive: permitir wrap en pantallas pequeñas */
+@media (max-width: 768px) {
+  .btn-action-group {
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .btn-action {
+    min-width: 60px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================
+   CARDS DE FILTROS
+   ============================================ */
+
+.filter-card-standard {
+  border: none;
+  background: linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.filter-card-standard .card-body {
+  padding: 1.5rem;
+}
+
+.filter-card-standard h5 {
+  color: #b76e79;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* ============================================
+   BADGES Y ETIQUETAS
+   ============================================ */
+
+/* Badge de Ingreso */
+.badge-ingreso {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+  display: inline-block;
+}
+
+/* Badge de Gasto */
+.badge-gasto {
+  background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+  display: inline-block;
+}
+
+/* Badge de Reversa */
+.badge-reversa {
+  background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+  display: inline-block;
+}
+
+/* Fila con reversa */
+.row-reversa {
+  background: linear-gradient(90deg, #fff9e6 0%, #fffbf0 100%) !important;
+  border-left: 4px solid #ffc107;
+}
+
+/* ============================================
+   UTILIDADES DE TEXTO
+   ============================================ */
+
+/* Montos positivos y negativos */
+.monto-positivo {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.monto-negativo {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+/* ============================================
+   ENCABEZADOS DE PÁGINA
+   ============================================ */
+
+.page-header-standard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.page-header-standard h2 {
+  color: #b76e79;
+  font-weight: bold;
+  margin: 0;
+}
+
+.page-header-standard h2 i {
+  margin-right: 0.5rem;
+}
+
+/* Responsive para encabezados */
+@media (max-width: 768px) {
+  .page-header-standard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .btn-group-catalogo {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* ============================================
+   CARDS DE RESUMEN/TOTALES
+   ============================================ */
+
+.summary-card-standard {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card-standard .card-header {
+  background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+  border: none;
+  padding: 1rem 1.5rem;
+}
+
+.summary-card-standard .card-header h5 {
+  color: white;
+  font-weight: bold;
+  margin: 0;
+}
+
+.summary-card-standard .card-body {
+  padding: 1.5rem;
+}
+
+/* Cajas de totales individuales */
+.summary-box {
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.summary-box-blue {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-left: 4px solid #2196f3;
+}
+
+.summary-box-green {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-left: 4px solid #4caf50;
+}
+
+.summary-box-orange {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border-left: 4px solid #ff9800;
+}
+
+/* ============================================
+   MODALES
+   ============================================ */
+
+.modal-header-standard {
+  background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+  color: white;
+  border: none;
+}
+
+.modal-header-standard .modal-title {
+  font-weight: 600;
+}
+
+.modal-header-standard .btn-close {
+  filter: brightness(0) invert(1);
+}
+
+/* ============================================
+   FORMULARIOS
+   ============================================ */
+
+/* Botones de formulario centrados */
+.form-buttons-standard {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.form-buttons-standard .btn {
+  min-width: 120px;
+}
+
+/* Card de formulario */
+.form-card-standard {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.form-card-standard .card-header {
+  background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+}
+
+.form-card-standard .card-body {
+  padding: 2rem;
+}
+
+/* ============================================
+   ANIMACIONES Y TRANSICIONES
+   ============================================ */
+
+/* Transición suave para todos los elementos interactivos */
+.btn,
+.card,
+.table tbody tr,
+.badge {
+  transition: all 0.3s ease;
+}
+
+/* Efecto de elevación en hover para cards */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   UTILIDADES ADICIONALES
+   ============================================ */
+
+/* Espaciado consistente para containers */
+.container-standard {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Sombra suave */
+.shadow-soft {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Sombra media */
+.shadow-medium {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Sombra fuerte */
+.shadow-strong {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Bordes redondeados estándar */
+.rounded-standard {
+  border-radius: 12px;
+}
+
+.rounded-standard-lg {
+  border-radius: 15px;
+}
+
+/* ============================================
+   NOTAS IMPORTANTES
+   ============================================ */
+
+/*
+  Este archivo complementa estilos.css, NO lo reemplaza.
+  Los colores de botones están definidos en estilos.css:
+  - btn-ver: #e6b2c6 (rosa pastel)
+  - btn-editar: #b76e79 (rosa medio)
+  - btn-eliminar: #f28ca3 (rosa coral)
+  - btn-listar: #b76e79 (rosa medio)
+  - btn-volver: #ffb6c1 (rosa claro)
+  - btn-pink: #e6b2c6 (rosa pastel)
+  
+  NO modificar estos colores aquí, están en estilos.css
+*/

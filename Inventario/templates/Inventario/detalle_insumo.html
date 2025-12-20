@@ -12,8 +12,7 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
           <p><strong>Descripción:</strong> {{ insumo.descripcion }}</p>
           <p><strong>Categoría:</strong> {{ insumo.categoria }}</p>
           <p>
-            <strong>Proveedor:</strong> {{ insumo.proveedor.nombre|default:"-"
-            }}
+            <strong>Proveedor:</strong> {{ insumo.proveedor.nombre|default:"-" }}
           </p>
           <p><strong>Medida:</strong> {{ insumo.medida }}</p>
         </div>
@@ -23,16 +22,13 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
             {{ insumo.medida }}
           </p>
           <p>
-            <strong>Existencia Mínima:</strong> {{
-            insumo.existencia_minima|floatformat:2 }} {{ insumo.medida }}
+            <strong>Existencia Mínima:</strong> {{ insumo.existencia_minima|floatformat:2 }} {{ insumo.medida }}
           </p>
           <p>
-            <strong>Costo Unitario (USD):</strong> ${{
-            insumo.costo_dolar|floatformat:2 }}
+            <strong>Costo Unitario (USD):</strong> ${{ insumo.costo_dolar|floatformat:2 }}
           </p>
           <p>
-            <strong>Fecha de Creación:</strong> {{
-            insumo.fecha_creacion|date:"d/m/Y" }}
+            <strong>Fecha de Creación:</strong> {{ insumo.fecha_creacion|date:"d/m/Y" }}
           </p>
         </div>
       </div>
