@@ -24,6 +24,190 @@ El servicio está corriendo correctamente y configurado para usar Waitress como 
 
 ## 📋 Cambios Recientes Implementados (Nov 28 - Dic 20, 2025)
 
+### 🏢 Módulo de Activos Fijos (Dic 20, 2025) ✅
+
+#### **Objetivo:** Implementar un sistema completo de gestión de activos fijos con control financiero, garantías y mantenimiento.
+
+**Características implementadas:**
+
+1. **Modelo ActivoFijo Completo** ✅
+
+   - ✅ **Código auto-generado** - AF00001, AF00002... (formato: AF + 5 dígitos)
+   - ✅ **Campo `descripcion_corta`** - Identificación rápida del activo (max 200 caracteres, opcional)
+   - ✅ **Tipo de activo** - Computadora, Mueble, Vehículo, Equipo, Herramienta, Otro
+   - ✅ **Datos técnicos** - Marca, modelo, serial
+   - ✅ **Proveedor** - Relación ForeignKey con ProveedoresApp
+   - ✅ **Ubicación y responsable** - Campos de texto para asignación
+   - ✅ **Fotografía** - Campo de imagen opcional
+   - ✅ **Observaciones** - Campo de texto para notas adicionales
+
+2. **Gestión Financiera** ✅
+
+   - ✅ **Valor de adquisición** - Moneda dual (Bs o $)
+   - ✅ **Conversión automática** - Usa cotización del día para calcular `valor_dolares`
+   - ✅ **Depreciación anual** - Porcentaje configurable (0-100%)
+   - ✅ **Cálculo automático de valor actual:**
+     ```python
+     años_transcurridos = (fecha_actual - fecha_adquisicion).days / 365.25
+     depreciacion_acumulada = valor_dolares * (depreciacion_anual / 100) * años_transcurridos
+     valor_actual = max(0, valor_dolares - depreciacion_acumulada)
+     ```
+   - ✅ **Porcentaje de depreciación** - Calculado automáticamente
+
+3. **Control de Garantía** ✅
+
+   - ✅ **Duración en meses** - Campo numérico
+   - ✅ **Fecha de expiración** - Calculada automáticamente
+   - ✅ **Estado de garantía** - Property que retorna True/False
+   - ✅ **Días restantes** - Cálculo automático (positivo si vigente, negativo si expirada)
+
+4. **Gestión de Mantenimiento** ✅
+
+   - ✅ **Fecha de último mantenimiento** - Campo de fecha
+   - ✅ **Descripción del mantenimiento** - Campo de texto
+   - ✅ **Formulario dedicado** - `form_mantenimiento.html` para registro
+
+5. **Estados del Activo** ✅
+
+   - ✅ **Activo** - Badge verde
+   - ✅ **En Mantenimiento** - Badge amarillo
+   - ✅ **Dado de Baja** - Badge rojo
+   - ✅ **Inactivo** - Badge gris
+
+6. **Filtros Avanzados** ✅
+
+   - ✅ **Por tipo de activo** - Dropdown con todos los tipos
+   - ✅ **Por estado** - Dropdown con todos los estados
+   - ✅ **Por rango de fechas** - Fecha desde/hasta de adquisición
+   - ✅ **Búsqueda** - Por número de inventario, marca o modelo
+
+7. **Exportación a PDF** ✅
+
+   - ✅ **Template `activos_pdf.html`** - Diseño profesional
+   - ✅ **Filtros aplicados** - Se reflejan en el PDF
+   - ✅ **Resumen de totales:**
+     - Total de activos
+     - Valor total en USD
+     - Depreciación acumulada
+     - Valor actual total
+   - ✅ **Totales por tipo** - Tabla adicional con desglose
+
+8. **Interfaz Responsiva** ✅
+
+   - ✅ **Tabla con `table-responsive`** - Scroll horizontal en móviles
+   - ✅ **Filtros optimizados** - `col-12 col-sm-6 col-md-*` para mejor apilamiento
+   - ✅ **Tarjetas de resumen** - `col-6 col-md-3` (2 por fila en móviles)
+   - ✅ **Columnas de detalle** - `col-12 col-lg-6` para apilamiento en tablets
+
+**Archivos creados:**
+
+- [`Inventario/templates/Inventario/listar_activos.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_activos.html)
+- [`Inventario/templates/Inventario/form_activo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/form_activo.html)
+- [`Inventario/templates/Inventario/detalle_activo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/detalle_activo.html)
+- [`Inventario/templates/Inventario/eliminar_activo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/eliminar_activo.html)
+- [`Inventario/templates/Inventario/form_mantenimiento.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/form_mantenimiento.html)
+- [`Inventario/templates/Inventario/activos_pdf.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/activos_pdf.html)
+
+**Archivos modificados:**
+
+- [`Inventario/models.py`](file:///E:/AmandaBoutique/Inventario/models.py) - Modelo `ActivoFijo` completo con properties
+- [`Inventario/forms.py`](file:///E:/AmandaBoutique/Inventario/forms.py) - Forms `ActivoFijoForm` y `MantenimientoForm`
+- [`Inventario/views.py`](file:///E:/AmandaBoutique/Inventario/views.py) - Vistas CRUD y PDF
+- [`Inventario/urls.py`](file:///E:/AmandaBoutique/Inventario/urls.py) - Rutas del módulo
+- [`Inventario/admin.py`](file:///E:/AmandaBoutique/Inventario/admin.py) - Admin de Django
+
+**Migraciones aplicadas:**
+
+- `0005_activofijo.py` - Creación del modelo
+- `0006_activofijo_descripcion_corta.py` - Agregado campo descripción corta
+
+**Impacto:**
+
+- ✅ **Control de activos** - Gestión completa del patrimonio de la empresa
+- ✅ **Cálculos automáticos** - Depreciación y valores actualizados
+- ✅ **Trazabilidad** - Historial de mantenimientos y garantías
+- ✅ **Reportes profesionales** - PDF con información detallada
+- ✅ **Experiencia móvil** - Diseño completamente responsivo
+
+---
+
+### 📱 Mejoras de Responsividad (Dic 20, 2025) ✅
+
+#### **Objetivo:** Hacer que todas las plantillas del módulo de Inventario sean completamente responsivas en dispositivos móviles, tablets y desktop.
+
+**Problemas identificados:**
+
+- ❌ **Tablas desbordadas** - Columnas no visibles en móviles
+- ❌ **Filtros mal apilados** - Ocupaban demasiado espacio vertical
+- ❌ **Tarjetas sin optimizar** - Se apilaban verticalmente en móviles
+- ❌ **Botones inconsistentes** - Tamaños y layouts variables
+
+**Soluciones implementadas:**
+
+1. **Tablas Responsivas** ✅
+
+   - ✅ **Wrapper `table-responsive`** - Permite scroll horizontal
+   - ✅ Aplicado en:
+     - `listar_activos.html`
+     - `detalle_activo.html`
+     - `eliminar_activo.html`
+
+2. **Filtros Optimizados** ✅
+
+   - ✅ **Clases responsivas:**
+     - `col-12` - Ancho completo en móviles (<576px)
+     - `col-sm-6` - 2 por fila en tablets (≥576px)
+     - `col-md-3` - 4 por fila en desktop (≥768px)
+   - ✅ **Resultado:** Mejor aprovechamiento del espacio en todos los tamaños
+
+3. **Tarjetas de Resumen** ✅
+
+   - ✅ **Cambio:** `col-md-3` → `col-6 col-md-3`
+   - ✅ **Resultado:** 2 tarjetas por fila en móviles, 4 en desktop
+   - ✅ Información más accesible en pantallas pequeñas
+
+4. **Columnas de Detalle** ✅
+
+   - ✅ **Cambio:** `col-md-6` → `col-12 col-lg-6`
+   - ✅ **Resultado:** Apilamiento vertical en tablets, lado a lado en desktop
+
+5. **Corrección de Template Tags** ✅
+
+   - ✅ **Problema:** Tags de Django divididos en múltiples líneas causaban errores
+   - ✅ **Solución:** Cada tag en su propia línea completa
+   - ✅ **Ejemplo correcto:**
+     ```html
+     {% if activo.moneda == 'Bs' %} Bs {{ activo.valor_adquisicion|floatformat:2
+     }} {% else %} ${{ activo.valor_adquisicion|floatformat:2 }} {% endif %}
+     ```
+
+**Archivos modificados:**
+
+- [`Inventario/templates/Inventario/listar_activos.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/listar_activos.html) - Tabla, filtros y tarjetas
+- [`Inventario/templates/Inventario/detalle_activo.html`](file:///E:/AmandaBoutique/Inventario/templates/Inventario/detalle_activo.html) - Columnas y template tags
+
+**Verificación realizada:**
+
+- ✅ **Móvil (375px):** Tabla con scroll, filtros 1 por fila, tarjetas 2 por fila
+- ✅ **Tablet (768px):** Filtros 2 por fila, layout optimizado
+- ✅ **Desktop (1280px):** Layout completo sin restricciones
+
+**Clases de Bootstrap 5 utilizadas:**
+
+- `table-responsive` - Scroll horizontal en tablas
+- `col-12`, `col-6`, `col-sm-6`, `col-md-*`, `col-lg-6` - Grid responsivo
+- `d-flex`, `flex-column`, `flex-md-row` - Flexbox responsivo
+- `gap-2`, `gap-3` - Espaciado entre elementos
+
+**Impacto:**
+
+- ✅ **Experiencia móvil mejorada** - Todas las funciones accesibles
+- ✅ **Diseño adaptable** - Se ajusta a cualquier tamaño de pantalla
+- ✅ **Sin desbordamiento** - Scroll horizontal solo cuando es necesario
+- ✅ **Código limpio** - Template tags correctamente formateados
+
+---
+
 ### 🎨 Estandarización Completa de Plantillas (Dic 20, 2025) ✅
 
 #### **Objetivo:** Crear consistencia visual total en todo el proyecto usando `listar_movimientos.html` como modelo de referencia.

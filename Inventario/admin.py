@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ExistenciaInsumo, CompraInsumo, UsoInsumo, DetalleUsoInsumo
+from .models import ExistenciaInsumo, CompraInsumo, UsoInsumo, DetalleUsoInsumo, ActivoFijo
 
 
 @admin.register(ExistenciaInsumo)
@@ -92,3 +92,52 @@ class UsoInsumoAdmin(admin.ModelAdmin):
     date_hierarchy = 'fecha_uso'
     readonly_fields = ['costo_total_usd']
     inlines = [DetalleUsoInsumoInline]
+
+
+# ============================================
+# ADMIN: ACTIVO FIJO
+# ============================================
+
+@admin.register(ActivoFijo)
+class ActivoFijoAdmin(admin.ModelAdmin):
+    list_display = [
+        'numero_inventario', 'tipo_activo', 'marca', 'modelo',
+        'valor_adquisicion', 'valor_dolares', 'valor_actual', 
+        'estado', 'fecha_adquisicion'
+    ]
+    list_filter = ['tipo_activo', 'estado', 'moneda', 'fecha_adquisicion']
+    search_fields = ['numero_inventario', 'marca', 'modelo', 'serial', 'ubicacion', 'responsable']
+    readonly_fields = [
+        'numero_inventario', 'valor_dolares', 'depreciacion_acumulada', 
+        'valor_actual', 'fecha_creacion', 'fecha_actualizacion'
+    ]
+    date_hierarchy = 'fecha_adquisicion'
+    ordering = ['-fecha_adquisicion', 'numero_inventario']
+    
+    fieldsets = (
+        ('Identificación', {
+            'fields': ('numero_inventario', 'tipo_activo', 'marca', 'modelo', 'serial')
+        }),
+        ('Adquisición', {
+            'fields': ('fecha_adquisicion', 'moneda', 'valor_adquisicion', 'valor_dolares')
+        }),
+        ('Depreciación', {
+            'fields': ('depreciacion_anual', 'depreciacion_acumulada', 'valor_actual')
+        }),
+        ('Estado y Ubicación', {
+            'fields': ('estado', 'ubicacion', 'responsable', 'foto')
+        }),
+        ('Mantenimiento', {
+            'fields': ('fecha_mantenimiento', 'descripcion_mantenimiento'),
+            'classes': ('collapse',),
+        }),
+        ('Información Adicional', {
+            'fields': ('observaciones', 'fecha_creacion', 'fecha_actualizacion'),
+            'classes': ('collapse',),
+        }),
+    )
+    
+    def get_queryset(self, request):
+        """Optimizar consultas"""
+        qs = super().get_queryset(request)
+        return qs.select_related()

@@ -131,6 +131,58 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - Método de pago: "Efectivo"
   - Campo `numero_factura` para vinculación directa
 
+### 🏢 Gestión de Activos Fijos
+
+- **Control Completo de Activos**
+  - Registro de activos con código auto-generado (AF00001, AF00002...)
+  - **Descripción corta** - Campo opcional para identificación rápida
+  - Tipo de activo (Computadora, Mueble, Vehículo, Equipo, Herramienta, Otro)
+  - Marca, modelo y número de serial
+  - Proveedor asociado
+  - Fecha de adquisición
+  - Ubicación y responsable asignado
+  - Fotografía del activo (opcional)
+  - Observaciones adicionales
+- **Gestión Financiera**
+  - Valor de adquisición en Bolívares o Dólares
+  - Conversión automática a USD usando cotización del día
+  - Depreciación anual configurable (%)
+  - Cálculo automático de valor actual
+  - Porcentaje de depreciación acumulada
+- **Control de Garantía**
+  - Duración en meses
+  - Fecha de expiración calculada automáticamente
+  - Estado de garantía (Vigente/Expirada)
+  - Días restantes o días desde expiración
+- **Mantenimiento**
+  - Registro de fecha de último mantenimiento
+  - Descripción detallada del mantenimiento realizado
+  - Historial de mantenimientos
+- **Estados del Activo**
+  - Activo (verde)
+  - En Mantenimiento (amarillo)
+  - Dado de Baja (rojo)
+  - Inactivo (gris)
+- **Filtros Avanzados**
+  - Por tipo de activo
+  - Por estado
+  - Por rango de fechas de adquisición
+  - Búsqueda por número, marca o modelo
+- **Reportes y Exportación**
+  - Listado completo con todas las columnas
+  - Exportación a PDF con filtros aplicados
+  - Resumen de totales:
+    - Total de activos
+    - Valor total en USD
+    - Depreciación acumulada
+    - Valor actual total
+  - Totales por tipo de activo
+- **Interfaz Responsiva**
+  - Tabla con scroll horizontal en dispositivos móviles
+  - Filtros que se apilan correctamente en tablets y móviles
+  - Tarjetas de resumen optimizadas (2 por fila en móviles)
+  - Diseño adaptable a todos los tamaños de pantalla
+
 ### 🔐 Sistema de Permisos de Usuario
 
 - **Registro con permisos de solo lectura por defecto**
@@ -163,7 +215,7 @@ AmandaBoutique/
 ├── ClientesApp/          # Gestión de clientes
 ├── ProveedoresApp/       # Gestión de proveedores
 ├── flujo/                # Flujo de caja y cotizaciones
-├── Inventario/           # Gestión de inventario de insumos
+├── Inventario/           # Gestión de inventario (insumos y activos fijos)
 ├── LoginApp/             # Autenticación y permisos
 ├── static/               # Archivos estáticos (CSS, JS, imágenes)
 └── templates/            # Templates base
@@ -468,6 +520,24 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.8  
-**Última actualización**: 20 de diciembre de 2025 - Estandarización de Plantillas  
+**Versión**: 2.9  
+**Última actualización**: 20 de diciembre de 2025 - Módulo de Activos Fijos y Mejoras de Responsividad  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5
+
+### Cambios en Versión 2.9 (20/12/2025)
+
+- ✅ **Nuevo Módulo: Gestión de Activos Fijos**
+  - Control completo de activos con código auto-generado
+  - Campo de descripción corta para identificación rápida
+  - Gestión financiera con depreciación automática
+  - Control de garantías y mantenimiento
+  - Exportación a PDF con filtros avanzados
+- ✅ **Mejoras de Responsividad**
+  - Tablas con scroll horizontal en dispositivos móviles
+  - Filtros optimizados para tablets y móviles
+  - Tarjetas de resumen adaptables (2 por fila en móviles)
+  - Diseño completamente responsivo en todos los módulos de Inventario
+- ✅ **Correcciones de Formato**
+  - Estandarización de template tags de Django
+  - Mejora en la legibilidad del código de plantillas
+  - Corrección de errores de sintaxis en templates

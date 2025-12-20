@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Listado de Activos Fijos</title>
+    <style>
+      @page {
+        size: A4 landscape;
+        margin: 1.5cm;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 10pt;
+        color: #333;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #b76e79;
+        padding-bottom: 10px;
+      }
+      .header h1 {
+        color: #b76e79;
+        margin: 0;
+        font-size: 20pt;
+      }
+      .header p {
+        margin: 5px 0;
+        color: #666;
+      }
+      .filtros {
+        background-color: #fff5f7;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        font-size: 9pt;
+      }
+      .filtros strong {
+        color: #b76e79;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th {
+        background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+        color: white;
+        padding: 8px;
+        text-align: left;
+        font-size: 9pt;
+        font-weight: bold;
+      }
+      td {
+        padding: 6px 8px;
+        border-bottom: 1px solid #ddd;
+        font-size: 9pt;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .totales {
+        background-color: #fff5f7;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 5px;
+      }
+      .totales h3 {
+        color: #b76e79;
+        margin: 0 0 10px 0;
+        font-size: 12pt;
+      }
+      .totales-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .total-item {
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 3px solid #b76e79;
+      }
+      .total-item strong {
+        display: block;
+        color: #666;
+        font-size: 9pt;
+      }
+      .total-item span {
+        display: block;
+        color: #b76e79;
+        font-size: 14pt;
+        font-weight: bold;
+        margin-top: 5px;
+      }
+      .badge {
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 8pt;
+        font-weight: bold;
+      }
+      .badge-success {
+        background-color: #28a745;
+        color: white;
+      }
+      .badge-warning {
+        background-color: #ffc107;
+        color: #333;
+      }
+      .badge-danger {
+        background-color: #dc3545;
+        color: white;
+      }
+      .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 8pt;
+        color: #999;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+      }
+      .tipo-section {
+        margin-bottom: 30px;
+      }
+      .tipo-section h4 {
+        color: #b76e79;
+        margin: 15px 0 10px 0;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #d4a5ae;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>LISTADO DE ACTIVOS FIJOS</h1>
+      <p>Amanda Mateo Boutique</p>
+      <p>Fecha de generación: {{ fecha_generacion|date:"d/m/Y H:i" }}</p>
+    </div>
+
+    {% if tipo_filtro or estado_filtro or fecha_desde or fecha_hasta or buscar %}
+    <div class="filtros">
+      <strong>Filtros aplicados:</strong>
+      {% if tipo_filtro %}
+      Tipo: {{ tipo_filtro }} | 
+      {% endif %}
+      {% if estado_filtro %}
+      Estado: {{ estado_filtro }} | 
+      {% endif %}
+      {% if fecha_desde %} 
+      Desde: {{ fecha_desde|date:"d/m/Y" }} | 
+      {% endif %} 
+      {% if fecha_hasta %} Hasta: 
+      {{ fecha_hasta|date:"d/m/Y" }} | 
+      {% endif %}
+      {% if buscar %}
+      Búsqueda: "
+      {{ buscar }}" 
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 8%">Nº Inventario</th>
+          <th style="width: 15%">Descripción</th>
+          <th style="width: 10%">Tipo</th>
+          <th style="width: 12%">Marca/Modelo</th>
+          <th style="width: 8%">Fecha Adq.</th>
+          <th style="width: 10%" class="text-right">Valor Adq.</th>
+          <th style="width: 10%" class="text-right">Valor USD</th>
+          <th style="width: 10%" class="text-right">Valor Actual</th>
+          <th style="width: 8%" class="text-center">Depr. %</th>
+          <th style="width: 9%" class="text-center">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for activo in activos %}
+        <tr>
+          <td class="text-center">
+            <strong>{{ activo.numero_inventario }}</strong>
+          </td>
+          <td>{{ activo.descripcion_corta|default:"-" }}</td>
+          <td>{{ activo.tipo_activo }}</td>
+          <td>{{ activo.marca|default:"-" }} {{ activo.modelo|default:"" }}</td>
+          <td class="text-center">
+            {{ activo.fecha_adquisicion|date:"d/m/Y" }}
+          </td>
+          <td class="text-right">
+            {% if activo.moneda == 'Bs' %}
+            Bs {{ activo.valor_adquisicion|floatformat:2 }}
+            {% else %}
+            ${{ activo.valor_adquisicion|floatformat:2 }}
+            {% endif %}
+          </td>
+          <td class="text-right">${{ activo.valor_dolares|floatformat:2 }}</td>
+          <td class="text-right">
+            <strong>${{ activo.valor_actual|floatformat:2 }}</strong>
+          </td>
+          <td class="text-center">
+            {{ activo.get_porcentaje_depreciacion|floatformat:1 }}%
+          </td>
+          <td class="text-center">
+            {% if activo.estado == 'Activo' %}
+            <span class="badge badge-success">{{ activo.estado }}</span>
+            {% elif activo.estado == 'En Mantenimiento' %}
+            <span class="badge badge-warning">{{ activo.estado }}</span>
+            {% elif activo.estado == 'Dado de Baja' %}
+            <span class="badge badge-danger">{{ activo.estado }}</span>
+            {% else %}
+            <span class="badge badge-secondary">{{ activo.estado }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td
+            colspan="10"
+            class="text-center"
+            style="padding: 20px; color: #999"
+          >
+            No hay activos fijos registrados
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totales">
+      <h3>Resumen General</h3>
+      <div class="totales-grid">
+        <div class="total-item">
+          <strong>Total de Activos</strong>
+          <span>{{ total_activos }}</span>
+        </div>
+        <div class="total-item">
+          <strong>Valor Total (USD)</strong>
+          <span>${{ valor_total|floatformat:2 }}</span>
+        </div>
+        <div class="total-item">
+          <strong>Depreciación Acumulada</strong>
+          <span>${{ depreciacion_total|floatformat:2 }}</span>
+        </div>
+        <div class="total-item">
+          <strong>Valor Actual Total</strong>
+          <span>${{ valor_actual_total|floatformat:2 }}</span>
+        </div>
+      </div>
+    </div>
+
+    {% if totales_por_tipo %}
+    <div class="tipo-section">
+      <h4>Totales por Tipo de Activo</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo de Activo</th>
+            <th class="text-center">Cantidad</th>
+            <th class="text-right">Valor Total (USD)</th>
+            <th class="text-right">Valor Actual (USD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tipo, datos in totales_por_tipo.items %}
+          <tr>
+            <td>{{ tipo }}</td>
+            <td class="text-center">{{ datos.cantidad }}</td>
+            <td class="text-right">${{ datos.valor_total|floatformat:2 }}</td>
+            <td class="text-right">${{ datos.valor_actual|floatformat:2 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+      <p>Amanda Mateo Boutique - Sistema de Gestión de Activos Fijos</p>
+      <p>Este documento es un reporte generado automáticamente</p>
+    </div>
+  </body>
+</html>

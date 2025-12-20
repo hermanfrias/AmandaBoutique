@@ -302,3 +302,179 @@ class DetalleUsoInsumo(models.Model):
     
     def __str__(self):
         return f"{self.insumo.codigo} - {self.cantidad} {self.insumo.medida}"
+
+
+# ============================================
+# MODELO: ACTIVO FIJO
+# ============================================
+
+class ActivoFijo(models.Model):
+    TIPO_ACTIVO_CHOICES = [
+        ('Maquinaria', 'Maquinaria'),
+        ('Herramienta', 'Herramienta'),
+        ('Mobiliario', 'Mobiliario'),
+        ('Equipo de Oficina', 'Equipo de Oficina'),
+        ('Vehículo', 'Vehículo'),        
+        ('Tecnología', 'Tecnología'),
+        ('Otros', 'Otros'),
+    ]
+    
+    ESTADO_CHOICES = [
+        ('Activo', 'Activo'),
+        ('En Mantenimiento', 'En Mantenimiento'),
+        ('Dado de Baja', 'Dado de Baja'),
+        ('Vendido', 'Vendido'),
+    ]
+    
+    MONEDAS = [
+        ('Bs', 'Bolívares'),
+        ('$', 'Dólares'),
+    ]
+    
+    # Campos principales
+    numero_inventario = models.CharField(max_length=20, unique=True, blank=True, verbose_name='Número de Inventario')
+    descripcion_corta = models.CharField(max_length=200, blank=True, null=True, verbose_name='Descripción Corta')
+    fecha_adquisicion = models.DateField(verbose_name='Fecha de Adquisición')
+    tipo_activo = models.CharField(max_length=50, choices=TIPO_ACTIVO_CHOICES, verbose_name='Tipo de Activo')
+    marca = models.CharField(max_length=100, blank=True, null=True, verbose_name='Marca')
+    modelo = models.CharField(max_length=100, blank=True, null=True, verbose_name='Modelo')
+    serial = models.CharField(max_length=100, blank=True, null=True, unique=True, verbose_name='Serial')
+    proveedor = models.ForeignKey(Proveedores, on_delete=models.SET_NULL, null=True, blank=True, related_name='activos_fijos', verbose_name='Proveedor')
+    
+    # Valores monetarios
+    moneda = models.CharField(max_length=2, choices=MONEDAS, verbose_name='Moneda')
+    valor_adquisicion = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='Valor de Adquisición')
+    valor_dolares = models.DecimalField(max_digits=15, decimal_places=2, editable=False, verbose_name='Valor en Dólares')
+    
+    # Depreciación
+    depreciacion_anual = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='Depreciación Anual (%)', help_text='Porcentaje de depreciación anual (ej: 20.00 para 20%)')
+    depreciacion_acumulada = models.DecimalField(max_digits=15, decimal_places=2, default=0, editable=False, verbose_name='Depreciación Acumulada (USD)')
+    valor_actual = models.DecimalField(max_digits=15, decimal_places=2, default=0, editable=False, verbose_name='Valor Actual (USD)')
+    
+    # Estado y ubicación
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Activo', verbose_name='Estado')
+    ubicacion = models.CharField(max_length=200, blank=True, null=True, verbose_name='Ubicación')
+    responsable = models.CharField(max_length=200, blank=True, null=True, verbose_name='Responsable')
+    
+    # Mantenimiento
+    fecha_mantenimiento = models.DateField(blank=True, null=True, verbose_name='Última Fecha de Mantenimiento')
+    descripcion_mantenimiento = models.TextField(blank=True, null=True, verbose_name='Descripción del Mantenimiento')
+    
+    # Garantía
+    garantia_meses = models.IntegerField(default=0, verbose_name='Garantía (meses)', help_text='Duración de la garantía en meses desde la fecha de adquisición')
+    
+    # Información adicional
+    foto = models.ImageField(upload_to='activos_fijos/', blank=True, null=True, verbose_name='Foto del Activo')
+    observaciones = models.TextField(blank=True, null=True, verbose_name='Observaciones')
+    
+    # Timestamps
+    fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de Creación')
+    fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name='Última Actualización')
+    
+    class Meta:
+        ordering = ['-fecha_adquisicion', 'numero_inventario']
+        verbose_name = 'Activo Fijo'
+        verbose_name_plural = 'Activos Fijos'
+    
+    def save(self, *args, **kwargs):
+        # Auto-generar numero_inventario
+        if not self.numero_inventario:
+            ultimo = ActivoFijo.objects.order_by('-numero_inventario').first()
+            if ultimo and ultimo.numero_inventario.startswith('AF'):
+                try:
+                    numero = int(ultimo.numero_inventario[2:]) + 1
+                    self.numero_inventario = f'AF{numero:05d}'
+                except ValueError:
+                    self.numero_inventario = 'AF00001'
+            else:
+                self.numero_inventario = 'AF00001'
+        
+        # Calcular valor en dólares si la compra fue en Bs
+        if self.moneda == 'Bs':
+            from flujo.models import CotizacionDolar
+            try:
+                cotizacion = CotizacionDolar.objects.filter(
+                    fecha=self.fecha_adquisicion
+                ).first()
+                if cotizacion:
+                    self.valor_dolares = self.valor_adquisicion / cotizacion.valor
+                else:
+                    # Si no hay cotización para esa fecha, usar la más reciente
+                    cotizacion_reciente = CotizacionDolar.objects.order_by('-fecha').first()
+                    if cotizacion_reciente:
+                        self.valor_dolares = self.valor_adquisicion / cotizacion_reciente.valor
+                    else:
+                        self.valor_dolares = Decimal('0')
+            except Exception:
+                self.valor_dolares = Decimal('0')
+        else:
+            # Si la compra fue en dólares, valor_dolares = valor_adquisicion
+            self.valor_dolares = self.valor_adquisicion
+        
+        # Calcular depreciación acumulada
+        self.calcular_depreciacion()
+        
+        super().save(*args, **kwargs)
+    
+    def calcular_depreciacion(self):
+        """Calcula la depreciación acumulada basada en años transcurridos"""
+        from datetime import date
+        
+        if self.fecha_adquisicion and self.valor_dolares and self.depreciacion_anual:
+            años_transcurridos = (date.today() - self.fecha_adquisicion).days / Decimal('365.25')
+            # Depreciación se calcula sobre el valor en dólares
+            depreciacion_anual_monto = (self.valor_dolares * self.depreciacion_anual) / Decimal('100')
+            self.depreciacion_acumulada = min(
+                depreciacion_anual_monto * Decimal(str(años_transcurridos)),
+                self.valor_dolares  # No puede depreciar más del valor original
+            )
+            self.valor_actual = self.valor_dolares - self.depreciacion_acumulada
+        else:
+            self.depreciacion_acumulada = Decimal('0')
+            self.valor_actual = self.valor_dolares if self.valor_dolares else Decimal('0')
+    
+    def get_vida_util_restante(self):
+        """Retorna años de vida útil restante"""
+        from datetime import date
+        
+        if self.depreciacion_anual > 0:
+            vida_util_total = Decimal('100') / self.depreciacion_anual
+            años_transcurridos = (date.today() - self.fecha_adquisicion).days / Decimal('365.25')
+            return max(Decimal('0'), vida_util_total - Decimal(str(años_transcurridos)))
+        return Decimal('0')
+    
+    def get_porcentaje_depreciacion(self):
+        """Retorna el porcentaje de depreciación acumulada"""
+        if self.valor_dolares > 0:
+            return (self.depreciacion_acumulada / self.valor_dolares) * Decimal('100')
+        return Decimal('0')
+    
+    def get_fecha_expiracion_garantia(self):
+        """Retorna la fecha de expiración de la garantía"""
+        from datetime import date
+        from dateutil.relativedelta import relativedelta
+        
+        if self.fecha_adquisicion and self.garantia_meses > 0:
+            return self.fecha_adquisicion + relativedelta(months=self.garantia_meses)
+        return None
+    
+    def garantia_vigente(self):
+        """Retorna True si la garantía está vigente"""
+        from datetime import date
+        
+        fecha_expiracion = self.get_fecha_expiracion_garantia()
+        if fecha_expiracion:
+            return date.today() <= fecha_expiracion
+        return False
+    
+    def dias_restantes_garantia(self):
+        """Retorna los días restantes de garantía (negativo si ya expiró)"""
+        from datetime import date
+        
+        fecha_expiracion = self.get_fecha_expiracion_garantia()
+        if fecha_expiracion:
+            return (fecha_expiracion - date.today()).days
+        return None
+    
+    def __str__(self):
+        return f"{self.numero_inventario} - {self.tipo_activo} - {self.marca or ''} {self.modelo or ''}".strip()

@@ -1,5 +1,9 @@
 from django.urls import path
 from . import views
+from .views_activos_fijos import (
+    listar_activos, crear_activo, editar_activo, detalle_activo,
+    eliminar_activo, registrar_mantenimiento, activos_pdf
+)
 
 urlpatterns = [
     # URLs para ExistenciaInsumo
@@ -32,4 +36,13 @@ urlpatterns = [
     path('usos/<int:pk>/', views.detalle_uso, name='detalle_uso'),
     path('usos/<int:pk>/eliminar/', views.eliminar_uso, name='eliminar_uso'),
     path('usos/pdf/', views.usos_pdf, name='usos_pdf'),
+    
+    # URLs para Activos Fijos
+    path('activos/', listar_activos, name='listar_activos'),
+    path('activos/crear/', crear_activo, name='crear_activo'),
+    path('activos/<str:numero_inventario>/', detalle_activo, name='detalle_activo'),
+    path('activos/<str:numero_inventario>/editar/', editar_activo, name='editar_activo'),
+    path('activos/<str:numero_inventario>/eliminar/', eliminar_activo, name='eliminar_activo'),
+    path('activos/<str:numero_inventario>/mantenimiento/', registrar_mantenimiento, name='registrar_mantenimiento'),
+    path('activos/pdf/export/', activos_pdf, name='activos_pdf'),
 ]

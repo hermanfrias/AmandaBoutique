@@ -1,0 +1,116 @@
+{% extends 'BoutiqueApp/base.html' %}
+{% load static %}
+{% block title%}Eliminar Activo{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Encabezado -->
+      <div class="mb-4">
+        <h2 class="text-pink fw-bold">
+          <i class="fas fa-trash me-2"></i>Eliminar Activo Fijo
+        </h2>
+      </div>
+
+      <!-- Card de Confirmación -->
+      <div class="card shadow-sm border-danger">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>Confirmación de
+            Eliminación
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>¡Atención!</strong> Esta acción eliminará permanentemente el
+            activo y no se puede deshacer.
+          </div>
+
+          <h5 class="text-pink fw-bold mb-3">
+            Información del Activo a Eliminar:
+          </h5>
+
+          <table class="table table-bordered">
+            <tr>
+              <th width="40%">Número de Inventario:</th>
+              <td class="fw-bold">{{ activo.numero_inventario }}</td>
+            </tr>
+            <tr>
+              <th>Tipo de Activo:</th>
+              <td>{{ activo.tipo_activo }}</td>
+            </tr>
+            <tr>
+              <th>Marca/Modelo:</th>
+              <td>
+                {{ activo.marca|default:"-" }} {{ activo.modelo|default:"" }}
+              </td>
+            </tr>
+            <tr>
+              <th>Serial:</th>
+              <td>{{ activo.serial|default:"-" }}</td>
+            </tr>
+            <tr>
+              <th>Fecha de Adquisición:</th>
+              <td>{{ activo.fecha_adquisicion|date:"d/m/Y" }}</td>
+            </tr>
+            <tr>
+              <th>Valor de Adquisición:</th>
+              <td class="fw-bold">
+                {% if activo.moneda == 'Bs' %}
+                Bs {{ activo.valor_adquisicion|floatformat:2 }}
+                {% else %}
+                ${{ activo.valor_adquisicion|floatformat:2 }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>Valor Actual (USD):</th>
+              <td class="text-success fw-bold">
+                ${{ activo.valor_actual|floatformat:2 }}
+              </td>
+            </tr>
+            <tr>
+              <th>Estado:</th>
+              <td>
+                {% if activo.estado == 'Activo' %}
+                <span class="badge bg-success">{{ activo.estado }}</span>
+                {% elif activo.estado == 'En Mantenimiento' %}
+                <span class="badge bg-warning">{{ activo.estado }}</span>
+                {% elif activo.estado == 'Dado de Baja' %}
+                <span class="badge bg-danger">{{ activo.estado }}</span>
+                {% else %}
+                <span class="badge bg-secondary">{{ activo.estado }}</span>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>Ubicación:</th>
+              <td>{{ activo.ubicacion|default:"-" }}</td>
+            </tr>
+            <tr>
+              <th>Responsable:</th>
+              <td>{{ activo.responsable|default:"-" }}</td>
+            </tr>
+          </table>
+
+          <div class="d-flex justify-content-center gap-3 mt-4">
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-eliminar px-4 py-2">
+                <i class="fas fa-trash me-1"></i>Eliminar
+              </button>
+            </form>
+            <a
+              href="{% url 'detalle_activo' activo.numero_inventario %}"
+              class="btn btn-volver px-4 py-2"
+            >
+              <i class="fas fa-times me-1"></i>Cancelar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

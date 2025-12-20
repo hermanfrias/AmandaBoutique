@@ -136,6 +136,11 @@
                     Uso de Insumos
                   </a>
                 </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'listar_activos' %}">
+                    Activos Fijos
+                  </a>
+                </li>
                 {% if user.is_superuser %}
                 <li><hr class="dropdown-divider" /></li>
                 <li>
