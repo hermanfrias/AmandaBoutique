@@ -3,7 +3,7 @@ Mateo Boutique{% endblock %} {% block content %}
 <div class="container py-5">
   <div
     class="card shadow-lg mx-auto border-0 rounded-4"
-    style="max-width: 750px; background-color: #fff5fa"
+    style="max-width: 100%; background-color: #fff5fa"
   >
     <div
       class="card-header text-center fw-bold text-pink fs-4"
@@ -16,7 +16,7 @@ Mateo Boutique{% endblock %} {% block content %}
         {% csrf_token %}
         <div class="row g-3">
           {% for field in form %}
-          <div class="col-md-6">
+          <div class="col-12 col-md-6">
             <label class="form-label fw-semibold text-secondary"
               >{{ field.label }}</label
             >

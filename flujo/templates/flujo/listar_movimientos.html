@@ -34,7 +34,7 @@
         <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
       </h5>
       <form method="get" action="{% url 'listar_movimientos' %}" class="row g-3">
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-md-2">
           <label for="fecha_inicio" class="form-label fw-semibold">
             <i class="fas fa-calendar-alt me-1"></i>Fecha Inicio
           </label>
@@ -46,7 +46,7 @@
             value="{{ fecha_inicio }}"
           />
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-md-2">
           <label for="fecha_fin" class="form-label fw-semibold">
             <i class="fas fa-calendar-check me-1"></i>Fecha Fin
           </label>
@@ -58,7 +58,7 @@
             value="{{ fecha_fin }}"
           />
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-md-2">
           <label for="tipo" class="form-label fw-semibold">
             <i class="fas fa-exchange-alt me-1"></i>Tipo
           </label>
@@ -68,7 +68,7 @@
             <option value="Gasto" {% if tipo_filtro == 'Gasto' %}selected{% endif %}>Gasto</option>
           </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-md-2">
           <label for="tipo_movimiento" class="form-label fw-semibold">
             <i class="fas fa-tags me-1"></i>Tipo Mov.
           </label>
@@ -81,7 +81,7 @@
             <option value="Otros" {% if tipo_movimiento_filtro == 'Otros' %}selected{% endif %}>Otros</option>
           </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-md-2">
           <label for="metodo_pago" class="form-label fw-semibold">
             <i class="fas fa-credit-card me-1"></i>Método Pago
           </label>
@@ -94,7 +94,7 @@
             <option value="Otro" {% if metodo_pago_filtro == 'Otro' %}selected{% endif %}>Otro</option>
           </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-md-2">
           <label for="moneda" class="form-label fw-semibold">
             <i class="fas fa-dollar-sign me-1"></i>Moneda
           </label>
@@ -113,7 +113,7 @@
     </div>
   </div>
   
-  <div class="table-responsive shadow-lg rounded" style="border-radius: 15px; overflow: hidden;">
+  <div class="table-responsive shadow-lg rounded" style="border-radius: 15px;">
     <style>
       .table-movimientos {
         font-size: 0.9rem;
@@ -204,6 +204,33 @@
         color: #dc3545;
         font-weight: 600;
       }
+
+      /* Responsividad para móviles */
+      @media (max-width: 767px) {
+        .table-movimientos th,
+        .table-movimientos td {
+          padding: 8px 4px;
+          font-size: 0.8rem;
+        }
+        .btn-action-group {
+          flex-wrap: wrap;
+          gap: 3px;
+        }
+        .btn-action {
+          padding: 4px 6px;
+          font-size: 0.75rem;
+          min-width: 50px;
+        }
+      }
+
+      /* Responsividad para tablets */
+      @media (max-width: 991px) {
+        .table-movimientos th,
+        .table-movimientos td {
+          padding: 10px 6px;
+          font-size: 0.85rem;
+        }
+      }
     </style>
     <table class="table table-striped table-bordered table-hover table-movimientos">
       <thead>
@@ -256,9 +283,9 @@
               </a>
               {% endif %}
               {% if perms.flujo.delete_movimientocaja %}
-              <button class="btn btn-sm btn-eliminar btn-action" onclick="confirmarEliminacion({{ m.id }})">
+              <a href="{% url 'eliminar_movimiento' m.id %}" class="btn btn-sm btn-eliminar btn-action">
                 Eliminar
-              </button>
+              </a>
               {% endif %}
             </div>
           </td>
@@ -435,30 +462,6 @@
     window.location.href = url;
   }
 
-  function confirmarEliminacion(id) {
-    const modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
-    document.getElementById('btnConfirmarEliminar').href = `/flujo/movimientos/eliminar/${id}/`;
-    modal.show();
-  }
 </script>
-
-<!-- Modal de Confirmación para Eliminar -->
-<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ¿Está seguro que desea eliminar este movimiento? Esta acción no se puede deshacer.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <a href="#" id="btnConfirmarEliminar" class="btn btn-danger">Eliminar</a>
-      </div>
-    </div>
-  </div>
-</div>
 
 {% endblock %}

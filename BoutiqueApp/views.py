@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib import messages
 from weasyprint import HTML, CSS
 from BoutiqueApp.forms import CatalogoForm
 from BoutiqueApp.models import Catalogo
@@ -64,9 +65,34 @@ def editar_catalogo(request, codigo):
 @login_required
 @permission_required('BoutiqueApp.delete_catalogo', raise_exception=True)
 def eliminar_catalogo(request, codigo):
+    import os
+    from django.conf import settings
+    
     catalogo = Catalogo.objects.get(codigo=codigo)
     if request.method == 'POST':
+        # Eliminar la imagen del sistema de archivos si existe
+        if catalogo.imagen_modelo:
+            try:
+                # Construir la ruta completa del archivo
+                imagen_path = os.path.join(settings.MEDIA_ROOT, str(catalogo.imagen_modelo))
+                # Verificar si el archivo existe y eliminarlo
+                if os.path.exists(imagen_path):
+                    os.remove(imagen_path)
+                    
+                    # Intentar eliminar la carpeta padre si está vacía
+                    carpeta_padre = os.path.dirname(imagen_path)
+                    try:
+                        if os.path.exists(carpeta_padre) and not os.listdir(carpeta_padre):
+                            os.rmdir(carpeta_padre)
+                    except OSError:
+                        pass  # La carpeta no está vacía o no se puede eliminar
+            except Exception as e:
+                # Log del error pero continuar con la eliminación del registro
+                print(f"Error al eliminar imagen: {e}")
+        
+        # Eliminar el registro de la base de datos
         catalogo.delete()
+        messages.success(request, 'Producto eliminado correctamente junto con su imagen')
         return redirect('listar_catalogo')
     return render(request, 'BoutiqueApp/eliminar_catalogo.html', {'catalogo': catalogo})
 

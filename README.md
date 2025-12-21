@@ -1,4 +1,4 @@
-﻿# Amanda Mateo Boutique - Sistema de Gestión
+# Amanda Mateo Boutique - Sistema de Gestión
 
 Sistema web completo para la gestión de boutique desarrollado con Django, que incluye gestión de inventario, citas, clientes, proveedores, flujo de caja y control de usuarios con permisos granulares.
 
@@ -541,3 +541,171 @@ Para soporte o consultas, contactar al administrador del sistema.
   - Estandarización de template tags de Django
   - Mejora en la legibilidad del código de plantillas
   - Corrección de errores de sintaxis en templates
+
+---
+
+## Actualización Diciembre 2025 - Estandarización Completa del Proyecto
+
+**Versión**: 3.0  
+**Fecha**: 21 de diciembre de 2025  
+**Tipo**: Estandarización UI/UX, Responsividad y Nuevas Funcionalidades
+
+### 🎨 Estandarización de UI/UX
+
+#### Templates de Eliminación Estandarizados
+
+Todos los módulos ahora tienen templates de eliminación consistentes con:
+- Card rosa con fondo #fff5fa y header #ffe6f2
+- Botones estandarizados: tn-eliminar (rojo) y tn-volver (gris)
+- Layout centrado y responsive (max-width: 600px)
+- Alerts de advertencia con iconos FontAwesome
+
+**Módulos estandarizados:**
+- ✅ Citas
+- ✅ Clientes  
+- ✅ Proveedores
+- ✅ Flujo de Caja (Movimientos, Cotizaciones, Config IVA)
+- ✅ Inventario (Insumos, Compras - Anulación)
+- ✅ Uso de Insumos
+- ✅ Catálogo
+- ✅ Usuarios (LoginApp)
+
+#### Responsividad Completa
+
+**Mejoras aplicadas a todos los listados:**
+- Filtros responsive con clases col-12 col-md-X para full-width en móviles
+- Eliminado overflow: hidden para permitir scroll horizontal en tablas
+- Media queries para móviles (max-width: 767px) y tablets (max-width: 991px)
+- Botones de acción con lex-wrap para adaptarse a pantallas pequeñas
+- Padding y font-size reducidos en móviles para mejor visualización
+
+**Módulos con responsividad completa:**
+- ✅ Citas
+- ✅ Clientes
+- ✅ Proveedores
+- ✅ Flujo de Caja (Movimientos, Cotizaciones, Config IVA)
+- ✅ Inventario (Insumos, Compras, Uso de Insumos)
+- ✅ Catálogo
+- ✅ LoginApp (Gestión de Permisos)
+
+### 🗑️ Eliminación Automática de Archivos
+
+#### Catálogo
+- Elimina automáticamente la imagen del producto al borrar el registro
+- Elimina la carpeta si queda vacía después de borrar la imagen
+- Manejo de errores sin interrumpir la eliminación del registro
+
+#### Usuarios
+- Elimina automáticamente el avatar del usuario al borrar la cuenta
+- No elimina avatares default (default/default_icono.png)
+- Elimina la carpeta si queda vacía después de borrar el avatar
+- Manejo de errores sin interrumpir la eliminación del usuario
+
+**Archivos modificados:**
+- BoutiqueApp/views.py - Vista liminar_catalogo
+- LoginApp/views.py - Vista liminar_usuario
+
+### 👥 Gestión Avanzada de Usuarios (Solo Superusuarios)
+
+#### Crear Usuarios
+- **Nueva vista**: crear_usuario_admin
+- **Ruta**: /crear-usuario/
+- **Template**: crear_usuario_admin.html
+- Asigna automáticamente permisos de solo lectura
+- Formulario completo con avatar opcional
+- Botón "Crear Usuario" en panel de gestión de permisos
+
+#### Editar Usuarios
+- **Nueva vista**: ditar_usuario_admin
+- **Ruta**: /editar-usuario/<int:user_id>/
+- **Template**: ditar_usuario_admin.html
+- Permite editar nombre, email y avatar
+- No permite editar superusuarios
+- Botón "Editar" en tabla de gestión de permisos
+
+#### Interfaz de Gestión Mejorada
+- **3 botones de acción** en tabla de usuarios:
+  - **Editar** (rosa - btn-ver): Edita información del usuario
+  - **Permisos** (amarillo - btn-editar): Edita permisos
+  - **Eliminar** (rojo - btn-eliminar): Elimina usuario
+- Tabla responsive con media queries
+- Estilos consistentes con el resto del proyecto
+
+### 📊 Resumen de Cambios
+
+#### Archivos Modificados (Total: 45+)
+
+**Templates de Eliminación (11):**
+- citas/eliminar_cita.html
+- lujo/eliminar_cotizacion.html
+- lujo/eliminar_movimiento.html
+- lujo/eliminar_configuracion_iva.html
+- Inventario/eliminar_insumo.html
+- Inventario/anular_compra_grupo.html
+- Inventario/eliminar_uso.html
+- BoutiqueApp/eliminar_catalogo.html
+- LoginApp/eliminar_usuario.html
+
+**Templates de Listado Responsive (10):**
+- ProveedoresApp/proveedores_list.html
+- lujo/listar_movimientos.html
+- lujo/listar_cotizaciones.html
+- lujo/listar_configuraciones_iva.html
+- Inventario/listar_insumos.html
+- Inventario/listar_compras.html
+- Inventario/listar_usos.html
+- BoutiqueApp/listar_catalogo.html
+- LoginApp/gestionar_permisos.html
+
+**Nuevos Templates (2):**
+- LoginApp/crear_usuario_admin.html
+- LoginApp/editar_usuario_admin.html
+
+**Vistas Modificadas (3):**
+- BoutiqueApp/views.py - Eliminación de imágenes
+- LoginApp/views.py - Eliminación de avatares, crear/editar usuarios
+- lujo/views.py - Templates de confirmación
+
+**URLs Modificadas (1):**
+- LoginApp/urls.py - Nuevas rutas para crear/editar usuarios
+
+### 🎯 Beneficios de la Estandarización
+
+1. **Experiencia de Usuario Consistente**
+   - Mismo look & feel en todos los módulos
+   - Navegación intuitiva y predecible
+   - Feedback visual uniforme
+
+2. **Responsividad Total**
+   - Funciona perfectamente en móviles, tablets y desktop
+   - Tablas con scroll horizontal cuando es necesario
+   - Filtros que se adaptan al tamaño de pantalla
+
+3. **Mantenimiento Simplificado**
+   - Código más limpio y organizado
+   - Estilos centralizados
+   - Fácil de actualizar y extender
+
+4. **Gestión de Archivos Mejorada**
+   - No quedan archivos huérfanos en el servidor
+   - Carpetas vacías eliminadas automáticamente
+   - Mejor uso del espacio en disco
+
+5. **Administración de Usuarios Completa**
+   - Superusuarios pueden crear usuarios sin acceso al admin de Django
+   - Edición de información de usuario desde panel de gestión
+   - Flujo de trabajo más eficiente
+
+### 📝 Notas Técnicas
+
+- **Bootstrap 5**: Uso extensivo de clases responsive (col-12 col-md-X)
+- **Media Queries**: Breakpoints en 767px (móvil) y 991px (tablet)
+- **Python**: Manejo de archivos con os.path y os.remove()
+- **Django**: Decoradores @login_required y @permission_required
+- **CSS**: Gradientes rosa consistentes y efectos hover estandarizados
+
+### 🚀 Próximos Pasos para Producción
+
+Ver archivo PLAN_PRODUCCION.md para instrucciones detalladas de despliegue.
+
+---

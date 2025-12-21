@@ -119,9 +119,11 @@ def ver_movimiento(request, id):
 @permission_required('flujo.delete_movimientocaja', raise_exception=True)
 def eliminar_movimiento(request, id):
     movimiento = MovimientoCaja.objects.get(id=id)
-    movimiento.delete()
-    messages.success(request, 'Movimiento eliminado correctamente')
-    return redirect('listar_movimientos')
+    if request.method == 'POST':
+        movimiento.delete()
+        messages.success(request, 'Movimiento eliminado correctamente')
+        return redirect('listar_movimientos')
+    return render(request, 'flujo/eliminar_movimiento.html', {'movimiento': movimiento})
 
 @login_required
 def listar_cotizaciones(request):
@@ -156,11 +158,14 @@ def editar_cotizacion(request, id):
     return render(request, 'flujo/editar_cotizacion.html', {'form': form, 'cotizacion': cotizacion})
 
 @login_required
+@permission_required('flujo.delete_cotizaciondolar', raise_exception=True)
 def eliminar_cotizacion(request, id):
     cotizacion = CotizacionDolar.objects.get(id=id)
-    cotizacion.delete()
-    messages.success(request, 'Cotización eliminada correctamente')
-    return redirect('listar_cotizaciones')
+    if request.method == 'POST':
+        cotizacion.delete()
+        messages.success(request, 'Cotización eliminada correctamente')
+        return redirect('listar_cotizaciones')
+    return render(request, 'flujo/eliminar_cotizacion.html', {'cotizacion': cotizacion})
 
 
 # ==================== VISTAS PARA CONFIGURACION IVA ====================
@@ -201,9 +206,11 @@ def editar_configuracion_iva(request, id):
 @permission_required('flujo.delete_configuracioniva', raise_exception=True)
 def eliminar_configuracion_iva(request, id):
     configuracion = ConfiguracionIVA.objects.get(id=id)
-    configuracion.delete()
-    messages.success(request, 'Configuración de IVA eliminada correctamente')
-    return redirect('listar_configuraciones_iva')
+    if request.method == 'POST':
+        configuracion.delete()
+        messages.success(request, 'Configuración de IVA eliminada correctamente')
+        return redirect('listar_configuraciones_iva')
+    return render(request, 'flujo/eliminar_configuracion_iva.html', {'configuracion': configuracion})
 
 @login_required
 def dashboard_flujo(request):

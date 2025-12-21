@@ -1,5 +1,4 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}Eliminar Insumo - Amanda Mateo Boutique{% endblock %}
+{% extends "BoutiqueApp/base.html" %}
 {% block content %}
 <div class="container my-5">
     <div class="card shadow-lg mx-auto border-0 rounded-4" style="max-width: 600px; background-color: #fff5fa;">
@@ -7,21 +6,18 @@
             Confirmar Eliminación
         </div>
         <div class="card-body text-center">
-            <h5>¿Estás seguro de que deseas eliminar este insumo?</h5>
+            <h5>¿Estás seguro de que deseas eliminar este movimiento?</h5>
             <p class="mt-3">
-                <strong>Código:</strong> {{ insumo.codigo }}<br>
-                <strong>Descripción:</strong> {{ insumo.descripcion }}<br>
-                <strong>Existencia:</strong> {{ insumo.existencia }} {{ insumo.unidad_medida }}
-            </p>
-            <p class="text-muted small">
-                Esta acción no se puede deshacer. También se eliminarán todas las compras asociadas a este insumo.
+                <strong>Fecha:</strong> {{ movimiento.fecha|date:"d/m/Y" }}<br>
+                <strong>Descripción:</strong> {{ movimiento.descripcion }}<br>
+                <strong>Monto:</strong> {{ movimiento.moneda }} {{ movimiento.monto|floatformat:2 }}
             </p>
             <div class="d-flex justify-content-center gap-3 mt-4">
                 <form method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-eliminar px-4 py-2">Eliminar</button>
                 </form>
-                <a href="{% url 'listar_insumos' %}" class="btn btn-volver px-4 py-2">Cancelar</a>
+                <a href="{% url 'listar_movimientos' %}" class="btn btn-volver px-4 py-2">Cancelar</a>
             </div>
         </div>
     </div>

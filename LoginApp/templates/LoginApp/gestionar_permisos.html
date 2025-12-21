@@ -1,6 +1,5 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}Gestionar Permisos | Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Gestionar Permisos |
+Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-12">
@@ -8,7 +7,12 @@
         <h2 class="text-pink">
           <i class="bi bi-shield-lock"></i> Gestión de Permisos de Usuarios
         </h2>
-        <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
+        <div>
+          <a href="{% url 'crear_usuario_admin' %}" class="btn btn-listar me-2">
+            <i class="fas fa-user-plus me-1"></i>Crear Usuario
+          </a>
+          <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
+        </div>
       </div>
       {% if messages %} {% for message in messages %}
       <div
@@ -24,10 +28,77 @@
       </div>
       {% endfor %} {% endif %}
 
-      <div class="card shadow-sm">
+      <div class="card shadow-lg">
         <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-striped table-hover">
+          <style>
+            .table-permisos th {
+              background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+              color: white;
+              font-weight: 600;
+              white-space: nowrap;
+              vertical-align: middle;
+              border: none;
+              padding: 12px 8px;
+            }
+            .table-permisos td {
+              vertical-align: middle;
+              padding: 10px 8px;
+            }
+            .table-permisos tbody tr {
+              transition: all 0.2s ease;
+            }
+            .table-permisos tbody tr:hover {
+              background-color: #fff5f7 !important;
+              transform: scale(1.01);
+              box-shadow: 0 2px 8px rgba(183, 110, 121, 0.15);
+            }
+            .btn-action-group {
+              display: flex;
+              gap: 5px;
+              justify-content: center;
+              flex-wrap: nowrap;
+            }
+            .btn-action {
+              padding: 6px 10px;
+              font-size: 0.85rem;
+              white-space: nowrap;
+              min-width: 90px;
+            }
+
+            /* Responsividad para móviles */
+            @media (max-width: 767px) {
+              .table-permisos th,
+              .table-permisos td {
+                padding: 8px 4px;
+                font-size: 0.85rem;
+              }
+              .btn-action-group {
+                flex-wrap: wrap;
+                gap: 3px;
+              }
+              .btn-action {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                min-width: 70px;
+              }
+            }
+
+            /* Responsividad para tablets */
+            @media (max-width: 991px) {
+              .table-permisos th,
+              .table-permisos td {
+                padding: 10px 6px;
+                font-size: 0.9rem;
+              }
+            }
+          </style>
+          <div
+            class="table-responsive shadow-lg rounded"
+            style="border-radius: 15px"
+          >
+            <table
+              class="table table-striped table-bordered table-hover table-permisos"
+            >
               <thead>
                 <tr>
                   <th>Usuario</th>
@@ -53,22 +124,30 @@
                     {% endif %}
                   </td>
                   <td class="text-center">
-                    {% if not usuario.is_superuser %}
-                    <a
-                      href="{% url 'editar_permisos_usuario' usuario.id %}"
-                      class="btn btn-editar btn-sm"
-                    >
-                      Editar Permisos
-                    </a>
-                    <a
-                      href="{% url 'eliminar_usuario' usuario.id %}"
-                      class="btn btn-eliminar btn-sm"
-                    >
-                      Eliminar
-                    </a>
-                    {% else %}
-                    <span class="text-muted">N/A</span>
-                    {% endif %}
+                    <div class="btn-action-group">
+                      {% if not usuario.is_superuser %}
+                      <a
+                        href="{% url 'editar_usuario_admin' usuario.id %}"
+                        class="btn btn-ver btn-sm btn-action"
+                      >
+                        Editar
+                      </a>
+                      <a
+                        href="{% url 'editar_permisos_usuario' usuario.id %}"
+                        class="btn btn-editar btn-sm btn-action"
+                      >
+                        Permisos
+                      </a>
+                      <a
+                        href="{% url 'eliminar_usuario' usuario.id %}"
+                        class="btn btn-eliminar btn-sm btn-action"
+                      >
+                        Eliminar
+                      </a>
+                      {% else %}
+                      <span class="text-muted">N/A</span>
+                      {% endif %}
+                    </div>
                   </td>
                 </tr>
                 {% empty %}

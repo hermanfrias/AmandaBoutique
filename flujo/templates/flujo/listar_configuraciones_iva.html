@@ -14,10 +14,7 @@
     </div>
   </div>
 
-  <div
-    class="table-responsive shadow-lg rounded"
-    style="border-radius: 15px; overflow: hidden"
-  >
+  <div class="table-responsive shadow-lg rounded" style="border-radius: 15px">
     <style>
       .table-iva th {
         background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
@@ -52,6 +49,33 @@
         white-space: nowrap;
         min-width: 65px;
       }
+
+      /* Responsividad para móviles */
+      @media (max-width: 767px) {
+        .table-iva th,
+        .table-iva td {
+          padding: 8px 4px;
+          font-size: 0.85rem;
+        }
+        .btn-action-group {
+          flex-wrap: wrap;
+          gap: 3px;
+        }
+        .btn-action {
+          padding: 4px 8px;
+          font-size: 0.75rem;
+          min-width: 55px;
+        }
+      }
+
+      /* Responsividad para tablets */
+      @media (max-width: 991px) {
+        .table-iva th,
+        .table-iva td {
+          padding: 10px 6px;
+          font-size: 0.9rem;
+        }
+      }
     </style>
     <table class="table table-striped table-bordered table-hover table-iva">
       <thead>
@@ -85,7 +109,6 @@
               <a
                 href="{% url 'eliminar_configuracion_iva' config.id %}"
                 class="btn btn-sm btn-eliminar btn-action"
-                onclick="return confirm('¿Estás seguro de eliminar esta configuración?')"
               >
                 Eliminar
               </a>

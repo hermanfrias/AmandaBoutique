@@ -35,7 +35,7 @@ Mateo Boutique{% endblock %} {% block content %}
         <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
       </h5>
       <form method="get" class="row g-3">
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
           <label for="fecha_desde" class="form-label fw-semibold">Desde</label>
           <input
             type="date"
@@ -45,7 +45,7 @@ Mateo Boutique{% endblock %} {% block content %}
             value="{{ fecha_desde }}"
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
           <label for="fecha_hasta" class="form-label fw-semibold">Hasta</label>
           <input
             type="date"
@@ -55,7 +55,7 @@ Mateo Boutique{% endblock %} {% block content %}
             value="{{ fecha_hasta }}"
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
           <label for="descripcion" class="form-label fw-semibold"
             >Descripción</label
           >
@@ -95,10 +95,7 @@ Mateo Boutique{% endblock %} {% block content %}
   </div>
   {% endfor %} {% endif %}
 
-  <div
-    class="table-responsive shadow-lg rounded"
-    style="border-radius: 15px; overflow: hidden"
-  >
+  <div class="table-responsive shadow-lg rounded" style="border-radius: 15px">
     <style>
       .table-usos th {
         background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
@@ -132,6 +129,33 @@ Mateo Boutique{% endblock %} {% block content %}
         font-size: 0.85rem;
         white-space: nowrap;
         min-width: 65px;
+      }
+
+      /* Responsividad para móviles */
+      @media (max-width: 767px) {
+        .table-usos th,
+        .table-usos td {
+          padding: 8px 4px;
+          font-size: 0.85rem;
+        }
+        .btn-action-group {
+          flex-wrap: wrap;
+          gap: 3px;
+        }
+        .btn-action {
+          padding: 4px 8px;
+          font-size: 0.75rem;
+          min-width: 55px;
+        }
+      }
+
+      /* Responsividad para tablets */
+      @media (max-width: 991px) {
+        .table-usos th,
+        .table-usos td {
+          padding: 10px 6px;
+          font-size: 0.9rem;
+        }
       }
     </style>
     <table class="table table-striped table-bordered table-hover table-usos">

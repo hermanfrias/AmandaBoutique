@@ -2,45 +2,44 @@
 {% block title %}Detalle Cliente | Amanda Mateo Boutique{% endblock %}
 {% block content %}
 <div class="container py-5">
-    <div class="card shadow-lg mx-auto border-0 rounded-4" style="max-width: 750px; background-color: #fff5fa;">
-        <div class="card-header text-center fw-bold text-pink fs-4" style="background-color: #ffe6f2;">
-            Detalles del Cliente
-        </div>
-        <div class="card-body p-4">
-            <div class="row mb-2">
-                <div class="col-md-4 fw-semibold text-secondary">Identificación:</div>
-                <div class="col-md-8">{{ clientes.identificacion }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4 fw-semibold text-secondary">Nombre:</div>
-                <div class="col-md-8">{{ clientes.nombre }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4 fw-semibold text-secondary">Apellido:</div>
-                <div class="col-md-8">{{ clientes.apellido }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4 fw-semibold text-secondary">Teléfono:</div>
-                <div class="col-md-8">{{ clientes.telefono }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4 fw-semibold text-secondary">Email:</div>
-                <div class="col-md-8">{{ clientes.email }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4 fw-semibold text-secondary">Dirección:</div>
-                <div class="col-md-8" style="white-space: pre-wrap;">{{ clientes.direccion }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4 fw-semibold text-secondary">Fecha de Registro:</div>
-                <div class="col-md-8">{{ clientes.fecha_creacion }}</div>
-            </div>
-            <div class="text-center mt-4">
-                <a href="{% url 'clientes_update' clientes.identificacion %}" class="btn btn-editar px-4 py-2 me-2">Editar</a>
-                <a href="{% url 'clientes_list' %}" class="btn btn-volver">Volver</a>
-            </div>
-        </div>
+  <div class="card shadow-lg mx-auto border-0 rounded-4" style="max-width: 100%; background-color: #fff5fa;">
+    <div class="card-header text-center fw-bold text-pink fs-4" style="background-color: #ffe6f2;">
+      Detalles del Cliente
     </div>
+    <div class="card-body p-3 p-md-4">
+      <div class="row mb-2">
+        <div class="col-12 col-md-4 fw-semibold text-secondary">Identificación:</div>
+        <div class="col-12 col-md-8">{{ clientes.identificacion }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-12 col-md-4 fw-semibold text-secondary">Nombre:</div>
+        <div class="col-12 col-md-8">{{ clientes.nombre }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-12 col-md-4 fw-semibold text-secondary">Apellido:</div>
+        <div class="col-12 col-md-8">{{ clientes.apellido }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-12 col-md-4 fw-semibold text-secondary">Teléfono:</div>
+        <div class="col-12 col-md-8">{{ clientes.telefono }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-12 col-md-4 fw-semibold text-secondary">Email:</div>
+        <div class="col-12 col-md-8">{{ clientes.email }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-12 col-md-4 fw-semibold text-secondary">Dirección:</div>
+        <div class="col-12 col-md-8" style="white-space: pre-wrap;">{{ clientes.direccion }}</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-12 col-md-4 fw-semibold text-secondary">Fecha de Registro:</div>
+        <div class="col-12 col-md-8">{{ clientes.fecha_creacion }}</div>
+      </div>
+      <div class="text-center mt-4">
+        <a href="{% url 'clientes_update' clientes.identificacion %}" class="btn btn-editar px-4 py-2 me-2">Editar</a>
+        <a href="{% url 'clientes_list' %}" class="btn btn-volver">Volver</a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
-

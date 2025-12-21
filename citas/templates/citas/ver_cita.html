@@ -1,30 +1,38 @@
-{% extends "BoutiqueApp/base.html" %}
-{% block content %}
+{% extends "BoutiqueApp/base.html" %} {% block content %}
 <div class="container py-5">
-    <h2 class="mb-4 text-center">Detalle de Cita</h2>
-    <div class="card shadow-sm border-0 p-4" style="max-width: 600px; margin:auto;">
-        <h4 class="mb-3">{{ cita.cliente }}</h4>
-        <p><strong>Teléfono:</strong> {{ cita.telefono|default:"-" }}</p>
-        <p><strong>Fecha:</strong> {{ cita.fecha|date:"l d/m/Y"|capfirst }}</p>
-        <p><strong>Hora:</strong> {{ cita.hora|time:"h:i A" }}</p>
-        <p><strong>Acción:</strong> {{ cita.get_accion_display }}</p>
-        <p><strong>Fecha de Entrega:</strong> {{ cita.fecha_entrega|date:"l d/m/Y"|capfirst }}</p>
-        <p><strong>Medidas en centimetros:</strong></p>
-        <p><strong>Copa:</strong> {{ cita.copa|default:"-" }}</p>
-        <p><strong>Busto:</strong> {{ cita.busto|default:"-" }}</p>
-        <p><strong>Cintura:</strong> {{ cita.cintura|default:"-" }}</p>
-        <p><strong>Largo:</strong> {{ cita.largo|default:"-" }}</p>
-        <p><strong>Tiras:</strong> {{ cita.tiras|default:"-" }}</p>
-        <p><strong>Otra:</strong> {{ cita.otra|default:"-" }}</p>
-        <p><strong>Moneda:</strong> {{ cita.get_moneda_display }}</p>
-        <p><strong>Precio:</strong> {{ cita.precio }}</p>
-        <p><strong>Abono:</strong> {{ cita.abono }}</p>
-        <p><strong>Pago Total:</strong> {{ cita.pago_total }}</p>
-        <p><strong>Descripción:</strong> {{ cita.descripcion|default:"-" }}</p>
-        <div class="text-center mt-4">
-            <a href="{% url 'editar_cita' cita.pk %}" class="btn btn-editar px-4 py-2 me-2">Editar</a>
-            <a href="{% url 'listar_citas' %}" class="btn btn-volver">Volver</a>
-        </div>
+  <h2 class="mb-4 text-center">Detalle de Cita</h2>
+  <div
+    class="card shadow-sm border-0 p-3 p-md-4"
+    style="max-width: 100%; margin: auto"
+  >
+    <h4 class="mb-3">{{ cita.cliente }}</h4>
+    <p><strong>Teléfono:</strong> {{ cita.telefono|default:"-" }}</p>
+    <p><strong>Fecha:</strong> {{ cita.fecha|date:"l d/m/Y"|capfirst }}</p>
+    <p><strong>Hora:</strong> {{ cita.hora|time:"h:i A" }}</p>
+    <p><strong>Acción:</strong> {{ cita.get_accion_display }}</p>
+    <p>
+      <strong>Fecha de Entrega:</strong> {{ cita.fecha_entrega|date:"l d/m/Y"|capfirst }}
+    </p>
+    <p><strong>Medidas en centimetros:</strong></p>
+    <p><strong>Copa:</strong> {{ cita.copa|default:"-" }}</p>
+    <p><strong>Busto:</strong> {{ cita.busto|default:"-" }}</p>
+    <p><strong>Cintura:</strong> {{ cita.cintura|default:"-" }}</p>
+    <p><strong>Largo:</strong> {{ cita.largo|default:"-" }}</p>
+    <p><strong>Tiras:</strong> {{ cita.tiras|default:"-" }}</p>
+    <p><strong>Otra:</strong> {{ cita.otra|default:"-" }}</p>
+    <p><strong>Moneda:</strong> {{ cita.get_moneda_display }}</p>
+    <p><strong>Precio:</strong> {{ cita.precio }}</p>
+    <p><strong>Abono:</strong> {{ cita.abono }}</p>
+    <p><strong>Pago Total:</strong> {{ cita.pago_total }}</p>
+    <p><strong>Descripción:</strong> {{ cita.descripcion|default:"-" }}</p>
+    <div class="text-center mt-4">
+      <a
+        href="{% url 'editar_cita' cita.pk %}"
+        class="btn btn-editar px-4 py-2 me-2"
+        >Editar</a
+      >
+      <a href="{% url 'listar_citas' %}" class="btn btn-volver">Volver</a>
     </div>
+  </div>
 </div>
 {% endblock %}

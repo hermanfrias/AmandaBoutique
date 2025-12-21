@@ -1,12 +1,12 @@
-{% extends 'BoutiqueApp/base.html' %} {% block title %}Editar Permisos - {{
-usuario.username }} | Amanda Mateo Boutique{% endblock %} {% block content %}
+{% extends 'BoutiqueApp/base.html' %}
+{% block title %}Editar Permisos - {{ usuario.username }} | Amanda Mateo Boutique{% endblock %}
+{% block content %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-10 offset-md-1">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-pink">
-          <i class="bi bi-shield-lock"></i> Editar Permisos: {{ usuario.username
-          }}
+          <i class="bi bi-shield-lock"></i> Editar Permisos: {{ usuario.username }}
         </h2>
         <a href="{% url 'gestionar_permisos' %}" class="btn btn-volver"
           >Volver</a
@@ -17,13 +17,11 @@ usuario.username }} | Amanda Mateo Boutique{% endblock %} {% block content %}
         <div class="card-body">
           <h5 class="card-title">Información del Usuario</h5>
           <p>
-            <strong>Nombre:</strong> {{ usuario.first_name }} {{
-            usuario.last_name }}
+            <strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}
           </p>
           <p><strong>Email:</strong> {{ usuario.email }}</p>
           <p>
-            <strong>Usuario desde:</strong> {{ usuario.date_joined|date:"d/m/Y"
-            }}
+            <strong>Usuario desde:</strong> {{ usuario.date_joined|date:"d/m/Y" }}
           </p>
         </div>
       </div>
@@ -57,28 +55,25 @@ usuario.username }} | Amanda Mateo Boutique{% endblock %} {% block content %}
                       name="permisos"
                       value="{{ permiso.id }}"
                       id="permiso_{{ permiso.id }}"
-                      {%
-                      if
-                      permiso.id
-                      in
-                      permisos_usuario
-                      %}checked{%
-                      endif
-                      %}
+                      {% if permiso.id in permisos_usuario %}
+                      checked
+                      {% endif %}
                     />
                     <label
                       class="form-check-label"
                       for="permiso_{{ permiso.id }}"
                     >
                       {% if 'add' in permiso.codename %}
-                      <i class="bi bi-plus-circle text-success"></i> Agregar {%
-                      elif 'change' in permiso.codename %}
-                      <i class="bi bi-pencil text-warning"></i> Cambiar {% elif
-                      'delete' in permiso.codename %}
-                      <i class="bi bi-trash text-danger"></i> Eliminar {% elif
-                      'view' in permiso.codename %}
-                      <i class="bi bi-eye text-info"></i> Ver {% else %} {{
-                      permiso.name }} {% endif %}
+                      <i class="bi bi-plus-circle text-success"></i> Agregar 
+                      {% elif 'change' in permiso.codename %}
+                      <i class="bi bi-pencil text-warning"></i> Cambiar
+                      {% elif 'delete' in permiso.codename %}
+                      <i class="bi bi-trash text-danger"></i> Eliminar 
+                      {% elif 'view' in permiso.codename %}
+                      <i class="bi bi-eye text-info"></i> Ver
+                      {% else %}
+                      {{ permiso.name }}
+                      {% endif %}
                     </label>
                   </div>
                 </div>

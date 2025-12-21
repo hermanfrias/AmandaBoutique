@@ -55,7 +55,83 @@ def editar_perfil(request):
         form = FormularioCambioUsuario(instance=request.user)
     return render(request, 'LoginApp/editar_perfil.html', {'form': form})
 
+
 @login_required
+def crear_usuario_admin(request):
+    """Vista para que superusuarios creen nuevos usuarios"""
+    if not request.user.is_superuser:
+        from django.contrib import messages
+        messages.error(request, 'No tienes permisos para acceder a esta página.')
+        return redirect('index')
+    
+    if request.method == 'POST':
+        form = FormularioCreacionUsuario(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            
+            # Asignar solo permisos de lectura (view) a nuevos usuarios
+            from django.contrib.contenttypes.models import ContentType
+            from django.contrib.auth.models import Permission
+            
+            # Lista de modelos para asignar permisos de view
+            models_to_grant_view = [
+                ('BoutiqueApp', 'catalogo'),
+                ('citas', 'cita'),
+                ('ClientesApp', 'clientes'),
+                ('ProveedoresApp', 'proveedores'),
+                ('flujo', 'movimientocaja'),
+                ('flujo', 'cotizaciondolar'),
+            ]
+            
+            for app_label, model_name in models_to_grant_view:
+                try:
+                    content_type = ContentType.objects.get(app_label=app_label, model=model_name)
+                    view_permission = Permission.objects.get(
+                        content_type=content_type,
+                        codename=f'view_{model_name}'
+                    )
+                    user.user_permissions.add(view_permission)
+                except (ContentType.DoesNotExist, Permission.DoesNotExist):
+                    pass  # Si el modelo no existe, continuar
+            
+            from django.contrib import messages
+            messages.success(request, f'Usuario {user.username} creado correctamente con permisos de lectura.')
+            return redirect('gestionar_permisos')
+    else:
+        form = FormularioCreacionUsuario()
+    return render(request, 'LoginApp/crear_usuario_admin.html', {'form': form})
+@login_required
+
+@login_required
+def editar_usuario_admin(request, user_id):
+    """Vista para que superusuarios editen usuarios"""
+    if not request.user.is_superuser:
+        from django.contrib import messages
+        messages.error(request, 'No tienes permisos para acceder a esta página.')
+        return redirect('index')
+    
+    from django.shortcuts import get_object_or_404
+    from LoginApp.models import PerfilUsuario
+    
+    usuario = get_object_or_404(PerfilUsuario, id=user_id)
+    
+    # No permitir editar superusuarios
+    if usuario.is_superuser:
+        from django.contrib import messages
+        messages.error(request, 'No se puede editar un superusuario.')
+        return redirect('gestionar_permisos')
+    
+    if request.method == 'POST':
+        form = FormularioCambioUsuario(request.POST, request.FILES, instance=usuario)
+        if form.is_valid():
+            form.save()
+            from django.contrib import messages
+            messages.success(request, f'Usuario {usuario.username} actualizado correctamente.')
+            return redirect('gestionar_permisos')
+    else:
+        form = FormularioCambioUsuario(instance=usuario)
+    
+    return render(request, 'LoginApp/editar_usuario_admin.html', {'form': form, 'usuario': usuario})
 def gestionar_permisos(request):
     """Vista para que superusuarios gestionen permisos de usuarios"""
     if not request.user.is_superuser:
@@ -139,6 +215,8 @@ def eliminar_usuario(request, user_id):
         messages.error(request, 'No tienes permisos para acceder a esta página.')
         return redirect('index')
     
+    import os
+    from django.conf import settings
     from django.shortcuts import get_object_or_404
     from LoginApp.models import PerfilUsuario
     
@@ -152,9 +230,31 @@ def eliminar_usuario(request, user_id):
     
     if request.method == 'POST':
         username = usuario.username
+        
+        # Eliminar el avatar del sistema de archivos si existe y no es el default
+        if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
+            try:
+                # Construir la ruta completa del archivo
+                avatar_path = os.path.join(settings.MEDIA_ROOT, str(usuario.avatar))
+                # Verificar si el archivo existe y eliminarlo
+                if os.path.exists(avatar_path):
+                    os.remove(avatar_path)
+                    
+                    # Intentar eliminar la carpeta padre si está vacía
+                    carpeta_padre = os.path.dirname(avatar_path)
+                    try:
+                        if os.path.exists(carpeta_padre) and not os.listdir(carpeta_padre):
+                            os.rmdir(carpeta_padre)
+                    except OSError:
+                        pass  # La carpeta no está vacía o no se puede eliminar
+            except Exception as e:
+                # Log del error pero continuar con la eliminación del usuario
+                print(f"Error al eliminar avatar: {e}")
+        
+        # Eliminar el usuario de la base de datos
         usuario.delete()
         from django.contrib import messages
-        messages.success(request, f'Usuario {username} eliminado correctamente.')
+        messages.success(request, f'Usuario {username} eliminado correctamente junto con su avatar.')
         return redirect('gestionar_permisos')
     
     return render(request, 'LoginApp/eliminar_usuario.html', {'usuario': usuario})

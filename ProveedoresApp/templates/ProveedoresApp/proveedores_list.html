@@ -38,7 +38,7 @@ Mateo Boutique{% endblock %} {% block content %}
         <i class="fas fa-search me-2"></i>Búsqueda
       </h5>
       <form method="GET" action="{% url 'proveedores_list' %}" class="row g-3">
-        <div class="col-md-10">
+        <div class="col-12 col-md-9 col-lg-10">
           <input
             type="text"
             name="buscar"
@@ -47,7 +47,7 @@ Mateo Boutique{% endblock %} {% block content %}
             value="{{ request.GET.buscar }}"
           />
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-md-3 col-lg-2">
           <button type="submit" class="btn btn-pink w-100">
             <i class="fas fa-search me-1"></i>Buscar
           </button>
@@ -57,10 +57,7 @@ Mateo Boutique{% endblock %} {% block content %}
   </div>
 
   <!-- Tabla -->
-  <div
-    class="table-responsive shadow-lg rounded"
-    style="border-radius: 15px; overflow: hidden"
-  >
+  <div class="table-responsive shadow-lg rounded" style="border-radius: 15px">
     <style>
       .table-proveedores th {
         background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
@@ -94,6 +91,33 @@ Mateo Boutique{% endblock %} {% block content %}
         font-size: 0.85rem;
         white-space: nowrap;
         min-width: 65px;
+      }
+
+      /* Responsividad para móviles */
+      @media (max-width: 767px) {
+        .table-proveedores th,
+        .table-proveedores td {
+          padding: 8px 4px;
+          font-size: 0.85rem;
+        }
+        .btn-action-group {
+          flex-wrap: wrap;
+          gap: 3px;
+        }
+        .btn-action {
+          padding: 4px 8px;
+          font-size: 0.75rem;
+          min-width: 55px;
+        }
+      }
+
+      /* Responsividad para tablets */
+      @media (max-width: 991px) {
+        .table-proveedores th,
+        .table-proveedores td {
+          padding: 10px 6px;
+          font-size: 0.9rem;
+        }
       }
     </style>
     <table

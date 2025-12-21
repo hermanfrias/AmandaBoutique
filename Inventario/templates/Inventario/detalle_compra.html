@@ -1,15 +1,12 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}Detalle de Compra - Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Detalle de Compra -
+Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row mb-4">
     <div class="col">
       <h2>Detalle de Compra</h2>
     </div>
     <div class="col text-end">
-      <a href="{% url 'listar_compras' %}" class="btn btn-secondary">
-        Volver
-      </a>
+      <a href="{% url 'listar_compras' %}" class="btn btn-volver"> Volver </a>
     </div>
   </div>
 
@@ -34,7 +31,8 @@
           </p>
           <p><strong>Moneda:</strong> {{ compra.get_moneda_display }}</p>
           <p>
-            <strong>Monto Ingresado:</strong> {{ compra.monto|floatformat:2 }} {{ compra.get_moneda_display }}
+            <strong>Monto Ingresado:</strong> {{ compra.monto|floatformat:2 }}
+            {{ compra.get_moneda_display }}
           </p>
           <p>
             <strong>Aplicar IVA:</strong> {% if compra.aplicar_iva %}<span
@@ -94,15 +92,15 @@
         </div>
       </div>
 
-      <div class="mt-4">
-        <a href="{% url 'editar_compra' compra.pk %}" class="btn btn-editar">
+      <div class="text-center mt-4">
+        <a
+          href="{% url 'editar_compra' compra.pk %}"
+          class="btn btn-editar px-4 py-2"
+        >
           Editar
         </a>
-        <a
-          href="{% url 'eliminar_compra' compra.pk %}"
-          class="btn btn-eliminar"
-        >
-          Eliminar
+        <a href="{% url 'listar_compras' %}" class="btn btn-volver px-4 py-2">
+          Volver
         </a>
       </div>
     </div>

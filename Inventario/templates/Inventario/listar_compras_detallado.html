@@ -7,20 +7,22 @@ Compras - Amanda Mateo Boutique{% endblock %} {% block content %}
       <p class="text-muted">Vista individual de cada compra sin agrupar</p>
     </div>
     <div class="col text-end">
-      <a href="{% url 'listar_compras' %}" class="btn btn-pink btn-sm me-2">
-        Vista Agrupada
+      <a href="{% url 'crear_compra' %}" class="btn btn-listar">
+        <i class="fas fa-plus me-1"></i>Agregar
+      </a>
+      <a href="{% url 'index' %}" class="btn btn-volver">
+        <i class="fas fa-arrow-left me-1"></i>Volver
+      </a>
+      <a href="{% url 'listar_compras' %}" class="btn btn-pink">
+        <i class="fas fa-th me-1"></i>Vista Agrupada
       </a>
       <a
         href="{% url 'compras_detallado_pdf' %}?{% if fecha_desde %}fecha_desde={{ fecha_desde }}&{% endif %}{% if fecha_hasta %}fecha_hasta={{ fecha_hasta }}&{% endif %}{% if insumo_filtro %}insumo={{ insumo_filtro }}{% endif %}"
-        class="btn btn-pink btn-sm me-2"
+        class="btn btn-pink"
         target="_blank"
       >
-        Imprimir PDF
+        <i class="fas fa-file-pdf me-1"></i>Imprimir PDF
       </a>
-      <a href="{% url 'crear_compra' %}" class="btn btn-listar">
-        Registrar Compra
-      </a>
-      <a href="{% url 'index' %}" class="btn btn-volver">Volver</a>
     </div>
   </div>
 
