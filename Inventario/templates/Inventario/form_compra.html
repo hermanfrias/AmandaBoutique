@@ -1,12 +1,22 @@
 {% extends 'BoutiqueApp/base.html' %} 
 {% block title %}{{ accion }} Compra de Insumos - Amanda Mateo Boutique {% endblock %}
 {% block content %}
-<div class="container mt-5">
+<div class="container py-5">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-shopping-cart me-2"></i>{{ accion }} Compra de Insumos
+    </h2>
+    <a href="{% url 'listar_compras' %}" class="btn btn-volver">
+      <i class="fas fa-arrow-left me-1"></i>Volver
+    </a>
+  </div>
+
   <div class="row justify-content-center">
     <div class="col-md-10">
-      <div class="card">
+      <div class="card shadow-sm form-card-standard">
         <div class="card-header">
-          <h3>{{ accion }} Compra de Insumos</h3>
+          <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Información de la Compra</h4>
         </div>
         <div class="card-body">
           <form method="post" id="compraForm">
@@ -171,13 +181,13 @@
               cotización del día.
             </div>
 
-            <div class="col-12 text-center mt-3">
-              <button type="submit" class="btn btn-pink btn-sm me-2">
-                Guardar
+            <div class="text-center mt-4 form-buttons-standard">
+              <button type="submit" class="btn btn-pink px-4 py-2">
+                <i class="fas fa-save me-1"></i>Guardar
               </button>
-              <a href="{% url 'listar_compras' %}" class="btn btn-editar btn-sm"
-                >Volver</a
-              >
+              <a href="{% url 'listar_compras' %}" class="btn btn-volver px-4 py-2">
+                <i class="fas fa-arrow-left me-1"></i>Volver
+              </a>
             </div>
           </form>
         </div>

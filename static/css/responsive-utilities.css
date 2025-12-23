@@ -1,0 +1,586 @@
+/* ============================================
+   RESPONSIVE UTILITIES - AMANDA BOUTIQUE
+   Utilidades CSS reutilizables para responsividad
+   ============================================ */
+
+/* ============================================
+   CLASES DE VISIBILIDAD
+   ============================================ */
+
+/* Mostrar solo en móviles */
+.mobile-only {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Mostrar solo en tablets */
+.tablet-only {
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tablet-only {
+    display: block !important;
+  }
+}
+
+/* Mostrar solo en desktop */
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .desktop-only {
+    display: block !important;
+  }
+}
+
+/* Ocultar en móviles */
+.hide-mobile {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Ocultar en tablets */
+.hide-tablet {
+  display: block;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* Ocultar en desktop */
+.hide-desktop {
+  display: block;
+}
+
+@media (min-width: 1025px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   CLASES DE ESPACIADO RESPONSIVO
+   ============================================ */
+
+/* Padding responsivo */
+.p-responsive {
+  padding: 15px;
+}
+
+@media (min-width: 768px) {
+  .p-responsive {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .p-responsive {
+    padding: 30px;
+  }
+}
+
+/* Margin responsivo */
+.m-responsive {
+  margin: 15px;
+}
+
+@media (min-width: 768px) {
+  .m-responsive {
+    margin: 20px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .m-responsive {
+    margin: 30px;
+  }
+}
+
+/* Gap responsivo para flexbox/grid */
+.gap-responsive {
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .gap-responsive {
+    gap: 15px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .gap-responsive {
+    gap: 20px;
+  }
+}
+
+/* ============================================
+   CLASES DE TIPOGRAFÍA RESPONSIVA
+   ============================================ */
+
+/* Texto pequeño responsivo */
+.text-responsive-sm {
+  font-size: 0.85rem;
+}
+
+@media (min-width: 768px) {
+  .text-responsive-sm {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .text-responsive-sm {
+    font-size: 1rem;
+  }
+}
+
+/* Texto mediano responsivo */
+.text-responsive-md {
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .text-responsive-md {
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .text-responsive-md {
+    font-size: 1.25rem;
+  }
+}
+
+/* Texto grande responsivo */
+.text-responsive-lg {
+  font-size: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .text-responsive-lg {
+    font-size: 1.75rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .text-responsive-lg {
+    font-size: 2rem;
+  }
+}
+
+/* ============================================
+   CLASES DE LAYOUT RESPONSIVO
+   ============================================ */
+
+/* Stack vertical en móviles */
+.stack-mobile {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .stack-mobile {
+    flex-direction: row;
+  }
+}
+
+/* Centrar en móviles */
+.center-mobile {
+  text-align: left;
+}
+
+@media (max-width: 767px) {
+  .center-mobile {
+    text-align: center !important;
+  }
+}
+
+/* Full width en móviles */
+.full-width-mobile {
+  width: auto;
+}
+
+@media (max-width: 767px) {
+  .full-width-mobile {
+    width: 100% !important;
+  }
+}
+
+/* ============================================
+   CLASES DE BOTONES RESPONSIVOS
+   ============================================ */
+
+/* Botón full-width en móviles */
+.btn-responsive {
+  display: inline-block;
+  width: auto;
+}
+
+@media (max-width: 767px) {
+  .btn-responsive {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* Grupo de botones responsivo */
+.btn-group-responsive {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .btn-group-responsive {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .btn-group-responsive .btn {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   CLASES DE GRID RESPONSIVO
+   ============================================ */
+
+/* Grid de 1 columna en móvil, 2 en tablet, 3 en desktop */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (min-width: 768px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+}
+
+/* Grid de 1 columna en móvil, 2 en tablet y desktop */
+.grid-responsive-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (min-width: 768px) {
+  .grid-responsive-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ============================================
+   CLASES DE CONTENEDORES RESPONSIVOS
+   ============================================ */
+
+/* Contenedor con padding responsivo */
+.container-responsive {
+  padding: 15px;
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    padding: 20px 30px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .container-responsive {
+    padding: 30px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* ============================================
+   CLASES DE CARDS RESPONSIVOS
+   ============================================ */
+
+/* Card con padding responsivo */
+.card-responsive {
+  padding: 15px;
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .card-responsive {
+    padding: 20px;
+    border-radius: 15px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .card-responsive {
+    padding: 25px;
+  }
+}
+
+/* ============================================
+   CLASES DE IMÁGENES RESPONSIVAS
+   ============================================ */
+
+/* Imagen responsiva con altura variable */
+.img-responsive {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Imagen con altura fija responsiva */
+.img-responsive-fixed {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  .img-responsive-fixed {
+    height: 300px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .img-responsive-fixed {
+    height: 400px;
+  }
+}
+
+/* ============================================
+   CLASES DE TABLAS RESPONSIVAS
+   ============================================ */
+
+/* Tabla con scroll horizontal en móviles */
+.table-wrapper-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+  .table-wrapper-responsive table {
+    min-width: 600px;
+  }
+}
+
+/* ============================================
+   CLASES DE FORMULARIOS RESPONSIVOS
+   ============================================ */
+
+/* Formulario con campos full-width en móviles */
+.form-responsive .form-control,
+.form-responsive .form-select {
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .form-responsive .form-control,
+  .form-responsive .form-select {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+}
+
+/* Grupo de formulario en línea en desktop, stack en móvil */
+.form-group-responsive {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .form-group-responsive {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* ============================================
+   CLASES DE NAVEGACIÓN RESPONSIVA
+   ============================================ */
+
+/* Menú horizontal en desktop, vertical en móvil */
+.nav-responsive {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .nav-responsive {
+    flex-direction: row;
+    gap: 20px;
+  }
+}
+
+/* ============================================
+   CLASES DE SOMBRAS RESPONSIVAS
+   ============================================ */
+
+/* Sombra que se reduce en móviles */
+.shadow-responsive {
+  box-shadow: 0 2px 4px rgba(183, 110, 121, 0.1);
+}
+
+@media (min-width: 768px) {
+  .shadow-responsive {
+    box-shadow: 0 4px 8px rgba(183, 110, 121, 0.15);
+  }
+}
+
+@media (min-width: 1025px) {
+  .shadow-responsive {
+    box-shadow: 0 8px 16px rgba(183, 110, 121, 0.2);
+  }
+}
+
+/* ============================================
+   CLASES DE BORDES RESPONSIVOS
+   ============================================ */
+
+/* Border radius responsivo */
+.rounded-responsive {
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  .rounded-responsive {
+    border-radius: 12px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .rounded-responsive {
+    border-radius: 15px;
+  }
+}
+
+/* ============================================
+   CLASES DE ALTURA RESPONSIVA
+   ============================================ */
+
+/* Altura mínima responsiva */
+.min-h-responsive {
+  min-height: 200px;
+}
+
+@media (min-width: 768px) {
+  .min-h-responsive {
+    min-height: 300px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .min-h-responsive {
+    min-height: 400px;
+  }
+}
+
+/* ============================================
+   CLASES DE FLEXBOX RESPONSIVO
+   ============================================ */
+
+/* Flex wrap en móviles */
+.flex-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .flex-responsive {
+    flex-wrap: nowrap;
+    gap: 15px;
+  }
+}
+
+/* Justify center en móviles, space-between en desktop */
+.flex-justify-responsive {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .flex-justify-responsive {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+}
+
+/* ============================================
+   CLASES DE OVERFLOW RESPONSIVO
+   ============================================ */
+
+/* Scroll horizontal visible solo en móviles */
+.overflow-responsive {
+  overflow-x: visible;
+}
+
+@media (max-width: 767px) {
+  .overflow-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================
+   CLASES DE POSICIONAMIENTO RESPONSIVO
+   ============================================ */
+
+/* Sticky solo en desktop */
+.sticky-responsive {
+  position: relative;
+}
+
+@media (min-width: 1025px) {
+  .sticky-responsive {
+    position: sticky;
+    top: 20px;
+  }
+}
+
+/* ============================================
+   CLASES DE Z-INDEX RESPONSIVO
+   ============================================ */
+
+/* Z-index mayor en móviles para modales */
+.z-index-responsive {
+  z-index: 1000;
+}
+
+@media (max-width: 767px) {
+  .z-index-responsive {
+    z-index: 1050;
+  }
+}

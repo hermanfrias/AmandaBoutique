@@ -1,82 +1,147 @@
 {% extends "BoutiqueApp/base.html" %} {% block title %}Crear Cita | Amanda Mateo
 Boutique{% endblock %} {% block content %}
 <div class="container py-5">
-  <h2 class="mb-4 text-center text-pink fw-bold">Crear Cita</h2>
-  <form method="post" class="row g-3">
-    {% csrf_token %}
-    <div class="col-12 col-md-6">
-      <label for="id_cliente" class="form-label">Cliente</label>
-      {{ form.cliente }}
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-calendar-plus me-2"></i>Crear Nueva Cita
+    </h2>
+    <a href="{% url 'listar_citas' %}" class="btn btn-volver">
+      <i class="fas fa-arrow-left me-1"></i>Volver
+    </a>
+  </div>
+
+  <!-- Formulario -->
+  <div class="card shadow-sm form-card-standard">
+    <div class="card-header">
+      <h4 class="mb-0">
+        <i class="fas fa-edit me-2"></i>Información de la Cita
+      </h4>
     </div>
-    <div class="col-12 col-md-6">
-      <label for="id_telefono" class="form-label">Teléfono</label>
-      {{ form.telefono }}
+    <div class="card-body">
+      <form method="post" class="row g-3">
+        {% csrf_token %}
+
+        <!-- Información del Cliente -->
+        <div class="col-12">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-user me-2"></i>Datos del Cliente
+          </h5>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_cliente" class="form-label fw-semibold">Cliente</label>
+          {{ form.cliente }}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_telefono" class="form-label fw-semibold"
+            >Teléfono</label
+          >
+          {{ form.telefono }}
+        </div>
+
+        <!-- Información de la Cita -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-calendar-check me-2"></i>Fecha y Hora
+          </h5>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_fecha" class="form-label fw-semibold"
+            >Fecha de Cita</label
+          >
+          {{ form.fecha }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_hora" class="form-label fw-semibold">Hora</label>
+          {{ form.hora }}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_accion" class="form-label fw-semibold">Acción</label>
+          {{ form.accion }}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_fecha_entrega" class="form-label fw-semibold"
+            >Fecha de Entrega</label
+          >
+          {{ form.fecha_entrega }}
+        </div>
+
+        <!-- Medidas -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-ruler me-2"></i>Medidas
+          </h5>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label for="id_copa" class="form-label fw-semibold">Copa</label>
+          {{ form.copa }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label for="id_busto" class="form-label fw-semibold">Busto</label>
+          {{ form.busto }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label for="id_cintura" class="form-label fw-semibold">Cintura</label>
+          {{ form.cintura }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label for="id_largo" class="form-label fw-semibold">Largo</label>
+          {{ form.largo }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label for="id_tiras" class="form-label fw-semibold">Tiras</label>
+          {{ form.tiras }}
+        </div>
+
+        <!-- Información de Pago -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-dollar-sign me-2"></i>Información de Pago
+          </h5>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_moneda" class="form-label fw-semibold">Moneda</label>
+          {{ form.moneda }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_precio" class="form-label fw-semibold">Precio</label>
+          {{ form.precio }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_abono" class="form-label fw-semibold">Abono</label>
+          {{ form.abono }}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_pago_total" class="form-label fw-semibold"
+            >Pago Total</label
+          >
+          {{ form.pago_total }}
+        </div>
+
+        <!-- Descripción -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-comment-alt me-2"></i>Descripción
+          </h5>
+        </div>
+        <div class="col-12">
+          <label for="id_descripcion" class="form-label fw-semibold"
+            >Descripción del Vestido</label
+          >
+          {{ form.descripcion }}
+        </div>
+
+        <!-- Botones -->
+        <div class="col-12 text-center mt-4 form-buttons-standard">
+          <button type="submit" class="btn btn-pink px-4 py-2">
+            <i class="fas fa-save me-1"></i>Guardar Cita
+          </button>
+          <a href="{% url 'listar_citas' %}" class="btn btn-volver px-4 py-2">
+            <i class="fas fa-arrow-left me-1"></i>Volver
+          </a>
+        </div>
+      </form>
     </div>
-    <div class="col-12 col-sm-6 col-md-3">
-      <label for="id_fecha" class="form-label">Fecha</label>
-      {{ form.fecha }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-3">
-      <label for="id_hora" class="form-label">Hora</label>
-      {{ form.hora }}
-    </div>
-    <div class="col-12 col-md-6">
-      <label for="id_accion" class="form-label">Acción</label>
-      {{ form.accion }}
-    </div>
-    <div class="col-12 col-md-6">
-      <label for="id_fecha_entrega" class="form-label">Fecha de Entrega</label>
-      {{ form.fecha_entrega }}
-    </div>
-    <p><strong>Medidas:</strong></p>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_copa" class="form-label">Copa</label>
-      {{ form.copa }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_busto" class="form-label">Busto</label>
-      {{ form.busto }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_cintura" class="form-label">Cintura</label>
-      {{ form.cintura }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_largo" class="form-label">Largo</label>
-      {{ form.largo }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_tiras" class="form-label">Tiras</label>
-      {{ form.tiras }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_moneda" class="form-label">Moneda</label>
-      {{ form.moneda }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_precio" class="form-label">Precio</label>
-      {{ form.precio }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_abono" class="form-label">Abono</label>
-      {{ form.abono }}
-    </div>
-    <div class="col-12 col-sm-6 col-md-6">
-      <label for="id_pago_total" class="form-label">Pago Total</label>
-      {{ form.pago_total }}
-    </div>
-    <div class="col-12">
-      <label for="id_descripcion" class="form-label">Descripción</label>
-      {{ form.descripcion }}
-    </div>
-    <div class="col-12 text-center mt-3">
-      <button type="submit" class="btn btn-pink btn-sm me-2">
-        Guardar Cita
-      </button>
-      <a href="{% url 'listar_citas' %}" class="btn btn-editar btn-sm"
-        >Volver</a
-      >
-    </div>
-  </form>
+  </div>
 </div>
 {% endblock %}

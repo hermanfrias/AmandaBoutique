@@ -362,3 +362,461 @@
   
   NO modificar estos colores aquí, están en estilos.css
 */
+
+/* ============================================
+   MEJORAS RESPONSIVAS - BOUTIQUE STANDARD
+   ============================================ */
+
+/* ============================================
+   MÓVILES PEQUEÑOS (max-width: 479px)
+   ============================================ */
+@media (max-width: 479px) {
+  /* Tablas */
+  .table-standard th,
+  .table-standard td {
+    padding: 6px 4px;
+    font-size: 0.75rem;
+  }
+  
+  /* Botones de acción */
+  .btn-action {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+    min-width: 50px;
+  }
+  
+  .btn-action-group {
+    gap: 2px;
+  }
+  
+  /* Cards de filtros */
+  .filter-card-standard .card-body {
+    padding: 1rem;
+  }
+  
+  .filter-card-standard h5 {
+    font-size: 1rem;
+  }
+  
+  /* Encabezados de página */
+  .page-header-standard h2 {
+    font-size: 1.3rem;
+  }
+  
+  /* Formularios */
+  .form-card-standard .card-body {
+    padding: 1rem;
+  }
+  
+  .form-buttons-standard {
+    gap: 0.5rem;
+  }
+  
+  .form-buttons-standard .btn {
+    min-width: 100px;
+    font-size: 0.85rem;
+  }
+  
+  /* Summary cards */
+  .summary-box {
+    padding: 1rem;
+  }
+  
+  /* Badges */
+  .badge-ingreso,
+  .badge-gasto {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================
+   MÓVILES GRANDES (480px - 767px)
+   ============================================ */
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Tablas */
+  .table-standard th,
+  .table-standard td {
+    padding: 8px 6px;
+    font-size: 0.8rem;
+  }
+  
+  /* Botones de acción */
+  .btn-action {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+    min-width: 55px;
+  }
+  
+  /* Cards de filtros */
+  .filter-card-standard .card-body {
+    padding: 1.25rem;
+  }
+  
+  /* Encabezados de página */
+  .page-header-standard h2 {
+    font-size: 1.5rem;
+  }
+  
+  /* Formularios */
+  .form-card-standard .card-body {
+    padding: 1.5rem;
+  }
+}
+
+/* ============================================
+   TABLETS (768px - 991px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Tablas */
+  .table-standard th,
+  .table-standard td {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+  
+  /* Botones de acción */
+  .btn-action {
+    padding: 6px 9px;
+    font-size: 0.8rem;
+  }
+  
+  /* Summary cards */
+  .summary-box {
+    padding: 1.15rem;
+  }
+}
+
+/* ============================================
+   MEJORAS ESPECÍFICAS PARA MÓVILES
+   ============================================ */
+@media (max-width: 767px) {
+  /* Stack vertical para encabezados */
+  .page-header-standard {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 1rem;
+  }
+  
+  .page-header-standard h2 {
+    text-align: center;
+  }
+  
+  /* Botones full-width */
+  .btn-group-catalogo {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-group-catalogo a,
+  .btn-group-catalogo button {
+    width: 100%;
+    margin: 0 !important;
+  }
+  
+  /* Cards de filtros full-width */
+  .filter-card-standard {
+    margin-bottom: 1rem;
+  }
+  
+  /* Formularios optimizados */
+  .form-buttons-standard {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .form-buttons-standard .btn {
+    width: 100%;
+  }
+  
+  /* Modales full-screen */
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+  
+  .modal-header-standard,
+  .modal-body,
+  .modal-footer {
+    padding: 1rem;
+  }
+  
+  /* Summary cards stack */
+  .summary-card-standard .card-body {
+    padding: 1rem;
+  }
+  
+  /* Tablas con scroll mejorado */
+  .table-container-standard {
+    border-radius: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Badges más pequeños */
+  .badge-reversa {
+    padding: 3px 8px;
+    font-size: 0.7rem;
+  }
+}
+
+/* ============================================
+   MEJORAS DE ACCESIBILIDAD
+   ============================================ */
+
+/* Touch targets mínimos para móviles */
+@media (max-width: 767px) {
+  .btn-action,
+  .dropdown-item,
+  .nav-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Focus visible mejorado */
+.btn-action:focus,
+.dropdown-item:focus {
+  outline: 2px solid #b76e79;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(183, 110, 121, 0.2);
+}
+
+/* ============================================
+   ANIMACIONES MEJORADAS
+   ============================================ */
+
+/* Transiciones suaves para todos los componentes */
+.table-standard tbody tr,
+.btn-action,
+.filter-card-standard,
+.summary-box,
+.modal-content {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover mejorado para cards */
+.filter-card-standard:hover,
+.form-card-standard:hover,
+.summary-card-standard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(183, 110, 121, 0.2);
+}
+
+/* Efecto active para touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .btn-action:active {
+    transform: scale(0.95);
+  }
+  
+  .table-standard tbody tr:active {
+    background-color: #fff5f7 !important;
+  }
+}
+
+/* ============================================
+   UTILIDADES ADICIONALES
+   ============================================ */
+
+/* Scroll horizontal con indicadores visuales */
+@media (max-width: 767px) {
+  .table-responsive::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #b76e79;
+    border-radius: 3px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #8c4a56;
+  }
+}
+
+/* Mejora de contraste para badges */
+.badge-ingreso {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+}
+
+.badge-gasto {
+  background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.badge-reversa {
+  background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+  box-shadow: 0 2px 6px rgba(255, 193, 7, 0.3);
+}
+
+/* Mejora de row-reversa */
+.row-reversa {
+  background: linear-gradient(90deg, #fff9e6 0%, #fffbf0 100%) !important;
+  border-left: 4px solid #ffc107;
+  transition: all 0.3s ease;
+}
+
+.row-reversa:hover {
+  background: linear-gradient(90deg, #fff5d6 0%, #fffae0 100%) !important;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .btn-action-group,
+  .filter-card-standard,
+  .page-header-standard .btn-group-catalogo {
+    display: none !important;
+  }
+  
+  .table-standard {
+    page-break-inside: avoid;
+  }
+  
+  .table-standard th {
+    background: #b76e79 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .summary-card-standard,
+  .form-card-standard {
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================
+   ESTILOS ESPECÍFICOS DE TABLAS
+   (Movidos desde templates inline)
+   ============================================ */
+
+/* Tabla de compras detallado */
+.table-compras-detallado th {
+  background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: middle;
+  border: none;
+  padding: 12px 8px;
+}
+
+.table-compras-detallado td {
+  vertical-align: middle;
+  padding: 10px 8px;
+}
+
+.table-compras-detallado tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table-compras-detallado tbody tr:hover {
+  background-color: #fff5f7 !important;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(183, 110, 121, 0.15);
+}
+
+/* Tabla de detalle de compra grupo */
+.table-detalle-compra th {
+  background: linear-gradient(135deg, #b76e79 0%, #d4a5ae 100%);
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: middle;
+  border: none;
+  padding: 12px 8px;
+}
+
+.table-detalle-compra td {
+  vertical-align: middle;
+  padding: 10px 8px;
+}
+
+.table-detalle-compra tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table-detalle-compra tbody tr:hover {
+  background-color: #fff5f7 !important;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(183, 110, 121, 0.15);
+}
+
+/* Fila anulada */
+.row-anulada {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* ============================================
+   ESTILOS DE FORMSETS
+   (Movidos desde templates inline)
+   ============================================ */
+
+/* Contenedor de formset */
+.formset-form {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.formset-form:hover {
+  box-shadow: 0 2px 8px rgba(183, 110, 121, 0.1);
+  border-color: #b76e79;
+}
+
+/* Select de insumo en formsets */
+.insumo-select {
+  width: 100%;
+}
+
+/* Checkbox de aplicar IVA en formsets */
+.aplicar-iva-item {
+  cursor: pointer;
+}
+
+/* Responsividad para tablas específicas */
+@media (max-width: 767px) {
+  .table-compras-detallado th,
+  .table-compras-detallado td,
+  .table-detalle-compra th,
+  .table-detalle-compra td {
+    padding: 8px 4px;
+    font-size: 0.8rem;
+  }
+
+  .btn-action-group {
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .btn-action {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    min-width: 55px;
+  }
+}
+
+@media (max-width: 991px) {
+  .table-compras-detallado th,
+  .table-compras-detallado td,
+  .table-detalle-compra th,
+  .table-detalle-compra td {
+    padding: 10px 6px;
+    font-size: 0.85rem;
+  }
+}
+

@@ -404,3 +404,542 @@ footer a:hover {
   background-color: #ffd6ea;
   color: #8c4a56;
 }
+
+/* ============================================
+   MEJORAS DE RESPONSIVIDAD - AMANDA BOUTIQUE
+   ============================================ */
+
+/* ============================================
+   EXTRA SMALL DEVICES (320px - 479px)
+   Móviles pequeños: iPhone SE, Android pequeños
+   ============================================ */
+@media (max-width: 479px) {
+  /* Navbar */
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .nav-link {
+    padding: 10px 8px;
+    font-size: 0.95rem;
+  }
+
+  /* Hero Section */
+  .hero {
+    height: 60vh;
+    padding: 0 15px;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+  }
+
+  .hero .lead {
+    font-size: 0.95rem;
+  }
+
+  /* Botones */
+  .btn-pink,
+  .btn-listar,
+  .btn-volver,
+  .btn-buscar {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .btn-group-catalogo {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-group-catalogo a,
+  .btn-group-catalogo button {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  /* Cards del Showroom */
+  .catalogo {
+    padding: 40px 0;
+  }
+
+  .img-container {
+    height: 250px;
+  }
+
+  .img-container:hover img {
+    transform: scale(1.1); /* Menos zoom en móvil */
+  }
+
+  /* Tipografía */
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
+
+  h4 {
+    font-size: 1.1rem;
+  }
+
+  h5 {
+    font-size: 1rem;
+  }
+
+  /* Secciones */
+  #acerca,
+  #contacto {
+    padding: 30px 0;
+  }
+
+  #acerca .lead,
+  #contacto .lead {
+    font-size: 1rem;
+  }
+
+  /* Footer */
+  footer {
+    padding: 15px 10px;
+    font-size: 0.85rem;
+  }
+
+  /* Tablas */
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 6px 4px;
+  }
+
+  /* Calendario */
+  .fc-toolbar-title {
+    font-size: 1.2rem !important;
+  }
+
+  .fc-button {
+    font-size: 0.65rem !important;
+    padding: 3px 6px !important;
+  }
+
+  /* Admin Dropdown */
+  .admin-dropdown {
+    min-width: 100%;
+  }
+
+  .admin-dropdown .dropdown-item {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================================
+   SMALL DEVICES (480px - 767px)
+   Móviles grandes: iPhone 12/13/14, Android grandes
+   ============================================ */
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Navbar */
+  .navbar-brand {
+    font-size: 1.4rem;
+  }
+
+  /* Hero Section */
+  .hero {
+    height: 65vh;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero .lead {
+    font-size: 1rem;
+  }
+
+  /* Botones */
+  .btn-group-catalogo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-group-catalogo a,
+  .btn-group-catalogo button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 140px;
+  }
+
+  /* Cards del Showroom */
+  .img-container {
+    height: 300px;
+  }
+
+  /* Tipografía */
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+  }
+
+  /* Tablas */
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 6px;
+  }
+}
+
+/* ============================================
+   TABLETS PORTRAIT (768px - 991px)
+   iPad, tablets Android en vertical
+   ============================================ */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Navbar */
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+
+  /* Hero Section */
+  .hero {
+    height: 70vh;
+  }
+
+  .hero h1 {
+    font-size: 2.6rem;
+  }
+
+  /* Botones */
+  .btn-group-catalogo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .btn-group-catalogo a,
+  .btn-group-catalogo button {
+    flex: 0 1 auto;
+  }
+
+  /* Cards del Showroom */
+  .img-container {
+    height: 350px;
+  }
+
+  .catalogo {
+    padding: 60px 0;
+  }
+
+  /* Tablas */
+  .table {
+    font-size: 0.9rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 10px 8px;
+  }
+
+  /* Calendario */
+  .calendario-contenedor {
+    max-width: 700px;
+  }
+}
+
+/* ============================================
+   TABLETS LANDSCAPE (992px - 1024px)
+   iPad en horizontal, tablets grandes
+   ============================================ */
+@media (min-width: 992px) and (max-width: 1024px) {
+  /* Hero Section */
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+
+  /* Cards del Showroom */
+  .img-container {
+    height: 380px;
+  }
+
+  /* Calendario */
+  .calendario-contenedor {
+    max-width: 800px;
+  }
+}
+
+/* ============================================
+   MEJORAS GENERALES PARA TODOS LOS DISPOSITIVOS
+   ============================================ */
+
+/* Smooth scrolling mejorado */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mejora de touch targets para móviles */
+@media (max-width: 767px) {
+  .btn,
+  .nav-link,
+  .dropdown-item,
+  a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Evitar zoom en inputs en iOS */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Mejorar espaciado en contenedores */
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  /* Optimizar padding de secciones */
+  section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  /* Mejorar cards */
+  .card {
+    margin-bottom: 15px;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  /* Optimizar modales */
+  .modal-dialog {
+    margin: 10px;
+  }
+
+  .modal-content {
+    border-radius: 12px;
+  }
+
+  .modal-header,
+  .modal-footer {
+    padding: 12px 15px;
+  }
+
+  .modal-body {
+    padding: 15px;
+  }
+}
+
+/* Mejoras de animaciones y transiciones */
+.btn,
+.card,
+.nav-link,
+.dropdown-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto hover mejorado para botones */
+.btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Efecto active para touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  .card:active {
+    transform: scale(0.99);
+  }
+
+  /* Desactivar hover en imágenes para móviles */
+  .img-container:hover img {
+    transform: none;
+    filter: none;
+  }
+
+  .catalogo:hover {
+    box-shadow: none;
+    border: 2px solid transparent;
+  }
+}
+
+/* Mejora de legibilidad */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimización de imágenes */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevenir overflow horizontal */
+body,
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Mejora de contraste para accesibilidad */
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Focus visible para accesibilidad */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #b76e79;
+  outline-offset: 2px;
+}
+
+/* Mejora de sombras con gradientes */
+.shadow-sm {
+  box-shadow: 0 2px 4px rgba(183, 110, 121, 0.1) !important;
+}
+
+.shadow {
+  box-shadow: 0 4px 8px rgba(183, 110, 121, 0.15) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 8px 16px rgba(183, 110, 121, 0.2) !important;
+}
+
+/* Animación de fade-in para elementos */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Mejora de grid responsivo para showroom */
+@media (max-width: 575px) {
+  .row.g-4 {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1rem;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .row.g-4 {
+    --bs-gutter-x: 1.25rem;
+    --bs-gutter-y: 1.25rem;
+  }
+}
+
+/* Optimización de formularios */
+@media (max-width: 767px) {
+  .form-control,
+  .form-select {
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
+  .form-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .form-buttons-standard .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* Mejora de tablas responsive */
+@media (max-width: 767px) {
+  .table-responsive {
+    border-radius: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-responsive::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #b76e79;
+    border-radius: 4px;
+  }
+
+  .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #8c4a56;
+  }
+}
+
+/* Mejora de encabezados de página */
+@media (max-width: 767px) {
+  .d-flex.justify-content-between.align-items-center {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px;
+  }
+
+  .d-flex.justify-content-between.align-items-center h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  .btn,
+  footer {
+    display: none !important;
+  }
+
+  body {
+    background-color: white;
+  }
+
+  .card {
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+}

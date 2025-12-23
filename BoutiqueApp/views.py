@@ -65,9 +65,6 @@ def editar_catalogo(request, codigo):
 @login_required
 @permission_required('BoutiqueApp.delete_catalogo', raise_exception=True)
 def eliminar_catalogo(request, codigo):
-    import os
-    from django.conf import settings
-    
     catalogo = Catalogo.objects.get(codigo=codigo)
     if request.method == 'POST':
         # Eliminar la imagen del sistema de archivos si existe

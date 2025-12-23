@@ -1,109 +1,140 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}{{ accion }} Insumo - Amanda Mateo Boutique{% endblock %}
-{% block content %}
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">
-          <h3>{{ accion }} Insumo</h3>
-        </div>
-        <div class="card-body">
-          <form method="post">
-            {% csrf_token %} {% if form.non_field_errors %}
-            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+{% extends 'BoutiqueApp/base.html' %} {% block title %}{{ accion }} Insumo -
+Amanda Mateo Boutique{% endblock %} {% block content %}
+<div class="container py-5">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-box me-2"></i>{{ accion }} Insumo
+    </h2>
+    <a href="{% url 'listar_insumos' %}" class="btn btn-volver">
+      <i class="fas fa-arrow-left me-1"></i>Volver
+    </a>
+  </div>
+
+  <!-- Formulario -->
+  <div class="card shadow-sm form-card-standard">
+    <div class="card-header">
+      <h4 class="mb-0">
+        <i class="fas fa-edit me-2"></i>Información del Insumo
+      </h4>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %} {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label
+              for="{{ form.descripcion.id_for_label }}"
+              class="form-label fw-semibold"
+            >
+              {{ form.descripcion.label }}
+            </label>
+            {{ form.descripcion }} {% if form.descripcion.errors %}
+            <div class="text-danger small mt-1">
+              {{ form.descripcion.errors }}
+            </div>
             {% endif %}
+          </div>
 
-            <div class="mb-3">
-              <label
-                for="{{ form.descripcion.id_for_label }}"
-                class="form-label"
-              >
-                {{ form.descripcion.label }}
-              </label>
-              {{ form.descripcion }} {% if form.descripcion.errors %}
-              <div class="text-danger">{{ form.descripcion.errors }}</div>
-              {% endif %}
-            </div>
+          <div class="col-12 col-md-6">
+            <label
+              for="{{ form.medida.id_for_label }}"
+              class="form-label fw-semibold"
+            >
+              {{ form.medida.label }}
+            </label>
+            {{ form.medida }} {% if form.medida.errors %}
+            <div class="text-danger small mt-1">{{ form.medida.errors }}</div>
+            {% endif %}
+          </div>
 
-            <div class="mb-3">
-              <label for="{{ form.medida.id_for_label }}" class="form-label">
-                {{ form.medida.label }}
-              </label>
-              {{ form.medida }} {% if form.medida.errors %}
-              <div class="text-danger">{{ form.medida.errors }}</div>
-              {% endif %}
+          <div class="col-12 col-sm-6 col-md-4">
+            <label
+              for="{{ form.existencia.id_for_label }}"
+              class="form-label fw-semibold"
+            >
+              {{ form.existencia.label }}
+            </label>
+            {{ form.existencia }} {% if form.existencia.errors %}
+            <div class="text-danger small mt-1">
+              {{ form.existencia.errors }}
             </div>
+            {% endif %}
+          </div>
 
-            <div class="mb-3">
-              <label
-                for="{{ form.existencia.id_for_label }}"
-                class="form-label"
-              >
-                {{ form.existencia.label }}
-              </label>
-              {{ form.existencia }} {% if form.existencia.errors %}
-              <div class="text-danger">{{ form.existencia.errors }}</div>
-              {% endif %}
+          <div class="col-12 col-sm-6 col-md-4">
+            <label
+              for="{{ form.existencia_minima.id_for_label }}"
+              class="form-label fw-semibold"
+            >
+              {{ form.existencia_minima.label }}
+            </label>
+            {{ form.existencia_minima }} {% if form.existencia_minima.errors %}
+            <div class="text-danger small mt-1">
+              {{ form.existencia_minima.errors }}
             </div>
+            {% endif %}
+          </div>
 
-            <div class="mb-3">
-              <label
-                for="{{ form.existencia_minima.id_for_label }}"
-                class="form-label"
-              >
-                {{ form.existencia_minima.label }}
-              </label>
-              {{ form.existencia_minima }} {% if form.existencia_minima.errors %}
-              <div class="text-danger">{{ form.existencia_minima.errors }}</div>
-              {% endif %}
+          <div class="col-12 col-md-4">
+            <label
+              for="{{ form.costo_dolar.id_for_label }}"
+              class="form-label fw-semibold"
+            >
+              {{ form.costo_dolar.label }}
+            </label>
+            {{ form.costo_dolar }} {% if form.costo_dolar.errors %}
+            <div class="text-danger small mt-1">
+              {{ form.costo_dolar.errors }}
             </div>
+            {% endif %}
+            <small class="form-text text-muted">
+              Puede ingresar el costo manualmente o se calculará automáticamente
+              al registrar una compra.
+            </small>
+          </div>
 
-            <div class="mb-3">
-              <label
-                for="{{ form.costo_dolar.id_for_label }}"
-                class="form-label"
-              >
-                {{ form.costo_dolar.label }}
-              </label>
-              {{ form.costo_dolar }} {% if form.costo_dolar.errors %}
-              <div class="text-danger">{{ form.costo_dolar.errors }}</div>
-              {% endif %}
-              <small class="form-text text-muted">
-                Puede ingresar el costo manualmente o se calculará
-                automáticamente al registrar una compra.
-              </small>
+          <div class="col-12 col-md-6">
+            <label
+              for="{{ form.proveedor.id_for_label }}"
+              class="form-label fw-semibold"
+            >
+              {{ form.proveedor.label }}
+            </label>
+            {{ form.proveedor }} {% if form.proveedor.errors %}
+            <div class="text-danger small mt-1">
+              {{ form.proveedor.errors }}
             </div>
+            {% endif %}
+          </div>
 
-            <div class="mb-3">
-              <label for="{{ form.proveedor.id_for_label }}" class="form-label">
-                {{ form.proveedor.label }}
-              </label>
-              {{ form.proveedor }} {% if form.proveedor.errors %}
-              <div class="text-danger">{{ form.proveedor.errors }}</div>
-              {% endif %}
+          <div class="col-12 col-md-6">
+            <label
+              for="{{ form.categoria.id_for_label }}"
+              class="form-label fw-semibold"
+            >
+              {{ form.categoria.label }}
+            </label>
+            {{ form.categoria }} {% if form.categoria.errors %}
+            <div class="text-danger small mt-1">
+              {{ form.categoria.errors }}
             </div>
-
-            <div class="mb-3">
-              <label for="{{ form.categoria.id_for_label }}" class="form-label">
-                {{ form.categoria.label }}
-              </label>
-              {{ form.categoria }} {% if form.categoria.errors %}
-              <div class="text-danger">{{ form.categoria.errors }}</div>
-              {% endif %}
-            </div>
-
-            <div class="col-12 text-center mt-3">
-              <button type="submit" class="btn btn-pink btn-sm me-2">
-                Guardar
-              </button>
-              <a href="{% url 'listar_insumos' %}" class="btn btn-editar btn-sm"
-                >Volver</a
-              >
-            </div>
-          </form>
+            {% endif %}
+          </div>
         </div>
-      </div>
+
+        <div class="text-center mt-4 form-buttons-standard">
+          <button type="submit" class="btn btn-pink px-4 py-2">
+            <i class="fas fa-save me-1"></i>Guardar
+          </button>
+          <a href="{% url 'listar_insumos' %}" class="btn btn-volver px-4 py-2">
+            <i class="fas fa-arrow-left me-1"></i>Volver
+          </a>
+        </div>
+      </form>
     </div>
   </div>
 </div>
