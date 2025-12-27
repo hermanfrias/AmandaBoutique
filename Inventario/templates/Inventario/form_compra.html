@@ -196,6 +196,75 @@
   </div>
 </div>
 
+<!-- Modal para crear nuevo insumo -->
+<div class="modal fade" id="modalNuevoInsumo" tabindex="-1" aria-labelledby="modalNuevoInsumoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNuevoInsumoLabel">
+          <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Insumo
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formNuevoInsumo">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="nuevo_descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="nuevo_descripcion" name="descripcion" required maxlength="150">
+            <div class="invalid-feedback" id="error_descripcion"></div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="nuevo_medida" class="form-label">Unidad de Medida <span class="text-danger">*</span></label>
+            <select class="form-select" id="nuevo_medida" name="medida" required>
+              <option value="">Seleccione...</option>
+              <option value="Unidades">Unidades</option>
+              <option value="Metros">Metros</option>
+            </select>
+            <div class="invalid-feedback" id="error_medida"></div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="nuevo_categoria" class="form-label">Categoría <span class="text-danger">*</span></label>
+            <select class="form-select" id="nuevo_categoria" name="categoria" required>
+              <option value="">Seleccione...</option>
+              <option value="Telas">Telas</option>
+              <option value="Hilos">Hilos</option>
+              <option value="Adornos">Adornos</option>
+              <option value="Estructura">Estructura</option>
+              <option value="Otros">Otros</option>
+            </select>
+            <div class="invalid-feedback" id="error_categoria"></div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="nuevo_proveedor" class="form-label">Proveedor <span class="text-danger">*</span></label>
+            <select class="form-select" id="nuevo_proveedor" name="proveedor" required>
+              <option value="">Seleccione...</option>
+              {% for proveedor in proveedores %}
+              <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+              {% endfor %}
+            </select>
+            <div class="invalid-feedback" id="error_proveedor"></div>
+          </div>
+          
+          <div class="alert alert-info mb-0">
+            <small><i class="fas fa-info-circle me-1"></i>El insumo se creará con existencia inicial de 0. Podrá modificar estos valores después en el módulo de Insumos.</small>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-pink" id="btnGuardarNuevoInsumo">
+          <i class="fas fa-save me-1"></i>Guardar</button>
+          <button type="button" class="btn btn-volver" data-bs-dismiss="modal">Volver</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- jQuery (requerido para Select2) -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -218,6 +287,7 @@
     const addButton = document.getElementById("add-form");
     const totalForms = document.querySelector("#id_form-TOTAL_FORMS");
     const globalIvaCheckbox = document.getElementById("aplicar_iva_global");
+    let currentSelectForNewInsumo = null;
 
     // Sincronizar checkbox global de IVA con todos los items
     if (globalIvaCheckbox) {
@@ -243,6 +313,158 @@
           return "Buscando...";
         },
       },
+      templateResult: formatInsumoResult,
+      escapeMarkup: function(markup) { return markup; }
+    });
+
+    // Función para formatear los resultados de Select2 con botón de crear nuevo
+    function formatInsumoResult(insumo) {
+      if (insumo.loading) {
+        return insumo.text;
+      }
+      
+      // Si es el último elemento y no hay resultados, mostrar botón de crear
+      if (!insumo.id) {
+        return insumo.text;
+      }
+      
+      return insumo.text;
+    }
+
+    // Evento cuando se abre el dropdown de Select2
+    $(document).on('select2:open', function(e) {
+      const selectId = e.target.id;
+      currentSelectForNewInsumo = $('#' + selectId);
+      
+      // Agregar botón "Crear nuevo insumo" al final de los resultados
+      setTimeout(function() {
+        const $results = $('.select2-results');
+        if ($results.length > 0 && !$results.find('.btn-crear-insumo').length) {
+          $results.append(
+            '<div class="select2-results__option btn-crear-insumo" style="background-color: #f8f9fa; border-top: 2px solid #dee2e6; padding: 8px; cursor: pointer; text-align: center; color: #e91e63; font-weight: bold;">' +
+            '<i class="fas fa-plus-circle me-2"></i>Crear Nuevo Insumo' +
+            '</div>'
+          );
+        }
+      }, 10);
+    });
+
+    // Evento al hacer clic en el botón "Crear nuevo insumo"
+    $(document).on('click', '.btn-crear-insumo', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Cerrar el dropdown de Select2
+      $('.insumo-select').select2('close');
+      
+      // Abrir el modal
+      const modal = new bootstrap.Modal(document.getElementById('modalNuevoInsumo'));
+      modal.show();
+    });
+
+    // Función para abrir el modal de nuevo insumo
+    window.openNewSupplyModal = function() {
+      const modal = new bootstrap.Modal(document.getElementById('modalNuevoInsumo'));
+      modal.show();
+    };
+
+    // Función para limpiar errores del modal
+    function clearModalErrors() {
+      document.querySelectorAll('.invalid-feedback').forEach(el => {
+        el.textContent = '';
+        el.style.display = 'none';
+      });
+      document.querySelectorAll('.form-control, .form-select').forEach(el => {
+        el.classList.remove('is-invalid');
+      });
+    }
+
+    // Función para mostrar errores en el modal
+    function showModalErrors(errors) {
+      clearModalErrors();
+      
+      for (const [field, messages] of Object.entries(errors)) {
+        const errorDiv = document.getElementById(`error_${field}`);
+        const inputField = document.getElementById(`nuevo_${field}`);
+        
+        if (errorDiv && inputField) {
+          errorDiv.textContent = messages.join(', ');
+          errorDiv.style.display = 'block';
+          inputField.classList.add('is-invalid');
+        }
+      }
+      
+      // Mostrar error general si existe
+      if (errors.general) {
+        alert('Error: ' + errors.general.join(', '));
+      }
+    }
+
+    // Evento para guardar nuevo insumo
+    document.getElementById('btnGuardarNuevoInsumo').addEventListener('click', function() {
+      const btn = this;
+      const originalText = btn.innerHTML;
+      
+      // Deshabilitar botón y mostrar loading
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Guardando...';
+      
+      // Limpiar errores previos
+      clearModalErrors();
+      
+      // Obtener datos del formulario
+      const formData = new FormData(document.getElementById('formNuevoInsumo'));
+      
+      // Enviar petición AJAX
+      fetch("{% url 'crear_insumo_ajax' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Crear nueva opción en el select
+          const newOption = new Option(
+            data.insumo.codigo + ' - ' + data.insumo.descripcion,
+            data.insumo.id,
+            true,
+            true
+          );
+          
+          // Agregar la opción al select actual
+          if (currentSelectForNewInsumo) {
+            currentSelectForNewInsumo.append(newOption).trigger('change');
+          }
+          
+          // Cerrar modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('modalNuevoInsumo'));
+          modal.hide();
+          
+          // Limpiar formulario
+          document.getElementById('formNuevoInsumo').reset();
+        } else {
+          // Mostrar errores
+          showModalErrors(data.errors);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al crear el insumo. Por favor, intente nuevamente.');
+      })
+      .finally(() => {
+        // Restaurar botón
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      });
+    });
+
+    // Limpiar formulario al cerrar modal
+    document.getElementById('modalNuevoInsumo').addEventListener('hidden.bs.modal', function() {
+      document.getElementById('formNuevoInsumo').reset();
+      clearModalErrors();
     });
 
     // Función para actualizar los índices de los formularios
@@ -331,6 +553,8 @@
               return "Buscando...";
             },
           },
+          templateResult: formatInsumoResult,
+          escapeMarkup: function(markup) { return markup; }
         });
       });
 

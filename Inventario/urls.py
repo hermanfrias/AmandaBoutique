@@ -9,6 +9,7 @@ urlpatterns = [
     # URLs para ExistenciaInsumo
     path('insumos/', views.listar_insumos, name='listar_insumos'),
     path('insumos/crear/', views.crear_insumo, name='crear_insumo'),
+    path('insumos/crear-ajax/', views.crear_insumo_ajax, name='crear_insumo_ajax'),
     path('insumos/<int:pk>/editar/', views.editar_insumo, name='editar_insumo'),
     path('insumos/<int:pk>/eliminar/', views.eliminar_insumo, name='eliminar_insumo'),
     path('insumos/<int:pk>/', views.detalle_insumo, name='detalle_insumo'),

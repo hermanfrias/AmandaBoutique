@@ -225,12 +225,15 @@ def crear_compra(request):
         if not fecha_compra_str or not moneda:
             messages.error(request, 'Debe completar todos los campos del encabezado (Fecha de Compra y Moneda).')
             formset = CompraInsumoDetalleFormSet(request.POST)
+            from ProveedoresApp.models import Proveedores
+            proveedores = Proveedores.objects.all().order_by('nombre')
             context = {
                 'formset': formset,
                 'accion': 'Registrar',
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
+                'proveedores': proveedores,
             }
             return render(request, 'Inventario/form_compra.html', context)
         
@@ -241,12 +244,15 @@ def crear_compra(request):
         except ValueError:
             messages.error(request, 'Formato de fecha inválido.')
             formset = CompraInsumoDetalleFormSet(request.POST)
+            from ProveedoresApp.models import Proveedores
+            proveedores = Proveedores.objects.all().order_by('nombre')
             context = {
                 'formset': formset,
                 'accion': 'Registrar',
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
+                'proveedores': proveedores,
             }
             return render(request, 'Inventario/form_compra.html', context)
         
@@ -259,12 +265,15 @@ def crear_compra(request):
                 'Por favor registre la cotización del día primero en el módulo de Flujo de Caja.'
             )
             formset = CompraInsumoDetalleFormSet(request.POST)
+            from ProveedoresApp.models import Proveedores
+            proveedores = Proveedores.objects.all().order_by('nombre')
             context = {
                 'formset': formset,
                 'accion': 'Registrar',
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
+                'proveedores': proveedores,
             }
             return render(request, 'Inventario/form_compra.html', context)
         
@@ -300,12 +309,15 @@ def crear_compra(request):
                 
                 if not compras_creadas:
                     messages.error(request, 'Debe agregar al menos un insumo.')
+                    from ProveedoresApp.models import Proveedores
+                    proveedores = Proveedores.objects.all().order_by('nombre')
                     context = {
                         'formset': formset,
                         'accion': 'Registrar',
                         'numero_factura': numero_factura,
                         'fecha_compra': fecha_compra_str,
                         'moneda': moneda,
+                        'proveedores': proveedores,
                     }
                     return render(request, 'Inventario/form_compra.html', context)
                 
@@ -319,40 +331,54 @@ def crear_compra(request):
                 return redirect('listar_compras')
             except ValidationError as e:
                 messages.error(request, f'Error de validación: {e}')
+                from ProveedoresApp.models import Proveedores
+                proveedores = Proveedores.objects.all().order_by('nombre')
                 context = {
                     'formset': formset,
                     'accion': 'Registrar',
                     'numero_factura': numero_factura,
                     'fecha_compra': fecha_compra_str,
                     'moneda': moneda,
+                    'proveedores': proveedores,
                 }
                 return render(request, 'Inventario/form_compra.html', context)
             except Exception as e:
                 messages.error(request, f'Error al registrar las compras: {str(e)}')
+                from ProveedoresApp.models import Proveedores
+                proveedores = Proveedores.objects.all().order_by('nombre')
                 context = {
                     'formset': formset,
                     'accion': 'Registrar',
                     'numero_factura': numero_factura,
                     'fecha_compra': fecha_compra_str,
                     'moneda': moneda,
+                    'proveedores': proveedores,
                 }
                 return render(request, 'Inventario/form_compra.html', context)
         else:
             messages.error(request, f'Errores en el formulario: {formset.errors}')
+            from ProveedoresApp.models import Proveedores
+            proveedores = Proveedores.objects.all().order_by('nombre')
             context = {
                 'formset': formset,
                 'accion': 'Registrar',
                 'numero_factura': numero_factura,
                 'fecha_compra': fecha_compra_str,
                 'moneda': moneda,
+                'proveedores': proveedores,
             }
             return render(request, 'Inventario/form_compra.html', context)
     else:
         formset = CompraInsumoDetalleFormSet()
     
+    # Obtener proveedores para el modal
+    from ProveedoresApp.models import Proveedores
+    proveedores = Proveedores.objects.all().order_by('nombre')
+    
     context = {
         'formset': formset,
         'accion': 'Registrar',
+        'proveedores': proveedores,
     }
     return render(request, 'Inventario/form_compra.html', context)
 
@@ -837,6 +863,81 @@ def insumos_pdf(request):
         print(error_msg)
         print("=" * 80)
         return HttpResponse(f"<pre>{error_msg}</pre>", status=500)
+
+
+# ==================== VISTA AJAX PARA CREAR INSUMO ====================
+
+@login_required
+def crear_insumo_ajax(request):
+    """Vista AJAX para crear un insumo rápidamente desde el formulario de compras"""
+    from django.http import JsonResponse
+    
+    if request.method == 'POST':
+        # Obtener datos del POST
+        descripcion = request.POST.get('descripcion', '').strip()
+        medida = request.POST.get('medida', '').strip()
+        categoria = request.POST.get('categoria', '').strip()
+        proveedor_id = request.POST.get('proveedor', '').strip()
+        
+        # Validar campos requeridos
+        errors = {}
+        
+        if not descripcion:
+            errors['descripcion'] = ['Este campo es requerido.']
+        
+        if not medida:
+            errors['medida'] = ['Este campo es requerido.']
+        elif medida not in dict(ExistenciaInsumo.MEDIDAS):
+            errors['medida'] = ['Seleccione una opción válida.']
+        
+        if not categoria:
+            errors['categoria'] = ['Este campo es requerido.']
+        elif categoria not in dict(ExistenciaInsumo.CATEGORIA_CHOICES):
+            errors['categoria'] = ['Seleccione una opción válida.']
+        
+        if not proveedor_id:
+            errors['proveedor'] = ['Este campo es requerido.']
+        else:
+            from ProveedoresApp.models import Proveedores
+            try:
+                proveedor = Proveedores.objects.get(pk=proveedor_id)
+            except Proveedores.DoesNotExist:
+                errors['proveedor'] = ['Proveedor no válido.']
+        
+        # Verificar si ya existe un insumo con la misma descripción
+        if descripcion and ExistenciaInsumo.objects.filter(descripcion__iexact=descripcion).exists():
+            errors['descripcion'] = ['Ya existe un insumo con esta descripción.']
+        
+        if errors:
+            return JsonResponse({'success': False, 'errors': errors})
+        
+        try:
+            # Crear el insumo con valores por defecto
+            insumo = ExistenciaInsumo(
+                descripcion=descripcion,
+                medida=medida,
+                categoria=categoria,
+                proveedor_id=proveedor_id,
+                existencia=0,  # Valor por defecto
+                existencia_minima=0,  # Valor por defecto
+            )
+            insumo.save()
+            
+            return JsonResponse({
+                'success': True,
+                'insumo': {
+                    'id': insumo.pk,
+                    'codigo': insumo.codigo,
+                    'descripcion': insumo.descripcion,
+                }
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'errors': {'general': [f'Error al crear el insumo: {str(e)}']}
+            })
+    
+    return JsonResponse({'success': False, 'errors': {'general': ['Método no permitido.']}})
 
 
 # ==================== IMPORTAR VISTAS DE COMPRAS AGRUPADAS ====================
