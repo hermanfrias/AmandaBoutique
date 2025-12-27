@@ -1,0 +1,185 @@
+{% extends "BoutiqueApp/base.html" %} {% block title %} {{ titulo }} | Amanda
+Mateo Boutique{% endblock %} {% block content %}
+<div class="container py-5">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-tshirt me-2"></i>{{ titulo }}
+    </h2>
+    <a href="{% url 'listar_vestidos' %}" class="btn btn-volver">
+      <i class="fas fa-arrow-left me-1"></i>Volver
+    </a>
+  </div>
+
+  <!-- Formulario -->
+  <div class="card shadow-sm form-card-standard">
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" class="row g-3">
+        {% csrf_token %}
+
+        <!-- Información General -->
+        <div class="col-12">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-info-circle me-2"></i>Información General
+          </h5>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_nombre_modelo" class="form-label fw-semibold"
+            >Nombre/Modelo</label
+          >
+          {{ form.nombre_modelo }} {% if form.nombre_modelo.errors %}
+          <div class="text-danger small">{{ form.nombre_modelo.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="id_talla" class="form-label fw-semibold">Talla</label>
+          {{ form.talla }} {% if form.talla.errors %}
+          <div class="text-danger small">{{ form.talla.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-3">
+          <label for="id_color" class="form-label fw-semibold">Color</label>
+          {{ form.color }} {% if form.color.errors %}
+          <div class="text-danger small">{{ form.color.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12">
+          <label for="id_descripcion" class="form-label fw-semibold"
+            >Descripción</label
+          >
+          {{ form.descripcion }} {% if form.descripcion.errors %}
+          <div class="text-danger small">{{ form.descripcion.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_estado" class="form-label fw-semibold">Estado</label>
+          {{ form.estado }} {% if form.estado.errors %}
+          <div class="text-danger small">{{ form.estado.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Precios -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-dollar-sign me-2"></i>Precios
+          </h5>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_precio_alquiler" class="form-label fw-semibold"
+            >Precio de Alquiler</label
+          >
+          {{ form.precio_alquiler }} {% if form.precio_alquiler.errors %}
+          <div class="text-danger small">{{ form.precio_alquiler.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_valor_compra" class="form-label fw-semibold"
+            >Valor de Compra</label
+          >
+          {{ form.valor_compra }} {% if form.valor_compra.errors %}
+          <div class="text-danger small">{{ form.valor_compra.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Fotos -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-camera me-2"></i>Fotos
+          </h5>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_foto1" class="form-label fw-semibold"
+            >Foto 1 (Requerida)</label
+          >
+          {{ form.foto1 }} {% if form.foto1.errors %}
+          <div class="text-danger small">{{ form.foto1.errors }}</div>
+          {% endif %} {% if vestido.foto1 %}
+          <div class="mt-2">
+            <img
+              src="{{ vestido.foto1.url }}"
+              alt="Foto 1"
+              class="img-thumbnail"
+              style="max-width: 200px"
+            />
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_foto2" class="form-label fw-semibold"
+            >Foto 2 (Opcional)</label
+          >
+          {{ form.foto2 }} {% if form.foto2.errors %}
+          <div class="text-danger small">{{ form.foto2.errors }}</div>
+          {% endif %} {% if vestido.foto2 %}
+          <div class="mt-2">
+            <img
+              src="{{ vestido.foto2.url }}"
+              alt="Foto 2"
+              class="img-thumbnail"
+              style="max-width: 200px"
+            />
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Información Adicional -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-plus-circle me-2"></i>Información Adicional
+          </h5>
+        </div>
+        <div class="col-12">
+          <label for="id_accesorios" class="form-label fw-semibold"
+            >Accesorios Incluidos</label
+          >
+          {{ form.accesorios }} {% if form.accesorios.errors %}
+          <div class="text-danger small">{{ form.accesorios.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Tintorería -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-tint me-2"></i>Tintorería
+          </h5>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_fecha_tintoreria" class="form-label fw-semibold"
+            >Fecha de Envío a Tintorería</label
+          >
+          {{ form.fecha_tintoreria }} {% if form.fecha_tintoreria.errors %}
+          <div class="text-danger small">
+            {{ form.fecha_tintoreria.errors }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label
+            for="id_fecha_entrega_tintoreria"
+            class="form-label fw-semibold"
+            >Fecha de Entrega de Tintorería</label
+          >
+          {{ form.fecha_entrega_tintoreria }} {% if form.fecha_entrega_tintoreria.errors %}
+          <div class="text-danger small">
+            {{ form.fecha_entrega_tintoreria.errors }}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Botones -->
+        <div class="col-12 text-center mt-4 form-buttons-standard">
+          <button type="submit" class="btn btn-pink px-4 py-2">
+            <i class="fas fa-save me-1"></i>{{ accion }} Vestido
+          </button>
+          <a
+            href="{% url 'listar_vestidos' %}"
+            class="btn btn-volver px-4 py-2"
+          >
+            <i class="fas fa-arrow-left me-1"></i>Volver
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'citas',
     'flujo',
     'Inventario',
+    'Alquiler',
     'django.contrib.humanize',
 ]
 

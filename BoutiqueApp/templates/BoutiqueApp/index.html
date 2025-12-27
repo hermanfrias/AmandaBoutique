@@ -40,6 +40,83 @@
     </div>
   </div>
 </section>
+
+<!-- VESTIDOS DE ALQUILER -->
+<section id="alquiler" class="py-5" style="background-color: #fff5f7">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="text-center flex-grow-1">Vestidos de Alquiler</h1>
+      {% if user.is_authenticated %}
+      <div class="btn-group">
+        <a
+          href="{% url 'catalogo_alquiler_pdf' %}"
+          class="btn btn-pink btn-sm"
+          target="_blank"
+        >
+          <i class="fas fa-file-pdf me-1"></i>PDF Lista
+        </a>
+        <a
+          href="{% url 'catalogo_alquiler_pdf_cards' %}"
+          class="btn btn-pink btn-sm"
+          target="_blank"
+        >
+          <i class="fas fa-file-pdf me-1"></i>PDF Tarjetas
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if vestidos_alquiler %}
+    <div class="row g-3 g-md-4">
+      {% for vestido in vestidos_alquiler %}
+      <div class="col-12 col-sm-6 col-md-4">
+        <div class="card shadow-sm border-0 h-100 catalogo fade-in">
+          <div class="img-container">
+            {% if vestido.foto1 %}
+            <img
+              src="{{ vestido.foto1.url }}"
+              class="card-img-top img-fluid img-hover"
+              alt="{{ vestido.nombre_modelo }}"
+              loading="lazy"
+            />
+            {% else %}
+            <div
+              class="bg-light d-flex align-items-center justify-content-center"
+              style="height: 300px"
+            >
+              <i class="fas fa-image fa-3x text-muted"></i>
+            </div>
+            {% endif %}
+          </div>
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ vestido.nombre_modelo }}</h5>
+            <p class="text-muted mb-2">
+              <strong>Talla:</strong> {{ vestido.talla }} |
+              <strong>Color:</strong> {{ vestido.color }}
+            </p>
+            <p class="card-text">{{ vestido.descripcion|truncatewords:15 }}</p>
+            <p class="fw-bold fs-5 text-pink">
+              Alquiler: ${{ vestido.precio_alquiler }}
+            </p>
+            {% if vestido.estado == 'Disponible' %}
+            <span class="badge bg-success">Disponible</span>
+            {% else %}
+            <span class="badge bg-warning text-dark">No Disponible</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+      <i class="fas fa-info-circle me-2"></i>No hay vestidos disponibles para
+      alquiler en este momento.
+    </div>
+    {% endif %}
+  </div>
+</section>
+
 <!-- SOBRE AMANDA -->
 <section id="acerca" class="py-5">
   <div class="container text-center">

@@ -11,6 +11,8 @@ urlpatterns = [
     path('eliminar_catalogo/<str:codigo>/', views.eliminar_catalogo, name='eliminar_catalogo'),
     path('catalogo/pdf/', views.catalogo_pdf, name='catalogo_pdf'),
     path('catalogo/pdf/cards/', views.catalogo_pdf_cards, name='catalogo_pdf_cards'),
+    path('catalogo-alquiler/pdf/', views.catalogo_alquiler_pdf, name='catalogo_alquiler_pdf'),
+    path('catalogo-alquiler/pdf/cards/', views.catalogo_alquiler_pdf_cards, name='catalogo_alquiler_pdf_cards'),
 
 ]
 

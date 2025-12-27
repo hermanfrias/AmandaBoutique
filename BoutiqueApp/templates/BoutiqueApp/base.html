@@ -154,6 +154,17 @@
                     Activos Fijos
                   </a>
                 </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'listar_alquileres' %}">
+                    <i class="fas fa-file-contract me-2"></i>Alquileres
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'listar_vestidos' %}">
+                    <i class="fas fa-tshirt me-2"></i>Vestidos
+                  </a>
+                </li>
                 {% if user.is_superuser %}
                 <li><hr class="dropdown-divider" /></li>
                 <li>

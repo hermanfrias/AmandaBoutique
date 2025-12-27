@@ -8,11 +8,17 @@ from django.contrib import messages
 from weasyprint import HTML, CSS
 from BoutiqueApp.forms import CatalogoForm
 from BoutiqueApp.models import Catalogo
+from Alquiler.models import Vestido
 
 
 def index(request):
     catalogos = Catalogo.objects.all()
-    return render(request, 'BoutiqueApp/index.html', {'catalogos': catalogos})
+    # Mostrar todos los vestidos excepto los dañados
+    vestidos_alquiler = Vestido.objects.exclude(estado='Dañado').order_by('-fecha_creacion')
+    return render(request, 'BoutiqueApp/index.html', {
+        'catalogos': catalogos,
+        'vestidos_alquiler': vestidos_alquiler
+    })
 
 @login_required
 @permission_required('BoutiqueApp.add_catalogo', raise_exception=True)
@@ -121,6 +127,46 @@ def catalogo_pdf_cards(request):
     
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = 'inline; filename="catalogo_tarjetas_amanda_boutique.pdf"'
+
+    css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/catalog_cards.css")
+
+    HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(
+        response,
+        stylesheets=[CSS(css_path)]
+    )
+
+    return response
+
+@login_required
+def catalogo_alquiler_pdf(request):
+    """Genera PDF del catálogo de vestidos de alquiler en formato lista"""
+    vestidos = Vestido.objects.filter(estado='Disponible').order_by('nombre_modelo')
+
+    # Renderizamos HTML
+    html_string = render_to_string('BoutiqueApp/catalogo_alquiler_pdf.html', {
+        'vestidos': vestidos
+    })
+
+    # Creamos respuesta PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="catalogo_alquiler_amanda_boutique.pdf"'
+
+    # Ruta del CSS para estilos PDF
+    css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/pdf.css")
+
+    HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        response, stylesheets=[CSS(css_path)]
+    )
+    return response
+
+@login_required
+def catalogo_alquiler_pdf_cards(request):
+    """Genera PDF del catálogo de vestidos de alquiler en formato tarjetas"""
+    vestidos = Vestido.objects.filter(estado='Disponible').order_by('nombre_modelo')
+    html = render_to_string("BoutiqueApp/catalogo_alquiler_pdf_cards.html", {"vestidos": vestidos})
+    
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = 'inline; filename="catalogo_alquiler_tarjetas_amanda_boutique.pdf"'
 
     css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/catalog_cards.css")
 

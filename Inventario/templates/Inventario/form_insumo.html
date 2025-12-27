@@ -13,11 +13,6 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
 
   <!-- Formulario -->
   <div class="card shadow-sm form-card-standard">
-    <div class="card-header">
-      <h4 class="mb-0">
-        <i class="fas fa-edit me-2"></i>Información del Insumo
-      </h4>
-    </div>
     <div class="card-body">
       <form method="post">
         {% csrf_token %} {% if form.non_field_errors %}

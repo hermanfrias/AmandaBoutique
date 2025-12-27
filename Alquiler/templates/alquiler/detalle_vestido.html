@@ -1,0 +1,187 @@
+{% extends "BoutiqueApp/base.html" %}
+{% load humanize %} {% block title%}Detalle Vestido | Amanda Mateo Boutique {% endblock %}
+{% block content %}
+<div class="container py-5">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-tshirt me-2"></i>Detalle del Vestido
+    </h2>
+    <div class="btn-group-catalogo">
+      <a href="{% url 'editar_vestido' vestido.pk %}" class="btn btn-editar">
+        <i class="fas fa-edit me-1"></i>Editar
+      </a>
+      <a href="{% url 'listar_vestidos' %}" class="btn btn-volver">
+        <i class="fas fa-arrow-left me-1"></i>Volver
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Información del Vestido -->
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-info-circle me-2"></i>Información General
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <strong>Nombre/Modelo:</strong>
+              <p class="mb-0">{{ vestido.nombre_modelo }}</p>
+            </div>
+            <div class="col-12 col-md-3">
+              <strong>Talla:</strong>
+              <p class="mb-0">{{ vestido.talla }}</p>
+            </div>
+            <div class="col-12 col-md-3">
+              <strong>Color:</strong>
+              <p class="mb-0">{{ vestido.color }}</p>
+            </div>
+            <div class="col-12">
+              <strong>Descripción:</strong>
+              <p class="mb-0">{{ vestido.descripcion }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Estado:</strong>
+              <p class="mb-0">
+                <span
+                  class="badge {% if vestido.estado == 'Disponible' %}bg-success 
+                  {% elif vestido.estado == 'Alquilado' %}bg-warning text-dark
+                  {% elif vestido.estado == 'Tintorería' %}bg-info 
+                  {% elif vestido.estado == 'Arreglo' %}bg-secondary 
+                  {% else %}bg-danger
+                   {% endif %}"
+                >
+                  {{ vestido.estado }}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <hr class="my-4" />
+
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-dollar-sign me-2"></i>Precios
+          </h5>
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <strong>Precio de Alquiler:</strong>
+              <p class="mb-0">
+                $ {{ vestido.precio_alquiler|floatformat:2|intcomma }}
+              </p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Valor de Compra:</strong>
+              <p class="mb-0">
+                $ {{ vestido.valor_compra|floatformat:2|intcomma }}
+              </p>
+            </div>
+          </div>
+
+          {% if vestido.accesorios %}
+          <hr class="my-4" />
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-plus-circle me-2"></i>Accesorios
+          </h5>
+          <p>{{ vestido.accesorios }}</p>
+          {% endif %} {% if vestido.fecha_tintoreria or vestido.fecha_entrega_tintoreria %}
+          <hr class="my-4" />
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-tint me-2"></i>Tintorería
+          </h5>
+          <div class="row g-3">
+            {% if vestido.fecha_tintoreria %}
+            <div class="col-12 col-md-6">
+              <strong>Fecha de Envío:</strong>
+              <p class="mb-0">{{ vestido.fecha_tintoreria|date:"d/m/Y" }}</p>
+            </div>
+            {% endif %} {% if vestido.fecha_entrega_tintoreria %}
+            <div class="col-12 col-md-6">
+              <strong>Fecha de Entrega:</strong>
+              <p class="mb-0">
+                {{ vestido.fecha_entrega_tintoreria|date:"d/m/Y" }}
+              </p>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Historial de Alquileres -->
+      {% if alquileres %}
+      <div class="card shadow-sm">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-history me-2"></i>Últimos Alquileres
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Fecha Inicio</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for alquiler in alquileres %}
+                <tr>
+                  <td>
+                    <a href="{% url 'detalle_alquiler' alquiler.pk %}"
+                      >{{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido }}</a
+                    >
+                  </td>
+                  <td>{{ alquiler.fecha_inicio|date:"d/m/Y" }}</td>
+                  <td>{{ alquiler.estado_alquiler }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Fotos -->
+    <div class="col-12 col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0"><i class="fas fa-camera me-2"></i>Fotos</h4>
+        </div>
+        <div class="card-body">
+          {% if vestido.foto1 %}
+          <div class="mb-3">
+            <img
+              src="{{ vestido.foto1.url }}"
+              alt="{{ vestido.nombre_modelo }}"
+              class="img-fluid rounded"
+            />
+          </div>
+          {% endif %} {% if vestido.foto2 %}
+          <div>
+            <img
+              src="{{ vestido.foto2.url }}"
+              alt="{{ vestido.nombre_modelo }}"
+              class="img-fluid rounded"
+            />
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-pink {
+    background-color: #b76e79 !important;
+  }
+</style>
+{% endblock %}

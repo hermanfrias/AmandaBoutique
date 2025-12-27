@@ -1,18 +1,16 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}Eliminar Compra - Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Eliminar Compra - Amanda
+Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row mb-4">
     <div class="col">
       <h2>Eliminar Compra - Factura {{ numero_factura }}</h2>
     </div>
     <div class="col text-end">
-      <a href="{% url 'listar_compras' %}" class="btn btn-volver"> Cancelar </a>
+      <a href="{% url 'listar_compras' %}" class="btn btn-volver"> Volver </a>
     </div>
   </div>
 
-  {% if messages %}
-  {% for message in messages %}
+  {% if messages %} {% for message in messages %}
   <div
     class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
     role="alert"
@@ -25,8 +23,7 @@
       aria-label="Close"
     ></button>
   </div>
-  {% endfor %}
-  {% endif %}
+  {% endfor %} {% endif %}
 
   <div class="alert alert-danger">
     <h4 class="alert-heading">⚠️ Advertencia</h4>
@@ -41,8 +38,13 @@
       <strong>Consecuencias de esta acción:</strong>
     </p>
     <ul>
-      <li>Se eliminarán todos los registros de compra asociados a esta factura</li>
-      <li>Las existencias de los insumos se restaurarán (se restarán las cantidades compradas)</li>
+      <li>
+        Se eliminarán todos los registros de compra asociados a esta factura
+      </li>
+      <li>
+        Las existencias de los insumos se restaurarán (se restarán las
+        cantidades compradas)
+      </li>
       <li>Esta acción <strong>NO se puede deshacer</strong></li>
     </ul>
   </div>
@@ -55,7 +57,9 @@
       <div class="row mb-3">
         <div class="col-md-6">
           <p><strong>Número de Factura:</strong> {{ numero_factura }}</p>
-          <p><strong>Fecha de Compra:</strong> {{ fecha_compra|date:"d/m/Y" }}</p>
+          <p>
+            <strong>Fecha de Compra:</strong> {{ fecha_compra|date:"d/m/Y" }}
+          </p>
         </div>
         <div class="col-md-6">
           <p><strong>Cantidad de Ítems:</strong> {{ compras.count }}</p>
@@ -82,14 +86,18 @@
               <td>{{ compra.insumo.descripcion }}</td>
               <td class="text-end">{{ compra.cantidad|floatformat:2 }}</td>
               <td>{{ compra.insumo.medida }}</td>
-              <td class="text-end">${{ compra.monto_total_usd|floatformat:2 }}</td>
+              <td class="text-end">
+                ${{ compra.monto_total_usd|floatformat:2 }}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
           <tfoot>
             <tr class="table-active">
               <td colspan="4" class="text-end"><strong>Total:</strong></td>
-              <td class="text-end"><strong>${{ total_usd|floatformat:2 }}</strong></td>
+              <td class="text-end">
+                <strong>${{ total_usd|floatformat:2 }}</strong>
+              </td>
             </tr>
           </tfoot>
         </table>
@@ -104,7 +112,7 @@
         Confirmar Eliminación
       </button>
       <a href="{% url 'listar_compras' %}" class="btn btn-volver btn-lg">
-        Cancelar
+        Volver
       </a>
     </div>
   </form>

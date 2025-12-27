@@ -1,24 +1,29 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% block title %}Anular Compra - Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Anular Compra - Amanda
+Mateo Boutique{% endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row mb-4">
     <div class="col">
       <h2>Anular Compra</h2>
     </div>
     <div class="col text-end">
-      <a href="{% url 'listar_compras' %}" class="btn btn-volver">Cancelar</a>
+      <a href="{% url 'listar_compras' %}" class="btn btn-volver">Volver</a>
     </div>
   </div>
 
-  {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+  {% if messages %} {% for message in messages %}
+  <div
+    class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+    role="alert"
+  >
     {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
   </div>
-  {% endfor %}
-  {% endif %}
+  {% endfor %} {% endif %}
 
   <div class="alert alert-warning">
     <h4 class="alert-heading">⚠️ Anulación de Compra</h4>
@@ -26,9 +31,17 @@
     <hr />
     <p class="mb-0"><strong>Consecuencias de esta acción:</strong></p>
     <ul>
-      <li>La compra quedará marcada como <strong>ANULADA</strong> (no se eliminará)</li>
-      <li>La existencia del insumo se revertirá (se restará la cantidad comprada)</li>
-      <li>Se creará un <strong>movimiento de reversa</strong> en el flujo de caja para compensar el gasto original</li>
+      <li>
+        La compra quedará marcada como <strong>ANULADA</strong> (no se
+        eliminará)
+      </li>
+      <li>
+        La existencia del insumo se revertirá (se restará la cantidad comprada)
+      </li>
+      <li>
+        Se creará un <strong>movimiento de reversa</strong> en el flujo de caja
+        para compensar el gasto original
+      </li>
       <li>El registro permanecerá visible para auditoría</li>
     </ul>
   </div>
@@ -40,19 +53,30 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-6">
-          <p><strong>Insumo:</strong> {{ compra.insumo.codigo }} - {{ compra.insumo.descripcion }}</p>
-          <p><strong>Fecha de Compra:</strong> {{ compra.fecha_compra|date:"d/m/Y" }}</p>
-          <p><strong>Número de Factura:</strong> {{ compra.numero_factura|default:"-" }}</p>
+          <p>
+            <strong>Insumo:</strong> {{ compra.insumo.codigo }} - {{
+            compra.insumo.descripcion }}
+          </p>
+          <p>
+            <strong>Fecha de Compra:</strong> {{
+            compra.fecha_compra|date:"d/m/Y" }}
+          </p>
+          <p>
+            <strong>Número de Factura:</strong> {{
+            compra.numero_factura|default:"-" }}
+          </p>
         </div>
         <div class="col-md-6">
-          <p><strong>Cantidad:</strong> {{ compra.cantidad|floatformat:2 }} {{ compra.insumo.medida }}</p>
+          <p>
+            <strong>Cantidad:</strong> {{ compra.cantidad|floatformat:2 }} {{
+            compra.insumo.medida }}
+          </p>
           <p><strong>Moneda:</strong> {{ compra.get_moneda_display }}</p>
-          <p><strong>Total:</strong> 
-            {% if compra.moneda == 'Bs' %}
-              {{ compra.monto_total_bs|floatformat:2 }} Bs
-            {% else %}
-              ${{ compra.monto_total_usd|floatformat:2 }}
-            {% endif %}
+          <p>
+            <strong>Total:</strong>
+            {% if compra.moneda == 'Bs' %} {{
+            compra.monto_total_bs|floatformat:2 }} Bs {% else %} ${{
+            compra.monto_total_usd|floatformat:2 }} {% endif %}
           </p>
         </div>
       </div>
@@ -66,7 +90,7 @@
         Confirmar Anulación
       </button>
       <a href="{% url 'listar_compras' %}" class="btn btn-volver btn-lg">
-        Cancelar
+        Volver
       </a>
     </div>
   </form>

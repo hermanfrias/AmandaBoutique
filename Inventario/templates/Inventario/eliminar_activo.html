@@ -1,7 +1,5 @@
-{% extends 'BoutiqueApp/base.html' %}
-{% load static %}
-{% block title%}Eliminar Activo{% endblock %}
-{% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% load static %} {% block title%}Eliminar
+Activo{% endblock %} {% block content %}
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-8">
@@ -57,11 +55,9 @@
             <tr>
               <th>Valor de Adquisición:</th>
               <td class="fw-bold">
-                {% if activo.moneda == 'Bs' %}
-                Bs {{ activo.valor_adquisicion|floatformat:2 }}
-                {% else %}
-                ${{ activo.valor_adquisicion|floatformat:2 }}
-                {% endif %}
+                {% if activo.moneda == 'Bs' %} Bs {{
+                activo.valor_adquisicion|floatformat:2 }} {% else %} ${{
+                activo.valor_adquisicion|floatformat:2 }} {% endif %}
               </td>
             </tr>
             <tr>
@@ -105,7 +101,7 @@
               href="{% url 'detalle_activo' activo.numero_inventario %}"
               class="btn btn-volver px-4 py-2"
             >
-              <i class="fas fa-times me-1"></i>Cancelar
+              <i class="fas fa-times me-1"></i>Volver
             </a>
           </div>
         </div>

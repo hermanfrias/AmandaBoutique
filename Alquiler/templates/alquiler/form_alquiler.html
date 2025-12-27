@@ -1,0 +1,384 @@
+{% extends "BoutiqueApp/base.html" %} {% block title %}{{ titulo }} | Amanda
+Mateo Boutique{% endblock %} {% block content %}
+<div class="container py-5">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-file-contract me-2"></i>{{ titulo }}
+    </h2>
+    <a href="{% url 'listar_alquileres' %}" class="btn btn-volver">
+      <i class="fas fa-arrow-left me-1"></i>Volver
+    </a>
+  </div>
+
+  <!-- Formulario -->
+  <div class="card shadow-sm form-card-standard">
+    <div class="card-body">
+      <form method="post" class="row g-3" id="alquilerForm">
+        {% csrf_token %}
+
+        <!-- Cliente y Vestido -->
+        <div class="col-12">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-user me-2"></i>Cliente y Vestido
+          </h5>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_cliente" class="form-label fw-semibold">Cliente</label>
+          <div class="input-group">
+            {{ form.cliente }}
+            <button
+              type="button"
+              class="btn btn-pink"
+              data-bs-toggle="modal"
+              data-bs-target="#modalCrearCliente"
+            >
+              <i class="fas fa-plus"></i> Nuevo
+            </button>
+          </div>
+          {% if form.cliente.errors %}
+          <div class="text-danger small">{{ form.cliente.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_vestido" class="form-label fw-semibold">Vestido</label>
+          {{ form.vestido }} {% if form.vestido.errors %}
+          <div class="text-danger small">{{ form.vestido.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Fechas -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-calendar me-2"></i>Fechas
+          </h5>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_fecha_contrato" class="form-label fw-semibold"
+            >Fecha de Contrato</label
+          >
+          {{ form.fecha_contrato }} {% if form.fecha_contrato.errors %}
+          <div class="text-danger small">{{ form.fecha_contrato.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_fecha_inicio" class="form-label fw-semibold"
+            >Fecha de Inicio</label
+          >
+          {{ form.fecha_inicio }} {% if form.fecha_inicio.errors %}
+          <div class="text-danger small">{{ form.fecha_inicio.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label
+            for="id_fecha_devolucion_prevista"
+            class="form-label fw-semibold"
+            >Fecha de Devolución Prevista</label
+          >
+          {{ form.fecha_devolucion_prevista }} {% if form.fecha_devolucion_prevista.errors %}
+          <div class="text-danger small">
+            {{ form.fecha_devolucion_prevista.errors }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_fecha_devolucion_real" class="form-label fw-semibold"
+            >Fecha de Devolución Real</label
+          >
+          {{ form.fecha_devolucion_real }} {% if form.fecha_devolucion_real.errors %}
+          <div class="text-danger small">
+            {{ form.fecha_devolucion_real.errors }}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Pagos -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-dollar-sign me-2"></i>Información de Pago
+          </h5>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_tipo_moneda" class="form-label fw-semibold"
+            >Tipo de Moneda</label
+          >
+          {{ form.tipo_moneda }} {% if form.tipo_moneda.errors %}
+          <div class="text-danger small">{{ form.tipo_moneda.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_anticipo" class="form-label fw-semibold"
+            >Anticipo</label
+          >
+          {{ form.anticipo }} {% if form.anticipo.errors %}
+          <div class="text-danger small">{{ form.anticipo.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_monto_final" class="form-label fw-semibold"
+            >Monto Final</label
+          >
+          {{ form.monto_final }} {% if form.monto_final.errors %}
+          <div class="text-danger small">{{ form.monto_final.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_deposito" class="form-label fw-semibold"
+            >Depósito</label
+          >
+          {{ form.deposito }} {% if form.deposito.errors %}
+          <div class="text-danger small">{{ form.deposito.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="saldo_pendiente" class="form-label fw-semibold"
+            >Saldo Pendiente</label
+          >
+          <input
+            type="text"
+            id="saldo_pendiente"
+            class="form-control"
+            readonly
+            value="0.00"
+          />
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_estado_pago" class="form-label fw-semibold"
+            >Estado de Pago</label
+          >
+          {{ form.estado_pago }} {% if form.estado_pago.errors %}
+          <div class="text-danger small">{{ form.estado_pago.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Estado -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-info-circle me-2"></i>Estado del Alquiler
+          </h5>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_estado_alquiler" class="form-label fw-semibold"
+            >Estado del Alquiler</label
+          >
+          {{ form.estado_alquiler }} {% if form.estado_alquiler.errors %}
+          <div class="text-danger small">{{ form.estado_alquiler.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Notas -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-comment-alt me-2"></i>Notas
+          </h5>
+        </div>
+        <div class="col-12">
+          <label for="id_notas" class="form-label fw-semibold"
+            >Notas Adicionales</label
+          >
+          {{ form.notas }} {% if form.notas.errors %}
+          <div class="text-danger small">{{ form.notas.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Botones -->
+        <div class="col-12 text-center mt-4 form-buttons-standard">
+          <button type="submit" class="btn btn-pink px-4 py-2">
+            <i class="fas fa-save me-1"></i>{{ accion }} Alquiler
+          </button>
+          <a
+            href="{% url 'listar_alquileres' %}"
+            class="btn btn-volver px-4 py-2"
+          >
+            <i class="fas fa-arrow-left me-1"></i>Volver
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Crear Cliente Rápido -->
+<div
+  class="modal fade"
+  id="modalCrearCliente"
+  tabindex="-1"
+  aria-labelledby="modalCrearClienteLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-pink text-white">
+        <h5 class="modal-title" id="modalCrearClienteLabel">
+          <i class="fas fa-user-plus me-2"></i>Crear Nuevo Cliente
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="formClienteRapido">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="modal_identificacion" class="form-label"
+              >Identificación</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="modal_identificacion"
+              name="identificacion"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="modal_nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="modal_nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="modal_apellido" class="form-label">Apellido</label>
+            <input
+              type="text"
+              class="form-control"
+              id="modal_apellido"
+              name="apellido"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="modal_email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="modal_email"
+              name="email"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="modal_telefono" class="form-label">Teléfono</label>
+            <input
+              type="text"
+              class="form-control"
+              id="modal_telefono"
+              name="telefono"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="modal_direccion" class="form-label">Dirección</label>
+            <textarea
+              class="form-control"
+              id="modal_direccion"
+              name="direccion"
+              rows="2"
+              required
+            ></textarea>
+          </div>
+        </form>
+        <div id="modalErrors" class="alert alert-danger d-none"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Volver
+        </button>
+        <button type="button" class="btn btn-pink" id="btnGuardarCliente">
+          <i class="fas fa-save me-1"></i>Guardar Cliente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Calcular saldo pendiente automáticamente
+  document.addEventListener("DOMContentLoaded", function () {
+    const anticipoInput = document.getElementById("id_anticipo");
+    const montoFinalInput = document.getElementById("id_monto_final");
+    const saldoPendienteInput = document.getElementById("saldo_pendiente");
+
+    function calcularSaldo() {
+      const anticipo = parseFloat(anticipoInput.value) || 0;
+      const montoFinal = parseFloat(montoFinalInput.value) || 0;
+      const saldo = montoFinal - anticipo;
+      saldoPendienteInput.value = saldo.toFixed(2);
+    }
+
+    anticipoInput.addEventListener("input", calcularSaldo);
+    montoFinalInput.addEventListener("input", calcularSaldo);
+
+    // Calcular al cargar
+    calcularSaldo();
+
+    // AJAX para crear cliente rápido
+    const btnGuardarCliente = document.getElementById("btnGuardarCliente");
+    const formClienteRapido = document.getElementById("formClienteRapido");
+    const modalErrors = document.getElementById("modalErrors");
+
+    btnGuardarCliente.addEventListener("click", function () {
+      const formData = new FormData(formClienteRapido);
+
+      fetch("{% url 'crear_cliente_rapido' %}", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Agregar el nuevo cliente al select
+            const selectCliente = document.getElementById("id_cliente");
+            const option = new Option(
+              data.cliente_nombre,
+              data.cliente_id,
+              true,
+              true
+            );
+            selectCliente.add(option);
+
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("modalCrearCliente")
+            );
+            modal.hide();
+
+            // Limpiar formulario
+            formClienteRapido.reset();
+            modalErrors.classList.add("d-none");
+          } else {
+            // Mostrar errores
+            let errorMsg = "Errores:\n";
+            for (let field in data.errors) {
+              errorMsg += `${field}: ${data.errors[field].join(", ")}\n`;
+            }
+            modalErrors.textContent = errorMsg;
+            modalErrors.classList.remove("d-none");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          modalErrors.textContent =
+            "Error al crear el cliente. Intente nuevamente.";
+          modalErrors.classList.remove("d-none");
+        });
+    });
+  });
+</script>
+
+<style>
+  .bg-pink {
+    background-color: #b76e79 !important;
+  }
+</style>
+{% endblock %}

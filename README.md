@@ -819,5 +819,240 @@ Todos los formularios de creación ahora tienen un diseño consistente y complet
 
 ---
 
-**Última actualización**: 23 de diciembre de 2025  
+## Actualización Diciembre 2025 - Módulo de Alquiler de Vestidos
+
+**Versión**: 3.3  
+**Fecha**: 27 de diciembre de 2025  
+**Tipo**: Nuevo Módulo Completo + Integración con Página Principal
+
+### 👗 Módulo de Alquiler de Vestidos
+
+#### Modelos y Gestión
+
+**Modelo Vestido:**
+
+- Código único auto-generado
+- Información completa: nombre, descripción, talla, color
+- Precio de alquiler y valor de compra
+- Estados: Disponible, Alquilado, Tintorería, Arreglo, No Disponible
+- Hasta 2 fotos por vestido
+- Accesorios incluidos
+- Control de tintorería (fechas de envío y entrega)
+- Timestamps automáticos
+
+**Modelo Alquiler:**
+
+- Relación con cliente y vestido
+- Fechas: contrato, inicio, devolución prevista/real
+- **Gestión financiera completa:**
+  - Tipo de moneda (Bs o $)
+  - Anticipo, monto final y depósito
+  - **Total en USD calculado automáticamente**
+  - Si es en Bs: convierte usando cotización del día
+  - Si es en $: suma directa
+- Estados de pago: Pendiente, Parcial, Pagado
+- Estados de alquiler: Activo, Completado, Retrasado, Cancelado
+- Notas adicionales
+
+#### Refactorización de Campos (27/12/2025)
+
+**Cambios en modelos:**
+
+- ❌ Eliminado `tipo_moneda` y `deposito` del modelo Vestido
+- ✅ Agregado `tipo_moneda`, `deposito` y `total_usd` al modelo Alquiler
+- ✅ Cálculo automático de USD en método `save()` del Alquiler
+- ✅ Integración con cotización del día desde flujo.models
+
+**Archivos actualizados:**
+
+- `Alquiler/models.py` - Lógica de conversión automática
+- `Alquiler/forms.py` - Formularios actualizados con formato de fechas correcto
+- `Alquiler/admin.py` - Admin actualizado con nuevos campos
+- Todos los templates actualizados para reflejar cambios
+
+#### Funcionalidades
+
+**CRUD Completo:**
+
+- Crear, editar, ver y eliminar vestidos
+- Crear, editar, ver y eliminar alquileres
+- Filtros avanzados por estado
+- Búsqueda por nombre, cliente, vestido
+- Validaciones automáticas de disponibilidad
+
+**Características Especiales:**
+
+- Cambio automático de estado del vestido al alquilar
+- Liberación automática al completar alquiler
+- Cálculo de saldo pendiente
+- Historial de alquileres por vestido
+- Medidas del cliente integradas
+
+#### Contrato PDF Profesional
+
+**Formato Legal de Arrendamiento:**
+
+- Diseño basado en contratos profesionales
+- 7 cláusulas legales completas
+- 10 requisitos de renta detallados
+- Sección de firmas formal
+- Datos completos del alquiler
+
+**Contenido del contrato:**
+
+- Información completa del cliente (con medidas)
+- Descripción detallada del vestido
+- Período de alquiler (4 días naturales)
+- Detalle de pagos con total en USD
+- Opción de seguro ($100)
+- Penalidades por retraso ($150/día)
+- Términos y condiciones completos
+- Espacio para observaciones
+
+**Generación:**
+
+- Vista: `generar_contrato_pdf`
+- Template: `contrato_pdf.html`
+- Formato: PDF con xhtml2pdf
+- Acceso desde detalle de alquiler
+
+### 🏠 Catálogo de Alquiler en Página Principal
+
+#### Nueva Sección en Homepage
+
+**Ubicación:** Entre Showroom y Sobre Amanda
+
+**Características:**
+
+- Muestra automáticamente vestidos disponibles
+- Diseño de tarjetas consistente con catálogo de venta
+- Fondo rosa claro (#fff5f7) para diferenciación
+- Badge "Disponible" en cada vestido
+- Información mostrada:
+  - Foto del vestido
+  - Nombre/modelo
+  - Talla y color
+  - Descripción (truncada)
+  - Precio de alquiler
+  - Estado de disponibilidad
+
+#### Generación de PDFs
+
+**Dos formatos disponibles:**
+
+1. **PDF Lista** (`catalogo_alquiler_pdf`)
+
+   - Tabla con imagen, modelo, talla, color y precio
+   - Formato profesional para impresión
+   - Reutiliza estilos de `pdf.css`
+
+2. **PDF Tarjetas** (`catalogo_alquiler_pdf_cards`)
+   - Diseño elegante con tarjetas
+   - Fotos grandes y detalles completos
+   - Marca "Disponible" en cada vestido
+   - Reutiliza estilos de `catalog_cards.css`
+
+**Acceso:**
+
+- Botones visibles solo para usuarios autenticados
+- URLs: `/catalogo-alquiler/pdf/` y `/catalogo-alquiler/pdf/cards/`
+- Generación con WeasyPrint
+- Filtrado automático: solo vestidos disponibles
+
+#### Archivos Modificados/Creados
+
+**Vistas:**
+
+- `BoutiqueApp/views.py` - Agregadas vistas de PDF y actualizada vista index
+
+**Templates:**
+
+- `BoutiqueApp/templates/BoutiqueApp/index.html` - Nueva sección de alquiler
+- `BoutiqueApp/templates/BoutiqueApp/catalogo_alquiler_pdf.html` - PDF lista
+- `BoutiqueApp/templates/BoutiqueApp/catalogo_alquiler_pdf_cards.html` - PDF tarjetas
+
+**URLs:**
+
+- `BoutiqueApp/urls.py` - Rutas para PDFs de alquiler
+
+### 🔧 Correcciones Técnicas
+
+#### Fechas en Formularios de Edición
+
+**Problema resuelto:** Las fechas no se mostraban al editar vestidos o alquileres
+
+**Solución implementada:**
+
+- Agregado `format='%Y-%m-%d'` a widgets DateInput
+- Implementado método `__init__` en formularios
+- Conversión automática de fechas a formato ISO
+- Aplicado a VestidoForm y AlquilerForm
+
+**Archivos modificados:**
+
+- `Alquiler/forms.py` - Métodos `__init__` con formateo de fechas
+
+#### Formato de Fechas en PDF
+
+**Problema resuelto:** Error "format specifier 'e' not allowed" en template PDF
+
+**Solución:**
+
+- Cambiado formato de `"d de F de Y"` a `"d/m/Y"`
+- Aplicado a todas las fechas en `contrato_pdf.html`
+- Formato simple y compatible con Django
+
+### 📊 Resumen de Cambios v3.3
+
+**Nuevo Módulo Completo:**
+
+- 2 modelos (Vestido, Alquiler)
+- 2 formularios principales + 1 formulario rápido
+- 14 vistas (CRUD completo + PDF)
+- 14 templates (listados, formularios, detalles, PDF)
+- Admin completo con fieldsets organizados
+- URLs configuradas
+
+**Integración Homepage:**
+
+- 1 sección nueva en index.html
+- 2 vistas de generación PDF
+- 2 templates PDF
+- 2 rutas nuevas
+
+**Archivos Totales:**
+
+- Creados: 20+ archivos nuevos
+- Modificados: 8 archivos existentes
+- Migraciones: 2 archivos de migración
+
+### 🎯 Beneficios del Módulo de Alquiler
+
+1. **Gestión Completa:**
+
+   - Control total de inventario de vestidos
+   - Seguimiento de alquileres activos
+   - Historial completo por vestido y cliente
+
+2. **Automatización:**
+
+   - Cambios de estado automáticos
+   - Cálculo de USD automático
+   - Validaciones de disponibilidad
+
+3. **Profesionalismo:**
+
+   - Contratos legales formales
+   - PDFs de catálogo elegantes
+   - Integración con página pública
+
+4. **Flexibilidad Financiera:**
+   - Soporte para Bs y USD
+   - Conversión automática
+   - Total en USD siempre visible
+
+---
+
+**Última actualización**: 27 de diciembre de 2025  
+**Versión actual**: 3.3
 **Calificación del proyecto**: A+ (Excelente) 🏆

@@ -137,7 +137,7 @@ Crear una experiencia consistente en todos los procesos de eliminación con conf
 #### Botones
 
 - **Eliminar**: `btn-eliminar px-4 py-2` (rojo)
-- **Cancelar**: `btn-volver px-4 py-2` (gris)
+- **Volver**: `btn-volver px-4 py-2` (gris)
 
 ### Templates Estandarizados
 

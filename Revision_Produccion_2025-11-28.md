@@ -556,9 +556,9 @@ Todos los colores se mantuvieron exactamente como estaban definidos en `estilos.
   - `btn-eliminar` - Eliminar registros (rojo)
   - `btn-ver` - Ver detalles (azul suave/rosa suave)
   - `btn-listar` - Agregar nuevos (verde)
-  - `btn-volver` / `btn-secondary` - Volver/Cancelar (gris)
+  - `btn-volver` / `btn-secondary` - Volver/Volver (gris)
 - ✅ **Tamaño consistente:** Uso de `btn-sm` en todos los botones de acción
-- ✅ **Cambio de terminología:** "Cancelar" → "Volver" en todos los formularios
+- ✅ **Cambio de terminología:** "Volver" → "Volver" en todos los formularios
 - ✅ **Centrado de botones:** Botones de formulario agrupados y centrados
 
 **Módulos actualizados:**
@@ -1374,7 +1374,7 @@ El script [`actualizar_produccion_simple.ps1`](file:///E:/AmandaBoutique/actuali
 > 2. ✅ Eliminación de iconos para interfaz más limpia
 > 3. ✅ Templates formateados consistentemente
 > 4. ✅ Estilos inline migrados a CSS externo
-> 5. ✅ Terminología unificada ("Volver" en lugar de "Cancelar")
+> 5. ✅ Terminología unificada ("Volver" en lugar de "Volver")
 >
 > ### 💰 Módulo Flujo de Caja
 >
@@ -1596,26 +1596,30 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
 #### Cambios Aplicados:
 
 1. **Filtros Responsive** ✅
+
    - Cambio: col-md-X → col-12 col-md-X
    - Resultado: Full-width en móviles, apilamiento automático
    - Aplicado en 10 templates de listado
 
 2. **Tablas con Scroll Horizontal** ✅
+
    - Eliminado: overflow: hidden en contenedores
    - Agregado: order-radius: 15px sin overflow
    - Resultado: Scroll horizontal cuando es necesario
 
 3. **Media Queries Personalizadas** ✅
    `css
-   /* Móviles (max-width: 767px) */
+   /_ Móviles (max-width: 767px) _/
+
    - Padding reducido: 8px 4px
    - Font-size: 0.85rem
    - Botones con flex-wrap
-   
-   /* Tablets (max-width: 991px) */
+
+   /_ Tablets (max-width: 991px) _/
+
    - Padding: 10px 6px
    - Font-size: 0.9rem
-   `
+     `
 
 #### Módulos Actualizados:
 
@@ -1626,10 +1630,11 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
 - ✅ **LoginApp** (1 template)
 
 **Archivos modificados:**
+
 - ProveedoresApp/templates/ProveedoresApp/proveedores_list.html
-- lujo/templates/flujo/listar_movimientos.html
-- lujo/templates/flujo/listar_cotizaciones.html
-- lujo/templates/flujo/listar_configuraciones_iva.html
+- lujo/templates/flujo/listar_movimientos.html
+- lujo/templates/flujo/listar_cotizaciones.html
+- lujo/templates/flujo/listar_configuraciones_iva.html
 - Inventario/templates/Inventario/listar_insumos.html
 - Inventario/templates/Inventario/listar_compras.html
 - Inventario/templates/Inventario/listar_usos.html
@@ -1647,6 +1652,7 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
 #### Diseño Estándar:
 
 `html
+
 <div class="card shadow-lg mx-auto border-0 rounded-4" 
      style="max-width: 600px; background-color: #fff5fa;">
     <div class="card-header text-center fw-bold text-pink fs-5" 
@@ -1657,13 +1663,14 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
         <!-- Contenido -->
         <div class="d-flex justify-content-center gap-3">
             <button class="btn btn-eliminar px-4 py-2">Eliminar</button>
-            <a class="btn btn-volver px-4 py-2">Cancelar</a>
+            <a class="btn btn-volver px-4 py-2">Volver</a>
         </div>
     </div>
 </div>
 `
 
 #### Características:
+
 - Card rosa (#fff5fa) con header rosa claro (#ffe6f2)
 - Max-width: 600px, centrado
 - Botones estandarizados: tn-eliminar y tn-volver
@@ -1698,17 +1705,18 @@ Copy-Item "E:\AmandaBoutique\db.sqlite3" -Destination "E:\Backups\db_$(Get-Date 
 
 `python
 if catalogo.imagen_modelo:
-    try:
-        imagen_path = os.path.join(settings.MEDIA_ROOT, str(catalogo.imagen_modelo))
-        if os.path.exists(imagen_path):
-            os.remove(imagen_path)
-            
+try:
+imagen_path = os.path.join(settings.MEDIA_ROOT, str(catalogo.imagen_modelo))
+if os.path.exists(imagen_path):
+os.remove(imagen_path)
+
             # Eliminar carpeta si está vacía
             carpeta_padre = os.path.dirname(imagen_path)
             if os.path.exists(carpeta_padre) and not os.listdir(carpeta_padre):
                 os.rmdir(carpeta_padre)
     except Exception as e:
         print(f"Error al eliminar imagen: {e}")
+
 `
 
 #### Implementación en Usuarios:
@@ -1718,20 +1726,22 @@ if catalogo.imagen_modelo:
 
 `python
 if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
-    try:
-        avatar_path = os.path.join(settings.MEDIA_ROOT, str(usuario.avatar))
-        if os.path.exists(avatar_path):
-            os.remove(avatar_path)
-            
+try:
+avatar_path = os.path.join(settings.MEDIA_ROOT, str(usuario.avatar))
+if os.path.exists(avatar_path):
+os.remove(avatar_path)
+
             # Eliminar carpeta si está vacía
             carpeta_padre = os.path.dirname(avatar_path)
             if os.path.exists(carpeta_padre) and not os.listdir(carpeta_padre):
                 os.rmdir(carpeta_padre)
     except Exception as e:
         print(f"Error al eliminar avatar: {e}")
+
 `
 
 **Beneficios:**
+
 - ✅ No quedan archivos huérfanos
 - ✅ Carpetas vacías eliminadas automáticamente
 - ✅ Mejor uso del espacio en disco
@@ -1748,6 +1758,7 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 #### Nuevas Funcionalidades:
 
 1. **Crear Usuarios** ✅
+
    - **Vista:** crear_usuario_admin
    - **URL:** /crear-usuario/
    - **Template:** crear_usuario_admin.html
@@ -1758,6 +1769,7 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
      - Solo accesible por superusuarios
 
 2. **Editar Usuarios** ✅
+
    - **Vista:** ditar_usuario_admin
    - **URL:** /editar-usuario/<int:user_id>/
    - **Template:** ditar_usuario_admin.html
@@ -1776,11 +1788,13 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
    - **Tabla responsive** con media queries
 
 **Archivos modificados:**
+
 - LoginApp/views.py - Nuevas vistas
 - LoginApp/urls.py - Nuevas rutas
 - LoginApp/templates/LoginApp/gestionar_permisos.html - Interfaz mejorada
 
 **Archivos creados:**
+
 - LoginApp/templates/LoginApp/crear_usuario_admin.html
 - LoginApp/templates/LoginApp/editar_usuario_admin.html
 
@@ -1789,14 +1803,17 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 ### 🔧 Correcciones Técnicas
 
 #### 1. Sintaxis de Docstrings
+
 **Problema:** Uso de comillas dobles ("") en lugar de triples (""")  
 **Solución:** Corregido en todas las nuevas vistas
 
 #### 2. Posición de Botones
+
 **Problema:** Botones "Vista Detallada" y "Vista Agrupada" en posiciones diferentes  
 **Solución:** Estandarizado orden en ambas vistas de compras
 
 #### 3. Error de URL
+
 **Problema:** URL liminar_compra no existía  
 **Solución:** Eliminado botón inválido de detalle_compra.html
 
@@ -1805,6 +1822,7 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 ### 📊 Resumen de Cambios
 
 #### Estadísticas:
+
 - **Templates modificados:** 45+
 - **Nuevos templates:** 2
 - **Vistas modificadas:** 3
@@ -1812,6 +1830,7 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 - **Líneas de código agregadas:** ~2,000
 
 #### Módulos Afectados:
+
 1. ✅ Citas
 2. ✅ Clientes
 3. ✅ Proveedores
@@ -1826,17 +1845,20 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 ### 🎯 Impacto del Proyecto
 
 #### Experiencia de Usuario:
+
 - ✅ **Consistencia total** - Mismo look & feel en todos los módulos
 - ✅ **Responsividad completa** - Funciona en móviles, tablets y desktop
 - ✅ **Navegación intuitiva** - Interfaz predecible
 - ✅ **Feedback claro** - Mensajes de confirmación
 
 #### Mantenibilidad:
+
 - ✅ **Código limpio** - Templates organizados
 - ✅ **Estilos centralizados** - Fácil de actualizar
 - ✅ **Documentación completa** - README y plan de producción
 
 #### Gestión de Archivos:
+
 - ✅ **Sin archivos huérfanos** - Eliminación automática
 - ✅ **Carpetas limpias** - Eliminación de carpetas vacías
 - ✅ **Mejor uso de espacio** - Optimización de disco
@@ -1848,11 +1870,13 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 #### Archivos de Documentación:
 
 1. **README.md** ✅
+
    - Sección nueva: "Actualización Diciembre 2025 - Estandarización Completa"
    - Descripción detallada de todos los cambios
    - Beneficios y notas técnicas
 
 2. **PLAN_PRODUCCION.md** (Nuevo) ✅
+
    - 10 fases detalladas de despliegue
    - Configuración de servidor (Ubuntu)
    - Configuración de Gunicorn y Nginx
@@ -1872,24 +1896,28 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 ### ✅ Verificación y Pruebas
 
 #### Responsividad:
+
 - ✅ Chrome DevTools (móvil, tablet, desktop)
 - ✅ Scroll horizontal en tablas
 - ✅ Apilamiento de filtros
 - ✅ Botones adaptables
 
 #### Eliminación de Archivos:
+
 - ✅ Eliminar producto con imagen
 - ✅ Eliminar usuario con avatar
 - ✅ Carpetas vacías eliminadas
 - ✅ Manejo de errores
 
 #### Gestión de Usuarios:
+
 - ✅ Crear usuario
 - ✅ Editar usuario
 - ✅ Eliminar usuario
 - ✅ Permisos asignados correctamente
 
 #### Navegación:
+
 - ✅ Todos los enlaces funcionan
 - ✅ Redirecciones correctas
 - ✅ Mensajes de confirmación
@@ -1906,6 +1934,7 @@ if usuario.avatar and str(usuario.avatar) != 'default/default_icono.png':
 **Documentación:** Completa y actualizada
 
 **Próximos pasos:**
+
 1. Revisar PLAN_PRODUCCION.md
 2. Preparar servidor de producción
 3. Transferir archivos y BD

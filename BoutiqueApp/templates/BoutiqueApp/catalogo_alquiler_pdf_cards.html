@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Catálogo de Alquiler Amanda Mateo Boutique PDF</title>
+
+    <!-- 🎀 Tipografías románticas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- 🎀 Estilos -->
+    <link
+      rel="stylesheet"
+      href="{% static 'BoutiqueApp/css/catalog_cards.css' %}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p>Catálogo de Vestidos de Alquiler</p>
+    </header>
+
+    <section class="container">
+      {% for vestido in vestidos %}
+      <div class="card">
+        <div class="image-box">
+          {% if vestido.foto1 %}
+          <img src="{{ vestido.foto1.url }}" />
+          {% else %}
+          <p class="no-img">Sin imagen</p>
+          {% endif %}
+        </div>
+
+        <h2>{{ vestido.nombre_modelo }}</h2>
+        <p class="estilo">
+          Talla: {{ vestido.talla }} | Color: {{ vestido.color }}
+        </p>
+        <p class="descripcion">{{ vestido.descripcion }}</p>
+
+        <p class="precio">Alquiler: ${{ vestido.precio_alquiler }}</p>
+        <p
+          style="
+            text-align: center;
+            color: #28a745;
+            font-weight: 600;
+            margin-top: 5px;
+          "
+        >
+          ✓ Disponible
+        </p>
+      </div>
+      {% endfor %}
+    </section>
+
+    <footer>
+      <p>
+        © {{ now|date:"Y" }} Amanda Mateo Boutique - Vestidos de Alquiler -
+        Elegancia a tu medida
+      </p>
+    </footer>
+  </body>
+</html>

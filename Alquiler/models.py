@@ -1,0 +1,188 @@
+from django.db import models
+from ClientesApp.models import Clientes
+from django.core.exceptions import ValidationError
+from decimal import Decimal
+
+
+class Vestido(models.Model):
+    """Modelo para gestionar el inventario de vestidos disponibles para alquiler"""
+    
+    ESTADO_CHOICES = [
+        ('Disponible', 'Disponible'),
+        ('Alquilado', 'Alquilado'),
+        ('Tintorería', 'Tintorería'),
+        ('Arreglo', 'Arreglo'),
+        ('Dañado', 'Dañado'),
+    ]
+    
+    MONEDAS = [
+        ('Bs', 'Bolívares'),
+        ('$', 'Dólares'),
+    ]
+    
+    # Campos principales
+    nombre_modelo = models.CharField(max_length=200, verbose_name='Nombre/Modelo')
+    descripcion = models.TextField(verbose_name='Descripción')
+    talla = models.CharField(max_length=20, verbose_name='Talla')
+    color = models.CharField(max_length=50, verbose_name='Color')
+    
+    # Precios
+    precio_alquiler = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio de Alquiler')
+    valor_compra = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Valor de Compra')
+    
+    # Estado y disponibilidad
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Disponible', verbose_name='Estado')
+    
+    # Fotos
+    foto1 = models.ImageField(upload_to='vestidos/', verbose_name='Foto 1')
+    foto2 = models.ImageField(upload_to='vestidos/', blank=True, null=True, verbose_name='Foto 2')
+    
+    # Información adicional
+    accesorios = models.TextField(blank=True, null=True, verbose_name='Accesorios Incluidos')
+    
+    # Tintorería
+    fecha_tintoreria = models.DateField(blank=True, null=True, verbose_name='Fecha de Envío a Tintorería')
+    fecha_entrega_tintoreria = models.DateField(blank=True, null=True, verbose_name='Fecha de Entrega de Tintorería')
+    
+    # Timestamps
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-fecha_creacion']
+        verbose_name = 'Vestido'
+        verbose_name_plural = 'Vestidos'
+    
+    def __str__(self):
+        return f"{self.nombre_modelo} - {self.talla} - {self.color}"
+    
+    def esta_disponible(self):
+        """Verifica si el vestido está disponible para alquilar"""
+        return self.estado == 'Disponible'
+
+
+class Alquiler(models.Model):
+    """Modelo para gestionar las transacciones de alquiler de vestidos"""
+    
+    ESTADO_PAGO_CHOICES = [
+        ('Pendiente', 'Pendiente'),
+        ('Pagado', 'Pagado'),
+        ('Parcial', 'Parcial'),
+    ]
+    
+    ESTADO_ALQUILER_CHOICES = [
+        ('Activo', 'Activo'),
+        ('Completado', 'Completado'),
+        ('Retrasado', 'Retrasado'),
+        ('Cancelado', 'Cancelado'),
+    ]
+    
+    MONEDAS = [
+        ('Bs', 'Bolívares'),
+        ('$', 'Dólares'),
+    ]
+    
+    # Relaciones
+    cliente = models.ForeignKey(Clientes, on_delete=models.PROTECT, related_name='alquileres', verbose_name='Cliente')
+    vestido = models.ForeignKey(Vestido, on_delete=models.PROTECT, related_name='alquileres', verbose_name='Vestido')
+    
+    # Fechas
+    fecha_contrato = models.DateField(verbose_name='Fecha de Contrato')
+    fecha_inicio = models.DateField(verbose_name='Fecha de Inicio')
+    fecha_devolucion_prevista = models.DateField(verbose_name='Fecha de Devolución Prevista')
+    fecha_devolucion_real = models.DateField(blank=True, null=True, verbose_name='Fecha de Devolución Real')
+    
+    # Montos
+    tipo_moneda = models.CharField(max_length=2, choices=MONEDAS, default='$', verbose_name='Tipo de Moneda')
+    anticipo = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Anticipo')
+    monto_final = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Monto Final')
+    deposito = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Depósito')
+    total_usd = models.DecimalField(max_digits=10, decimal_places=2, editable=False, verbose_name='Total en USD', default=0)
+    
+    # Estados
+    estado_pago = models.CharField(max_length=20, choices=ESTADO_PAGO_CHOICES, default='Pendiente', verbose_name='Estado de Pago')
+    estado_alquiler = models.CharField(max_length=20, choices=ESTADO_ALQUILER_CHOICES, default='Activo', verbose_name='Estado del Alquiler')
+    
+    # Notas
+    notas = models.TextField(blank=True, null=True, verbose_name='Notas')
+    
+    # Timestamps
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-fecha_contrato']
+        verbose_name = 'Alquiler'
+        verbose_name_plural = 'Alquileres'
+    
+    def clean(self):
+        """Validaciones personalizadas"""
+        # Validar que fecha_devolucion_prevista sea posterior a fecha_inicio
+        if self.fecha_devolucion_prevista and self.fecha_inicio:
+            if self.fecha_devolucion_prevista <= self.fecha_inicio:
+                raise ValidationError({
+                    'fecha_devolucion_prevista': 'La fecha de devolución prevista debe ser posterior a la fecha de inicio.'
+                })
+        
+        # Validar que anticipo no sea mayor que monto_final
+        if self.anticipo and self.monto_final:
+            if self.anticipo > self.monto_final:
+                raise ValidationError({
+                    'anticipo': 'El anticipo no puede ser mayor que el monto final.'
+                })
+        
+        # Validar que el vestido esté disponible (solo para nuevos alquileres)
+        if not self.pk and self.vestido:
+            if not self.vestido.esta_disponible():
+                raise ValidationError({
+                    'vestido': f'El vestido "{self.vestido}" no está disponible para alquilar. Estado actual: {self.vestido.estado}'
+                })
+    
+    def save(self, *args, **kwargs):
+        # Ejecutar validaciones
+        self.full_clean()
+        
+        # Calcular total_usd basado en tipo_moneda
+        if self.tipo_moneda == 'Bs':
+            # Obtener la cotización del día desde el modelo ConfiguracionIVA
+            try:
+                from flujo.models import ConfiguracionIVA
+                config = ConfiguracionIVA.objects.latest('fecha_vigencia')
+                tasa_cambio = config.tasa_cambio if hasattr(config, 'tasa_cambio') else Decimal('36.50')
+            except:
+                # Valor por defecto si no hay configuración
+                tasa_cambio = Decimal('36.50')
+            
+            # Convertir el monto total (monto_final + deposito) a USD
+            total_bs = self.monto_final + self.deposito
+            self.total_usd = total_bs / tasa_cambio
+        else:
+            # Si ya está en dólares, el total es la suma directa
+            self.total_usd = self.monto_final + self.deposito
+        
+        # Si es un nuevo alquiler, cambiar el estado del vestido a "Alquilado"
+        if not self.pk and self.vestido.esta_disponible():
+            self.vestido.estado = 'Alquilado'
+            self.vestido.save()
+        
+        super().save(*args, **kwargs)
+    
+    def calcular_saldo_pendiente(self):
+        """Calcula el saldo pendiente de pago"""
+        return self.monto_final - self.anticipo
+    
+    def marcar_como_devuelto(self, fecha_devolucion=None):
+        """Marca el alquiler como completado y libera el vestido"""
+        from datetime import date
+        
+        self.fecha_devolucion_real = fecha_devolucion or date.today()
+        self.estado_alquiler = 'Completado'
+        
+        # Liberar el vestido
+        self.vestido.estado = 'Disponible'
+        self.vestido.save()
+        
+        self.save()
+    
+    def __str__(self):
+        return f"Alquiler #{self.pk} - {self.cliente.nombre} {self.cliente.apellido} - {self.vestido.nombre_modelo}"

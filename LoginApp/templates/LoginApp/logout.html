@@ -1,14 +1,18 @@
-{% extends "BoutiqueApp/base.html" %}
-{% block content %}
+{% extends "BoutiqueApp/base.html" %} {% block content %}
 <div class="container text-center my-5">
-    <div class="card p-5 shadow-sm mx-auto" style="max-width: 500px; background-color: #fff0f7; border-radius: 20px;">
-        <h2 style="color: #b76e79;">Cerrar Sesión</h2>
-        <p class="lead mt-3 mb-4">¿Estás seguro de que deseas salir de tu cuenta?</p>
-        <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-pink px-4">Cerrar Sesión</button>
-        <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Cancelar</a>
-        </form>
-    </div>
+  <div
+    class="card p-5 shadow-sm mx-auto"
+    style="max-width: 500px; background-color: #fff0f7; border-radius: 20px"
+  >
+    <h2 style="color: #b76e79">Cerrar Sesión</h2>
+    <p class="lead mt-3 mb-4">
+      ¿Estás seguro de que deseas salir de tu cuenta?
+    </p>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-pink px-4">Cerrar Sesión</button>
+      <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Volver</a>
+    </form>
+  </div>
 </div>
 {% endblock %}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Catálogo de Alquiler | Amanda Mateo Boutique</title>
+    <link rel="stylesheet" href="{% static 'BoutiqueApp/css/pdf.css' %}" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p class="subtitle">
+        Catálogo de Vestidos de Alquiler<br />
+        Fecha de generación: {% now "d/m/Y" %}
+      </p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Imagen</th>
+          <th>Modelo</th>
+          <th>Talla</th>
+          <th>Color</th>
+          <th>Precio Alquiler</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vestido in vestidos %}
+        <tr>
+          <td>
+            {% if vestido.foto1 %}
+            <img src="{{ vestido.foto1.url }}" />
+            {% else %}
+            <span>Sin imagen</span>
+            {% endif %}
+          </td>
+          <td>{{ vestido.nombre_modelo }}</td>
+          <td>{{ vestido.talla }}</td>
+          <td>{{ vestido.color }}</td>
+          <td>${{ vestido.precio_alquiler }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <footer>
+      <p>
+        Amanda Mateo Boutique | Vestidos de Alquiler | Todos los derechos
+        reservados © {{ now|date:"Y" }}
+      </p>
+    </footer>
+  </body>
+</html>

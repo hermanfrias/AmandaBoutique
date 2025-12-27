@@ -1,0 +1,64 @@
+{% extends "BoutiqueApp/base.html" %} {% block title %}Eliminar Alquiler |
+Amanda Mateo Boutique{% endblock %} {% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-lg">
+        <div class="card-header bg-danger text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>Confirmar
+            Eliminación
+          </h4>
+        </div>
+        <div class="card-body">
+          <p class="lead">
+            ¿Está seguro que desea eliminar el siguiente alquiler?
+          </p>
+
+          <div class="alert alert-warning">
+            <strong
+              ><i class="fas fa-file-contract me-2"></i>Alquiler #{{ alquiler.pk
+              }}</strong
+            ><br />
+            <small>
+              <strong>Cliente:</strong> {{ alquiler.cliente.nombre }} {{
+              alquiler.cliente.apellido }}<br />
+              <strong>Vestido:</strong> {{ alquiler.vestido.nombre_modelo }}<br />
+              <strong>Fecha Inicio:</strong> {{
+              alquiler.fecha_inicio|date:"d/m/Y" }}
+            </small>
+          </div>
+
+          {% if alquiler.estado_alquiler == 'Activo' %}
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Nota:</strong> Este alquiler está activo. Al eliminarlo, el
+            vestido quedará disponible nuevamente.
+          </div>
+          {% endif %}
+
+          <p class="text-muted small">
+            <i class="fas fa-info-circle me-1"></i>
+            Esta acción no se puede deshacer.
+          </p>
+
+          <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-danger btn-lg">
+                <i class="fas fa-trash me-1"></i>Sí, Eliminar Alquiler
+              </button>
+              <a
+                href="{% url 'detalle_alquiler' alquiler.pk %}"
+                class="btn btn-secondary btn-lg"
+              >
+                <i class="fas fa-times me-1"></i>Volver
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

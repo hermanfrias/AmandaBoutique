@@ -30,6 +30,7 @@ urlpatterns = [
     path("citas/", include("citas.urls")),
     path("flujo/", include("flujo.urls")),
     path("inventario/", include("Inventario.urls")),
+    path("alquiler/", include("Alquiler.urls")),
     ]
 
 # Servir archivos media en producción y desarrollo

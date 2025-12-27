@@ -6,20 +6,159 @@ Mateo Boutique{% endblock %} {% block content %}
     class="card shadow-lg mx-auto p-4 rounded-4"
     style="max-width: 100%; background-color: #fff5fa"
   >
-    <form method="POST" novalidate>
-      {% csrf_token %} {{ form.non_field_errors }} {% for field in form %}
-      <div class="mb-3">
+    <form method="POST" novalidate class="row g-3">
+      {% csrf_token %} {{ form.non_field_errors }}
+
+      <!-- Información Básica -->
+      <div class="col-12">
+        <h5 class="text-pink mb-3">
+          <i class="fas fa-user me-2"></i>Datos Personales
+        </h5>
+      </div>
+      <div class="col-12 col-md-6">
         <label
-          for="{{ field.id_for_label }}"
-          class="form-label fw-semibold text-dark-quince"
+          for="{{ form.identificacion.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.identificacion.label }}</label
         >
-          {{ field.label }}
-        </label>
-        {{ field }} {% if field.errors %}
-        <div class="text-danger small">{{ field.errors }}</div>
+        {{ form.identificacion }} {% if form.identificacion.errors %}
+        <div class="text-danger small">{{ form.identificacion.errors }}</div>
         {% endif %}
       </div>
-      {% endfor %}
+      <div class="col-12 col-md-6">
+        <label
+          for="{{ form.nombre.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.nombre.label }}</label
+        >
+        {{ form.nombre }} {% if form.nombre.errors %}
+        <div class="text-danger small">{{ form.nombre.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-md-6">
+        <label
+          for="{{ form.apellido.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.apellido.label }}</label
+        >
+        {{ form.apellido }} {% if form.apellido.errors %}
+        <div class="text-danger small">{{ form.apellido.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-md-6">
+        <label
+          for="{{ form.email.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.email.label }}</label
+        >
+        {{ form.email }} {% if form.email.errors %}
+        <div class="text-danger small">{{ form.email.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-md-6">
+        <label
+          for="{{ form.telefono.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.telefono.label }}</label
+        >
+        {{ form.telefono }} {% if form.telefono.errors %}
+        <div class="text-danger small">{{ form.telefono.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12">
+        <label
+          for="{{ form.direccion.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.direccion.label }}</label
+        >
+        {{ form.direccion }} {% if form.direccion.errors %}
+        <div class="text-danger small">{{ form.direccion.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Medidas -->
+      <div class="col-12 mt-4">
+        <h5 class="text-pink mb-3">
+          <i class="fas fa-ruler me-2"></i>Medidas (Opcional)
+        </h5>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label for="{{ form.copa.id_for_label }}" class="form-label fw-semibold"
+          >{{ form.copa.label }}</label
+        >
+        {{ form.copa }} {% if form.copa.errors %}
+        <div class="text-danger small">{{ form.copa.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label
+          for="{{ form.busto.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.busto.label }}</label
+        >
+        {{ form.busto }} {% if form.busto.errors %}
+        <div class="text-danger small">{{ form.busto.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label
+          for="{{ form.cintura.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.cintura.label }}</label
+        >
+        {{ form.cintura }} {% if form.cintura.errors %}
+        <div class="text-danger small">{{ form.cintura.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label
+          for="{{ form.largo.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.largo.label }}</label
+        >
+        {{ form.largo }} {% if form.largo.errors %}
+        <div class="text-danger small">{{ form.largo.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label
+          for="{{ form.tiras.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.tiras.label }}</label
+        >
+        {{ form.tiras }} {% if form.tiras.errors %}
+        <div class="text-danger small">{{ form.tiras.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="col-12 col-md-4">
+        <label
+          for="{{ form.otras.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.otras.label }}</label
+        >
+        {{ form.otras }} {% if form.otras.errors %}
+        <div class="text-danger small">{{ form.otras.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Historial -->
+      <div class="col-12 mt-4">
+        <h5 class="text-pink mb-3">
+          <i class="fas fa-history me-2"></i>Historial de Alquileres (Opcional)
+        </h5>
+      </div>
+      <div class="col-12">
+        <label
+          for="{{ form.historial.id_for_label }}"
+          class="form-label fw-semibold"
+          >{{ form.historial.label }}</label
+        >
+        {{ form.historial }} {% if form.historial.errors %}
+        <div class="text-danger small">{{ form.historial.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Botones -->
       <div class="text-center mt-4">
         <button type="submit" class="btn btn-pink btn-sm me-2">Guardar</button>
         <a href="{% url 'clientes_list' %}" class="btn btn-editar btn-sm"

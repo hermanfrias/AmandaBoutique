@@ -1,0 +1,285 @@
+{% extends "BoutiqueApp/base.html" %}
+{% load humanize %}
+{% block title %}Detalle Alquiler | Amanda Mateo Boutique{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-pink fw-bold">
+      <i class="fas fa-file-contract me-2"></i>Detalle del Alquiler #{{ alquiler.pk }}
+    </h2>
+    <div class="btn-group-catalogo">
+      <a
+        href="{% url 'contrato_pdf' alquiler.pk %}"
+        class="btn btn-pink"
+        target="_blank"
+      >
+        <i class="fas fa-file-pdf me-1"></i>Imprimir Contrato
+      </a>
+      <a href="{% url 'editar_alquiler' alquiler.pk %}" class="btn btn-editar">
+        <i class="fas fa-edit me-1"></i>Editar
+      </a>
+      <a href="{% url 'listar_alquileres' %}" class="btn btn-volver">
+        <i class="fas fa-arrow-left me-1"></i>Volver
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Información del Alquiler -->
+    <div class="col-12 col-lg-8">
+      <!-- Cliente -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-user me-2"></i>Información del Cliente
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <strong>Nombre Completo:</strong>
+              <p class="mb-0">
+                {{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido }}
+              </p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Identificación:</strong>
+              <p class="mb-0">{{ alquiler.cliente.identificacion }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Teléfono:</strong>
+              <p class="mb-0">{{ alquiler.cliente.telefono }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Email:</strong>
+              <p class="mb-0">{{ alquiler.cliente.email }}</p>
+            </div>
+            <div class="col-12">
+              <strong>Dirección:</strong>
+              <p class="mb-0">{{ alquiler.cliente.direccion }}</p>
+            </div>
+
+            {% if alquiler.cliente.copa or alquiler.cliente.busto or alquiler.cliente.cintura or alquiler.cliente.largo or alquiler.cliente.tiras %}
+            <div class="col-12 mt-3">
+              <h6 class="text-pink">
+                <i class="fas fa-ruler me-2"></i>Medidas
+              </h6>
+              <div class="row">
+                {% if alquiler.cliente.copa %}
+                <div class="col-6 col-md-4">
+                  <small
+                    ><strong>Copa:</strong> {{ alquiler.cliente.copa }}</small
+                  >
+                </div>
+                {% endif %} {% if alquiler.cliente.busto %}
+                <div class="col-6 col-md-4">
+                  <small
+                    ><strong>Busto:</strong> {{ alquiler.cliente.busto }}</small
+                  >
+                </div>
+                {% endif %} {% if alquiler.cliente.cintura %}
+                <div class="col-6 col-md-4">
+                  <small
+                    ><strong>Cintura:</strong> {{ alquiler.cliente.cintura }}</small
+                  >
+                </div>
+                {% endif %} {% if alquiler.cliente.largo %}
+                <div class="col-6 col-md-4">
+                  <small
+                    ><strong>Largo:</strong> {{ alquiler.cliente.largo }}</small
+                  >
+                </div>
+                {% endif %} {% if alquiler.cliente.tiras %}
+                <div class="col-6 col-md-4">
+                  <small
+                    ><strong>Tiras:</strong> {{ alquiler.cliente.tiras }}</small
+                  >
+                </div>
+                {% endif %} {% if alquiler.cliente.otras %}
+                <div class="col-12">
+                  <small
+                    ><strong>Otras:</strong> {{ alquiler.cliente.otras }}</small
+                  >
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Vestido -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-tshirt me-2"></i>Información del Vestido
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <strong>Nombre/Modelo:</strong>
+              <p class="mb-0">
+                <a href="{% url 'detalle_vestido' alquiler.vestido.pk %}"
+                  >{{ alquiler.vestido.nombre_modelo }}</a
+                >
+              </p>
+            </div>
+            <div class="col-12 col-md-4">
+              <strong>Talla:</strong>
+              <p class="mb-0">{{ alquiler.vestido.talla }}</p>
+            </div>
+            <div class="col-12 col-md-4">
+              <strong>Color:</strong>
+              <p class="mb-0">{{ alquiler.vestido.color }}</p>
+            </div>
+            <div class="col-12 col-md-4">
+              <strong>Estado:</strong>
+              <p class="mb-0">{{ alquiler.vestido.estado }}</p>
+            </div>
+            {% if alquiler.vestido.accesorios %}
+            <div class="col-12">
+              <strong>Accesorios:</strong>
+              <p class="mb-0">{{ alquiler.vestido.accesorios }}</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Fechas -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0"><i class="fas fa-calendar me-2"></i>Fechas</h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <strong>Fecha de Contrato:</strong>
+              <p class="mb-0">{{ alquiler.fecha_contrato|date:"d/m/Y" }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Fecha de Inicio:</strong>
+              <p class="mb-0">{{ alquiler.fecha_inicio|date:"d/m/Y" }}</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Fecha de Devolución Prevista:</strong>
+              <p class="mb-0">
+                {{ alquiler.fecha_devolucion_prevista|date:"d/m/Y" }}
+              </p>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Fecha de Devolución Real:</strong>
+              <p class="mb-0">
+                {% if alquiler.fecha_devolucion_real %} {{ alquiler.fecha_devolucion_real|date:"d/m/Y" }} {% else %}
+                <span class="text-muted">Pendiente</span>
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notas -->
+      {% if alquiler.notas %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0"><i class="fas fa-comment-alt me-2"></i>Notas</h4>
+        </div>
+        <div class="card-body">
+          <p class="mb-0">{{ alquiler.notas }}</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Resumen de Pago y Estados -->
+    <div class="col-12 col-lg-4">
+      <!-- Resumen de Pago -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-dollar-sign me-2"></i>Resumen de Pago
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <strong>Tipo de Moneda:</strong>
+            <p class="mb-0">
+              {% if alquiler.tipo_moneda == 'Bs' %}Bolívares (Bs){% else %}Dólares ($){% endif %}
+            </p>
+          </div>
+          <div class="mb-3">
+            <strong>Anticipo:</strong>
+            <p class="mb-0">
+              {{ alquiler.tipo_moneda }} {{ alquiler.anticipo|floatformat:2|intcomma }}
+            </p>
+          </div>
+          <div class="mb-3">
+            <strong>Monto Final:</strong>
+            <p class="mb-0">
+              {{ alquiler.tipo_moneda }} {{ alquiler.monto_final|floatformat:2|intcomma }}
+            </p>
+          </div>
+          <div class="mb-3">
+            <strong>Depósito:</strong>
+            <p class="mb-0">
+              {{ alquiler.tipo_moneda }} {{ alquiler.deposito|floatformat:2|intcomma }}
+            </p>
+          </div>
+          <hr />
+          <div class="mb-3">
+            <strong>Saldo Pendiente:</strong>
+            <p class="mb-0 text-danger fw-bold">
+              {{ alquiler.tipo_moneda }} {{ saldo_pendiente|floatformat:2|intcomma }}
+            </p>
+          </div>
+          <div>
+            <strong>Total en USD:</strong>
+            <p class="mb-0 text-success fw-bold">
+              $ {{ alquiler.total_usd|floatformat:2|intcomma }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estados -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-pink text-white">
+          <h4 class="mb-0"><i class="fas fa-info-circle me-2"></i>Estados</h4>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <strong>Estado de Pago:</strong>
+            <p class="mb-0">
+              <span
+                class="badge {% if alquiler.estado_pago == 'Pagado' %}bg-success {% elif alquiler.estado_pago == 'Parcial' %}bg-warning text-dark {% else %}bg-danger{% endif %} fs-6"
+              >
+                {{ alquiler.estado_pago }}
+              </span>
+            </p>
+          </div>
+          <div>
+            <strong>Estado del Alquiler:</strong>
+            <p class="mb-0">
+              <span
+                class="badge {% if alquiler.estado_alquiler == 'Activo' %}bg-primary {% elif alquiler.estado_alquiler == 'Completado' %}bg-success {% elif alquiler.estado_alquiler == 'Retrasado' %}bg-danger {% else %}bg-secondary{% endif %} fs-6"
+              >
+                {{ alquiler.estado_alquiler }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-pink {
+    background-color: #b76e79 !important;
+  }
+</style>
+{% endblock %}

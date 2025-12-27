@@ -13,29 +13,129 @@ Mateo Boutique{% endblock %} {% block content %}
 
   <!-- Formulario -->
   <div class="card shadow-sm form-card-standard">
-    <div class="card-header">
-      <h4 class="mb-0">
-        <i class="fas fa-edit me-2"></i>Información del Cliente
-      </h4>
-    </div>
     <div class="card-body">
-      <form method="POST" novalidate>
+      <form method="POST" novalidate class="row g-3">
         {% csrf_token %}
-        <div class="row g-3">
-          {% for field in form %}
-          <div class="col-12 col-md-6">
-            <label class="form-label fw-semibold">
-              {{ field.label }} {% if field.field.required %}<span
-                class="text-danger"
-                >*</span
-              >{% endif %}
-            </label>
-            {{ field }} {% if field.errors %}
-            <div class="text-danger small mt-1">{{ field.errors }}</div>
-            {% endif %}
-          </div>
-          {% endfor %}
+
+        <!-- Información Básica -->
+        <div class="col-12">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-user me-2"></i>Datos Personales
+          </h5>
         </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold"
+            >{{ form.identificacion.label }}
+            <span class="text-danger">*</span></label
+          >
+          {{ form.identificacion }} {% if form.identificacion.errors %}
+          <div class="text-danger small mt-1">
+            {{ form.identificacion.errors }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold"
+            >{{ form.nombre.label }} <span class="text-danger">*</span></label
+          >
+          {{ form.nombre }} {% if form.nombre.errors %}
+          <div class="text-danger small mt-1">{{ form.nombre.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold"
+            >{{ form.apellido.label }} <span class="text-danger">*</span></label
+          >
+          {{ form.apellido }} {% if form.apellido.errors %}
+          <div class="text-danger small mt-1">{{ form.apellido.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold"
+            >{{ form.email.label }} <span class="text-danger">*</span></label
+          >
+          {{ form.email }} {% if form.email.errors %}
+          <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold"
+            >{{ form.telefono.label }} <span class="text-danger">*</span></label
+          >
+          {{ form.telefono }} {% if form.telefono.errors %}
+          <div class="text-danger small mt-1">{{ form.telefono.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold"
+            >{{ form.direccion.label }}
+            <span class="text-danger">*</span></label
+          >
+          {{ form.direccion }} {% if form.direccion.errors %}
+          <div class="text-danger small mt-1">{{ form.direccion.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Medidas -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-ruler me-2"></i>Medidas (Opcional)
+          </h5>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label class="form-label fw-semibold">{{ form.copa.label }}</label>
+          {{ form.copa }} {% if form.copa.errors %}
+          <div class="text-danger small mt-1">{{ form.copa.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label class="form-label fw-semibold">{{ form.busto.label }}</label>
+          {{ form.busto }} {% if form.busto.errors %}
+          <div class="text-danger small mt-1">{{ form.busto.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label class="form-label fw-semibold">{{ form.cintura.label }}</label>
+          {{ form.cintura }} {% if form.cintura.errors %}
+          <div class="text-danger small mt-1">{{ form.cintura.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label class="form-label fw-semibold">{{ form.largo.label }}</label>
+          {{ form.largo }} {% if form.largo.errors %}
+          <div class="text-danger small mt-1">{{ form.largo.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <label class="form-label fw-semibold">{{ form.tiras.label }}</label>
+          {{ form.tiras }} {% if form.tiras.errors %}
+          <div class="text-danger small mt-1">{{ form.tiras.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="form-label fw-semibold">{{ form.otras.label }}</label>
+          {{ form.otras }} {% if form.otras.errors %}
+          <div class="text-danger small mt-1">{{ form.otras.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Historial -->
+        <div class="col-12 mt-4">
+          <h5 class="text-pink mb-3">
+            <i class="fas fa-history me-2"></i>Historial de Alquileres
+            (Opcional)
+          </h5>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold"
+            >{{ form.historial.label }}</label
+          >
+          {{ form.historial }} {% if form.historial.errors %}
+          <div class="text-danger small mt-1">{{ form.historial.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Botones -->
         <div class="text-center mt-4 form-buttons-standard">
           <button type="submit" class="btn btn-pink px-4 py-2">
             <i class="fas fa-save me-1"></i>Guardar
