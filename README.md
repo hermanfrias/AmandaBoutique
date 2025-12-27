@@ -82,6 +82,10 @@ Sistema web completo para la gestión de boutique desarrollado con Django, que i
   - **Creación de múltiples ítems** - Formset para agregar varios insumos en una factura
   - Registro de compras con número de factura opcional
   - **Selector de insumos con búsqueda** - Integración con Select2 para búsqueda rápida
+  - **Creación rápida de insumos** - Botón "Crear Nuevo Insumo" en dropdown para agregar insumos sin salir del formulario
+    - Modal con campos: Descripción, Unidad de Medida, Categoría, Proveedor
+    - Validación en tiempo real
+    - El nuevo insumo se agrega y selecciona automáticamente
   - Cantidad y moneda (Bolívares o Dólares)
   - Opción de aplicar IVA (16%)
   - Conversión automática de moneda usando cotización del día
@@ -520,8 +524,8 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 2.9  
-**Última actualización**: 20 de diciembre de 2025 - Módulo de Activos Fijos y Mejoras de Responsividad  
+**Versión**: 3.2  
+**Última actualización**: 27 de diciembre de 2025 - Creación Rápida de Insumos desde Formulario de Compras  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5
 
 ### Cambios en Versión 2.9 (20/12/2025)
