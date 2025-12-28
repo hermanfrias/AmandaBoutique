@@ -1,4 +1,4 @@
-{% extends "BoutiqueApp/base.html" %} {% block title %}{{ titulo }} | Amanda
+{% extends "BoutiqueApp/base.html" %} {% block title %} {{ titulo }} | Amanda
 Mateo Boutique{% endblock %} {% block content %}
 <div class="container py-5">
   <!-- Encabezado -->
@@ -129,6 +129,26 @@ Mateo Boutique{% endblock %} {% block content %}
           {{ form.deposito }} {% if form.deposito.errors %}
           <div class="text-danger small">{{ form.deposito.errors }}</div>
           {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="id_pago_final" class="form-label fw-semibold"
+            >Pago Final/Liquidación</label
+          >
+          {{ form.pago_final }} {% if form.pago_final.errors %}
+          <div class="text-danger small">{{ form.pago_final.errors }}</div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <label for="pago_total_display" class="form-label fw-semibold"
+            >Pago Total Recibido</label
+          >
+          <input
+            type="text"
+            id="pago_total_display"
+            class="form-control"
+            readonly
+            value="0.00"
+          />
         </div>
         <div class="col-12 col-sm-6 col-md-3">
           <label for="saldo_pendiente" class="form-label fw-semibold"
@@ -300,21 +320,35 @@ Mateo Boutique{% endblock %} {% block content %}
 </div>
 
 <script>
-  // Calcular saldo pendiente automáticamente
+  // Calcular saldo pendiente y pago total automáticamente
   document.addEventListener("DOMContentLoaded", function () {
     const anticipoInput = document.getElementById("id_anticipo");
+    const pagoFinalInput = document.getElementById("id_pago_final");
     const montoFinalInput = document.getElementById("id_monto_final");
+    const depositoInput = document.getElementById("id_deposito");
+    const pagoTotalDisplay = document.getElementById("pago_total_display");
     const saldoPendienteInput = document.getElementById("saldo_pendiente");
 
     function calcularSaldo() {
       const anticipo = parseFloat(anticipoInput.value) || 0;
+      const pagoFinal = parseFloat(pagoFinalInput.value) || 0;
       const montoFinal = parseFloat(montoFinalInput.value) || 0;
-      const saldo = montoFinal - anticipo;
+      const deposito = parseFloat(depositoInput.value) || 0;
+
+      // Calcular pago total (anticipo + pago final)
+      const pagoTotal = anticipo + pagoFinal;
+      pagoTotalDisplay.value = pagoTotal.toFixed(2);
+
+      // Calcular saldo pendiente
+      const totalAPagar = montoFinal + deposito;
+      const saldo = totalAPagar - pagoTotal;
       saldoPendienteInput.value = saldo.toFixed(2);
     }
 
     anticipoInput.addEventListener("input", calcularSaldo);
+    pagoFinalInput.addEventListener("input", calcularSaldo);
     montoFinalInput.addEventListener("input", calcularSaldo);
+    depositoInput.addEventListener("input", calcularSaldo);
 
     // Calcular al cargar
     calcularSaldo();

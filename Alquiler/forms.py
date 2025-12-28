@@ -11,7 +11,7 @@ class VestidoForm(forms.ModelForm):
         model = Vestido
         fields = [
             'nombre_modelo', 'descripcion', 'talla', 'color',
-            'precio_alquiler', 'valor_compra',
+            'precio_alquiler', 'valor_compra', 'deposito_garantia',
             'estado', 'foto1', 'foto2', 'accesorios',
             'fecha_tintoreria', 'fecha_entrega_tintoreria'
         ]
@@ -22,6 +22,7 @@ class VestidoForm(forms.ModelForm):
             'color': forms.TextInput(attrs={'class': 'form-control'}),
             'precio_alquiler': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'valor_compra': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'deposito_garantia': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'estado': forms.Select(attrs={'class': 'form-select'}),
             'foto1': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'foto2': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
@@ -48,7 +49,7 @@ class AlquilerForm(forms.ModelForm):
         fields = [
             'cliente', 'vestido', 'fecha_contrato', 'fecha_inicio',
             'fecha_devolucion_prevista', 'fecha_devolucion_real',
-            'tipo_moneda', 'anticipo', 'monto_final', 'deposito',
+            'tipo_moneda', 'anticipo', 'monto_final', 'deposito', 'pago_final',
             'estado_pago', 'estado_alquiler', 'notas'
         ]
         widgets = {
@@ -62,6 +63,7 @@ class AlquilerForm(forms.ModelForm):
             'anticipo': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'monto_final': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'deposito': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'pago_final': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'estado_pago': forms.Select(attrs={'class': 'form-select'}),
             'estado_alquiler': forms.Select(attrs={'class': 'form-select'}),
             'notas': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),

@@ -1,5 +1,6 @@
-{% extends "BoutiqueApp/base.html" %} {% block title %}Eliminar Alquiler |
-Amanda Mateo Boutique{% endblock %} {% block content %}
+{% extends "BoutiqueApp/base.html" %}
+{% block title %}Eliminar Alquiler | Amanda Mateo Boutique{% endblock %}
+{% block content %}
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6">
@@ -17,15 +18,12 @@ Amanda Mateo Boutique{% endblock %} {% block content %}
 
           <div class="alert alert-warning">
             <strong
-              ><i class="fas fa-file-contract me-2"></i>Alquiler #{{ alquiler.pk
-              }}</strong
+              ><i class="fas fa-file-contract me-2"></i>Alquiler #{{ alquiler.pk }}</strong
             ><br />
             <small>
-              <strong>Cliente:</strong> {{ alquiler.cliente.nombre }} {{
-              alquiler.cliente.apellido }}<br />
+              <strong>Cliente:</strong> {{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido }}<br />
               <strong>Vestido:</strong> {{ alquiler.vestido.nombre_modelo }}<br />
-              <strong>Fecha Inicio:</strong> {{
-              alquiler.fecha_inicio|date:"d/m/Y" }}
+              <strong>Fecha Inicio:</strong> {{ alquiler.fecha_inicio|date:"d/m/Y" }}
             </small>
           </div>
 

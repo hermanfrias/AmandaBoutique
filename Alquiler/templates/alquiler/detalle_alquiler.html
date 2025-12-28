@@ -1,12 +1,10 @@
 {% extends "BoutiqueApp/base.html" %}
-{% load humanize %}
-{% block title %}Detalle Alquiler | Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% load humanize %} {% block title %}Detalle Alquiler | Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container py-5">
   <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="text-pink fw-bold">
-      <i class="fas fa-file-contract me-2"></i>Detalle del Alquiler #{{ alquiler.pk }}
+      <i class="fas fa-file-contract me-2"></i>Detalle del Alquiler
     </h2>
     <div class="btn-group-catalogo">
       <a
@@ -65,45 +63,6 @@
               <h6 class="text-pink">
                 <i class="fas fa-ruler me-2"></i>Medidas
               </h6>
-              <div class="row">
-                {% if alquiler.cliente.copa %}
-                <div class="col-6 col-md-4">
-                  <small
-                    ><strong>Copa:</strong> {{ alquiler.cliente.copa }}</small
-                  >
-                </div>
-                {% endif %} {% if alquiler.cliente.busto %}
-                <div class="col-6 col-md-4">
-                  <small
-                    ><strong>Busto:</strong> {{ alquiler.cliente.busto }}</small
-                  >
-                </div>
-                {% endif %} {% if alquiler.cliente.cintura %}
-                <div class="col-6 col-md-4">
-                  <small
-                    ><strong>Cintura:</strong> {{ alquiler.cliente.cintura }}</small
-                  >
-                </div>
-                {% endif %} {% if alquiler.cliente.largo %}
-                <div class="col-6 col-md-4">
-                  <small
-                    ><strong>Largo:</strong> {{ alquiler.cliente.largo }}</small
-                  >
-                </div>
-                {% endif %} {% if alquiler.cliente.tiras %}
-                <div class="col-6 col-md-4">
-                  <small
-                    ><strong>Tiras:</strong> {{ alquiler.cliente.tiras }}</small
-                  >
-                </div>
-                {% endif %} {% if alquiler.cliente.otras %}
-                <div class="col-12">
-                  <small
-                    ><strong>Otras:</strong> {{ alquiler.cliente.otras }}</small
-                  >
-                </div>
-                {% endif %}
-              </div>
             </div>
             {% endif %}
           </div>
@@ -173,7 +132,8 @@
             <div class="col-12 col-md-6">
               <strong>Fecha de Devolución Real:</strong>
               <p class="mb-0">
-                {% if alquiler.fecha_devolucion_real %} {{ alquiler.fecha_devolucion_real|date:"d/m/Y" }} {% else %}
+                {% if alquiler.fecha_devolucion_real %} {{
+                alquiler.fecha_devolucion_real|date:"d/m/Y" }} {% else %}
                 <span class="text-muted">Pendiente</span>
                 {% endif %}
               </p>
@@ -208,7 +168,11 @@
           <div class="mb-3">
             <strong>Tipo de Moneda:</strong>
             <p class="mb-0">
-              {% if alquiler.tipo_moneda == 'Bs' %}Bolívares (Bs){% else %}Dólares ($){% endif %}
+              {% if alquiler.tipo_moneda == 'Bs' %}
+              Bolívares (Bs)
+              {% else %}
+              Dólares ($)
+              {% endif %}
             </p>
           </div>
           <div class="mb-3">
@@ -229,17 +193,44 @@
               {{ alquiler.tipo_moneda }} {{ alquiler.deposito|floatformat:2|intcomma }}
             </p>
           </div>
+          <div class="mb-3">
+            <strong>Pago Final/Liquidación:</strong>
+            <p class="mb-0">
+              {{ alquiler.tipo_moneda }} {{ alquiler.pago_final|floatformat:2|intcomma }}
+            </p>
+          </div>
           <hr />
+          <div class="mb-3">
+            <strong>Pago Total Recibido:</strong>
+            <p class="mb-0 text-info fw-bold">
+              {{ alquiler.tipo_moneda }} {{ alquiler.pago_total|floatformat:2|intcomma }}
+            </p>
+            <small class="text-muted">(Anticipo + Pago Final)</small>
+          </div>
+          <hr />
+          <div class="mb-3">
+            <strong>Total a Pagar:</strong>
+            <p class="mb-0">
+              {{ alquiler.tipo_moneda }} {{ alquiler.monto_final|add:alquiler.deposito|floatformat:2|intcomma }}
+            </p>
+          </div>
           <div class="mb-3">
             <strong>Saldo Pendiente:</strong>
             <p class="mb-0 text-danger fw-bold">
               {{ alquiler.tipo_moneda }} {{ saldo_pendiente|floatformat:2|intcomma }}
             </p>
           </div>
-          <div>
+          <hr />
+          <div class="mb-3">
             <strong>Total en USD:</strong>
             <p class="mb-0 text-success fw-bold">
               $ {{ alquiler.total_usd|floatformat:2|intcomma }}
+            </p>
+          </div>
+          <div>
+            <strong>Pago Total en USD:</strong>
+            <p class="mb-0 text-success">
+              $ {{ alquiler.pago_total_usd|floatformat:2|intcomma }}
             </p>
           </div>
         </div>
@@ -255,7 +246,7 @@
             <strong>Estado de Pago:</strong>
             <p class="mb-0">
               <span
-                class="badge {% if alquiler.estado_pago == 'Pagado' %}bg-success {% elif alquiler.estado_pago == 'Parcial' %}bg-warning text-dark {% else %}bg-danger{% endif %} fs-6"
+                class="badge {% if alquiler.estado_pago == 'Pagado' %} bg-success {% elif alquiler.estado_pago == 'Parcial' %} bg-warning text-dark {% else %}bg-danger {% endif %} fs-6"
               >
                 {{ alquiler.estado_pago }}
               </span>
@@ -265,7 +256,7 @@
             <strong>Estado del Alquiler:</strong>
             <p class="mb-0">
               <span
-                class="badge {% if alquiler.estado_alquiler == 'Activo' %}bg-primary {% elif alquiler.estado_alquiler == 'Completado' %}bg-success {% elif alquiler.estado_alquiler == 'Retrasado' %}bg-danger {% else %}bg-secondary{% endif %} fs-6"
+                class="badge {% if alquiler.estado_alquiler == 'Activo' %} bg-primary {% elif alquiler.estado_alquiler == 'Completado' %} bg-success {% elif alquiler.estado_alquiler == 'Retrasado' %} bg-danger {% else %} bg-secondary {% endif %} fs-6"
               >
                 {{ alquiler.estado_alquiler }}
               </span>

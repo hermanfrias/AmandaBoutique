@@ -13,6 +13,8 @@ class Vestido(models.Model):
         ('Tintorería', 'Tintorería'),
         ('Arreglo', 'Arreglo'),
         ('Dañado', 'Dañado'),
+        ('Vendido', 'Vendido'),
+        ('Baja', 'Baja'),
     ]
     
     MONEDAS = [
@@ -29,6 +31,7 @@ class Vestido(models.Model):
     # Precios
     precio_alquiler = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio de Alquiler')
     valor_compra = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Valor de Compra')
+    deposito_garantia = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Depósito de Garantía', default=0)
     
     # Estado y disponibilidad
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Disponible', verbose_name='Estado')
@@ -72,7 +75,8 @@ class Alquiler(models.Model):
     
     ESTADO_ALQUILER_CHOICES = [
         ('Activo', 'Activo'),
-        ('Completado', 'Completado'),
+        ('Entregado', 'Entregado'),
+        ('Devuelto', 'Devuelto'),
         ('Retrasado', 'Retrasado'),
         ('Cancelado', 'Cancelado'),
     ]
@@ -97,7 +101,10 @@ class Alquiler(models.Model):
     anticipo = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Anticipo')
     monto_final = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Monto Final')
     deposito = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Depósito')
+    pago_final = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Pago Final/Liquidación', default=0)
+    pago_total = models.DecimalField(max_digits=10, decimal_places=2, editable=False, verbose_name='Pago Total Recibido', default=0)
     total_usd = models.DecimalField(max_digits=10, decimal_places=2, editable=False, verbose_name='Total en USD', default=0)
+    pago_total_usd = models.DecimalField(max_digits=10, decimal_places=2, editable=False, verbose_name='Pago Total en USD', default=0)
     
     # Estados
     estado_pago = models.CharField(max_length=20, choices=ESTADO_PAGO_CHOICES, default='Pendiente', verbose_name='Estado de Pago')
@@ -142,34 +149,60 @@ class Alquiler(models.Model):
         # Ejecutar validaciones
         self.full_clean()
         
+        # Obtener la tasa de cambio
+        try:
+            from flujo.models import ConfiguracionIVA
+            config = ConfiguracionIVA.objects.latest('fecha_vigencia')
+            tasa_cambio = config.tasa_cambio if hasattr(config, 'tasa_cambio') else Decimal('36.50')
+        except:
+            # Valor por defecto si no hay configuración
+            tasa_cambio = Decimal('36.50')
+        
+        # Calcular pago_total como anticipo + pago_final
+        self.pago_total = self.anticipo + self.pago_final
+        
         # Calcular total_usd basado en tipo_moneda
         if self.tipo_moneda == 'Bs':
-            # Obtener la cotización del día desde el modelo ConfiguracionIVA
-            try:
-                from flujo.models import ConfiguracionIVA
-                config = ConfiguracionIVA.objects.latest('fecha_vigencia')
-                tasa_cambio = config.tasa_cambio if hasattr(config, 'tasa_cambio') else Decimal('36.50')
-            except:
-                # Valor por defecto si no hay configuración
-                tasa_cambio = Decimal('36.50')
-            
             # Convertir el monto total (monto_final + deposito) a USD
             total_bs = self.monto_final + self.deposito
             self.total_usd = total_bs / tasa_cambio
+            # Convertir pago_total a USD
+            self.pago_total_usd = self.pago_total / tasa_cambio
         else:
             # Si ya está en dólares, el total es la suma directa
             self.total_usd = self.monto_final + self.deposito
+            self.pago_total_usd = self.pago_total
+        
+        # Obtener el estado anterior del alquiler si existe
+        estado_anterior = None
+        if self.pk:
+            try:
+                estado_anterior = Alquiler.objects.get(pk=self.pk).estado_alquiler
+            except Alquiler.DoesNotExist:
+                pass
         
         # Si es un nuevo alquiler, cambiar el estado del vestido a "Alquilado"
         if not self.pk and self.vestido.esta_disponible():
             self.vestido.estado = 'Alquilado'
             self.vestido.save()
         
+        # Si el estado del alquiler cambió, actualizar el estado del vestido
+        elif self.pk and estado_anterior and estado_anterior != self.estado_alquiler:
+            # Cuando el alquiler se cancela, el vestido vuelve a estar disponible
+            if self.estado_alquiler == 'Cancelado':
+                self.vestido.estado = 'Disponible'
+                self.vestido.save()
+            # Cuando el alquiler se devuelve, el vestido va a tintorería
+            elif self.estado_alquiler == 'Devuelto':
+                self.vestido.estado = 'Tintorería'
+                self.vestido.save()
+        
         super().save(*args, **kwargs)
     
     def calcular_saldo_pendiente(self):
-        """Calcula el saldo pendiente de pago"""
-        return self.monto_final - self.anticipo
+        """Calcula el saldo pendiente de pago (monto_final + deposito - pago_total)"""
+        total_a_pagar = self.monto_final + self.deposito
+        return total_a_pagar - self.pago_total
     
     def marcar_como_devuelto(self, fecha_devolucion=None):
         """Marca el alquiler como completado y libera el vestido"""

@@ -13,8 +13,10 @@ from Alquiler.models import Vestido
 
 def index(request):
     catalogos = Catalogo.objects.all()
-    # Mostrar todos los vestidos excepto los dañados
-    vestidos_alquiler = Vestido.objects.exclude(estado='Dañado').order_by('-fecha_creacion')
+    # Mostrar solo vestidos activos para alquiler (excluir Dañado, Vendido y Baja)
+    vestidos_alquiler = Vestido.objects.exclude(
+        estado__in=['Dañado', 'Vendido', 'Baja']
+    ).order_by('-fecha_creacion')
     return render(request, 'BoutiqueApp/index.html', {
         'catalogos': catalogos,
         'vestidos_alquiler': vestidos_alquiler

@@ -1,5 +1,6 @@
 {% extends "BoutiqueApp/base.html" %}
-{% load humanize %} {% block title%}Detalle Vestido | Amanda Mateo Boutique {% endblock %}
+{% load humanize %}
+{% block title%}Detalle Vestido | Amanda Mateo Boutique {% endblock %}
 {% block content %}
 <div class="container py-5">
   <!-- Encabezado -->
@@ -48,12 +49,7 @@
               <strong>Estado:</strong>
               <p class="mb-0">
                 <span
-                  class="badge {% if vestido.estado == 'Disponible' %}bg-success 
-                  {% elif vestido.estado == 'Alquilado' %}bg-warning text-dark
-                  {% elif vestido.estado == 'Tintorería' %}bg-info 
-                  {% elif vestido.estado == 'Arreglo' %}bg-secondary 
-                  {% else %}bg-danger
-                   {% endif %}"
+                  class="badge {% if vestido.estado == 'Disponible' %}bg-success {% elif vestido.estado == 'Alquilado' %}bg-warning text-dark {% elif vestido.estado == 'Tintorería' %}bg-info {% elif vestido.estado == 'Arreglo' %}bg-secondary {% else %}bg-danger {% endif %}"
                 >
                   {{ vestido.estado }}
                 </span>
@@ -67,16 +63,22 @@
             <i class="fas fa-dollar-sign me-2"></i>Precios
           </h5>
           <div class="row g-3">
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
               <strong>Precio de Alquiler:</strong>
               <p class="mb-0">
                 $ {{ vestido.precio_alquiler|floatformat:2|intcomma }}
               </p>
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
               <strong>Valor de Compra:</strong>
               <p class="mb-0">
                 $ {{ vestido.valor_compra|floatformat:2|intcomma }}
+              </p>
+            </div>
+            <div class="col-12 col-md-4">
+              <strong>Depósito de Garantía:</strong>
+              <p class="mb-0">
+                $ {{ vestido.deposito_garantia|floatformat:2|intcomma }}
               </p>
             </div>
           </div>
