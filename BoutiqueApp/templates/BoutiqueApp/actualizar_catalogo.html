@@ -42,6 +42,54 @@
         </div>
       </div>
 
+      <div class="mb-3">
+        <label for="id_foto2" class="form-label fw-bold"
+          >Foto 2 (Opcional)</label
+        >
+        {{ form.foto2 }} {% if form.instance.foto2 %}
+        <div class="text-center mt-2">
+          <img
+            src="{{ form.instance.foto2.url }}"
+            alt="Foto 2"
+            class="img-thumbnail"
+            style="max-height: 150px"
+          />
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_foto3" class="form-label fw-bold"
+          >Foto 3 (Opcional)</label
+        >
+        {{ form.foto3 }} {% if form.instance.foto3 %}
+        <div class="text-center mt-2">
+          <img
+            src="{{ form.instance.foto3.url }}"
+            alt="Foto 3"
+            class="img-thumbnail"
+            style="max-height: 150px"
+          />
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_foto4" class="form-label fw-bold"
+          >Foto 4 (Opcional)</label
+        >
+        {{ form.foto4 }} {% if form.instance.foto4 %}
+        <div class="text-center mt-2">
+          <img
+            src="{{ form.instance.foto4.url }}"
+            alt="Foto 4"
+            class="img-thumbnail"
+            style="max-height: 150px"
+          />
+        </div>
+        {% endif %}
+      </div>
+
       <div class="text-center mt-4 acciones-cell">
         <button type="submit" class="btn btn-pink btn-sm me-2">Guardar</button>
         <a href="{% url 'listar_catalogo' %}" class="btn btn-editar btn-sm"

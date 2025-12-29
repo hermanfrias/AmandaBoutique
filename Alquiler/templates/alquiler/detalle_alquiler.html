@@ -14,14 +14,17 @@
       >
         <i class="fas fa-file-pdf me-1"></i>Imprimir Contrato
       </a>
+      {% if perms.Alquiler.change_alquiler %}
       <a href="{% url 'editar_alquiler' alquiler.pk %}" class="btn btn-editar">
         <i class="fas fa-edit me-1"></i>Editar
       </a>
+      {% endif %}
       <a href="{% url 'listar_alquileres' %}" class="btn btn-volver">
         <i class="fas fa-arrow-left me-1"></i>Volver
       </a>
     </div>
   </div>
+
 
   <div class="row">
     <!-- Información del Alquiler -->

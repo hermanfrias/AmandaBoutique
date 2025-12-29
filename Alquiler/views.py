@@ -84,7 +84,8 @@ def editar_vestido(request, pk):
     return render(request, 'alquiler/form_vestido.html', context)
 
 
-@login_required
+
+
 def detalle_vestido(request, pk):
     """Muestra los detalles de un vestido"""
     vestido = get_object_or_404(Vestido, pk=pk)
@@ -290,3 +291,37 @@ def crear_cliente_rapido(request):
             })
     
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+
+# ============================================
+# VISTA PARA CATÁLOGO PDF
+# ============================================
+
+@login_required
+def catalogo_alquiler_pdf(request):
+    """Genera el catálogo PDF de vestidos disponibles para alquiler"""
+    from django.template.loader import render_to_string
+    from weasyprint import HTML, CSS
+    from django.conf import settings
+    import os
+    
+    # Filtrar solo vestidos disponibles
+    vestidos = Vestido.objects.filter(estado='Disponible').order_by('nombre_modelo')
+    
+    # Renderizar HTML
+    html_string = render_to_string('alquiler/catalogo_alquiler_pdf.html', {
+        'vestidos': vestidos
+    })
+    
+    # Crear respuesta PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="catalogo_alquiler_amanda_boutique.pdf"'
+    
+    # Ruta del CSS para estilos PDF - usar staticfiles
+    css_path = os.path.join(settings.BASE_DIR, "staticfiles", "alquiler", "css", "catalogo_pdf.css")
+    
+    HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(
+        response, stylesheets=[CSS(css_path)]
+    )
+    return response
+

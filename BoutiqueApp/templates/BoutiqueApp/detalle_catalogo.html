@@ -1,40 +1,382 @@
-{% extends "BoutiqueApp/base.html" %}
+{% extends "BoutiqueApp/base.html" %} 
 {% block title %}Detalle | {{ catalogo.modelo }}{% endblock %}
 {% block content %}
 <div class="container my-5">
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="background-color: #fff5fa;">
-        <!-- Imagen del modelo -->
-        {% if catalogo.imagen_modelo %}
-        <div class="text-center bg-white p-3">
-          <img src="{{ catalogo.imagen_modelo.url }}" 
-              alt="{{ catalogo.modelo }}" 
-              class="img-fluid rounded-4 shadow-sm border border-light"
-              style="max-height: 450px; width: auto; object-fit: contain;">
+      <div
+        class="card shadow-lg border-0 rounded-4 overflow-hidden"
+        style="background-color: #fff5fa"
+      >
+        <!-- Carousel de imágenes -->
+        <div class="bg-white p-3">
+          {% if catalogo.imagen_modelo or catalogo.foto2 or catalogo.foto3 or catalogo.foto4 %}
+          <div
+            id="catalogoCarousel"
+            class="carousel slide carousel-fade"
+            data-bs-ride="carousel"
+            data-bs-wrap="true"
+          >
+            <!-- Indicadores -->
+            <div class="carousel-indicators">
+              {% if catalogo.imagen_modelo %}
+              <button
+                type="button"
+                data-bs-target="#catalogoCarousel"
+                data-bs-slide-to="0"
+                class="active"
+                aria-current="true"
+              ></button>
+              {% endif %} {% if catalogo.foto2 %}
+              <button
+                type="button"
+                data-bs-target="#catalogoCarousel"
+                data-bs-slide-to="{% if catalogo.imagen_modelo %}1{% else %}0{% endif %}"
+              ></button>
+              {% endif %} {% if catalogo.foto3 %}
+              <button
+                type="button"
+                data-bs-target="#catalogoCarousel"
+                data-bs-slide-to="{% if catalogo.imagen_modelo and catalogo.foto2 %}2{% elif catalogo.imagen_modelo or catalogo.foto2 %}1{% else %}0{% endif %}"
+              ></button>
+              {% endif %} {% if catalogo.foto4 %}
+              <button
+                type="button"
+                data-bs-target="#catalogoCarousel"
+                data-bs-slide-to="{% if catalogo.imagen_modelo and catalogo.foto2 and catalogo.foto3 %}3{% elif catalogo.imagen_modelo and catalogo.foto2 or catalogo.imagen_modelo and catalogo.foto3 or catalogo.foto2 and catalogo.foto3 %}2{% elif catalogo.imagen_modelo or catalogo.foto2 or catalogo.foto3 %}1{% else %}0{% endif %}"
+              ></button>
+              {% endif %}
+            </div>
+
+            <!-- Slides -->
+            <div class="carousel-inner">
+              {% if catalogo.imagen_modelo %}
+              <div class="carousel-item active">
+                <img
+                  src="{{ catalogo.imagen_modelo.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ catalogo.modelo }}"
+                  style="height: 400px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox(0)"
+                />
+              </div>
+              {% endif %} {% if catalogo.foto2 %}
+              <div
+                class="carousel-item {% if not catalogo.imagen_modelo %}active{% endif %}"
+              >
+                <img
+                  src="{{ catalogo.foto2.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ catalogo.modelo }}"
+                  style="height: 400px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox({% if catalogo.imagen_modelo %}1{% else %}0{% endif %})"
+                />
+              </div>
+              {% endif %} {% if catalogo.foto3 %}
+              <div
+                class="carousel-item {% if not catalogo.imagen_modelo and not catalogo.foto2 %}active{% endif %}"
+              >
+                <img
+                  src="{{ catalogo.foto3.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ catalogo.modelo }}"
+                  style="height: 400px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox({% if catalogo.imagen_modelo and catalogo.foto2 %}2{% elif catalogo.imagen_modelo or catalogo.foto2 %}1{% else %}0{% endif %})"
+                />
+              </div>
+              {% endif %} {% if catalogo.foto4 %}
+              <div
+                class="carousel-item {% if not catalogo.imagen_modelo and not catalogo.foto2 and not catalogo.foto3 %}active{% endif %}"
+              >
+                <img
+                  src="{{ catalogo.foto4.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ catalogo.modelo }}"
+                  style="height: 400px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox({% if catalogo.imagen_modelo and catalogo.foto2 and catalogo.foto3 %}3{% elif catalogo.imagen_modelo and catalogo.foto2 or catalogo.imagen_modelo and catalogo.foto3 or catalogo.foto2 and catalogo.foto3 %}2{% elif catalogo.imagen_modelo or catalogo.foto2 or catalogo.foto3 %}1{% else %}0{% endif %})"
+                />
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Controles de navegación -->
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#catalogoCarousel"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#catalogoCarousel"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Siguiente</span>
+            </button>
+          </div>
+          {% else %}
+          <div class="text-center py-5">
+            <p class="text-muted fst-italic">No hay imágenes disponibles</p>
+          </div>
+          {% endif %}
         </div>
-        {% else %}
-        <div class="bg-light text-center py-5">
-          <p class="text-muted fst-italic">No hay imagen disponible</p>
-        </div>
-        {% endif %}
+
         <!-- Contenido -->
         <div class="card-body p-4">
-          <h2 class="titulo text-center text-pink fw-bold mb-3">{{ catalogo.nombre }}</h2>
-          <p class="text-center text-muted mb-1">Código: <strong>{{ catalogo.codigo }}</strong></p>
-          <p class="text-center text-muted mb-1">Modelo: <strong>{{ catalogo.modelo }}</strong></p>
-          <p class="text-center h4 fw-bold text-pink mb-4">Precio ${{ catalogo.precio }}</p>
+          <h2 class="titulo text-center text-pink fw-bold mb-3">
+            {{ catalogo.nombre }}
+          </h2>
+          <p class="text-center text-muted mb-1">
+            Código: <strong>{{ catalogo.codigo }}</strong>
+          </p>
+          <p class="text-center text-muted mb-1">
+            Modelo: <strong>{{ catalogo.modelo }}</strong>
+          </p>
+          <p class="text-center h4 fw-bold text-pink mb-4">
+            Precio ${{ catalogo.precio }}
+          </p>
           <h5 class="fw-semibold text-secondary">Descripción</h5>
           <p class="text-justify">{{ catalogo.descripcion }}</p>
           <!-- Acciones -->
           <div class="text-center mt-4 acciones-cell">
-            <a href="{% url 'editar_catalogo' catalogo.codigo %}" 
-              class="btn btn-editar px-4 py-2 me-2">Editar</a>
-            <a href="{% url 'listar_catalogo' %}" class="btn btn-volver">Volver</a>
+            <a
+              href="{% url 'editar_catalogo' catalogo.codigo %}"
+              class="btn btn-editar px-4 py-2 me-2"
+              >Editar</a
+            >
+            <a href="{% url 'listar_catalogo' %}" class="btn btn-volver"
+              >Volver</a
+            >
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal Lightbox con Carousel -->
+<div id="lightboxModal" class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0">
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body p-0">
+        <div
+          id="lightboxCarousel"
+          class="carousel slide carousel-fade"
+          data-bs-ride="false"
+          data-bs-wrap="true"
+        >
+          <div class="carousel-inner">
+            {% if catalogo.imagen_modelo %}
+            <div class="carousel-item active">
+              <img
+                src="{{ catalogo.imagen_modelo.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ catalogo.modelo }}"
+              />
+            </div>
+            {% endif %} {% if catalogo.foto2 %}
+            <div
+              class="carousel-item {% if not catalogo.imagen_modelo %}active{% endif %}"
+            >
+              <img
+                src="{{ catalogo.foto2.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ catalogo.modelo }}"
+              />
+            </div>
+            {% endif %} {% if catalogo.foto3 %}
+            <div
+              class="carousel-item {% if not catalogo.imagen_modelo and not catalogo.foto2 %}active{% endif %}"
+            >
+              <img
+                src="{{ catalogo.foto3.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ catalogo.modelo }}"
+              />
+            </div>
+            {% endif %} {% if catalogo.foto4 %}
+            <div
+              class="carousel-item {% if not catalogo.imagen_modelo and not catalogo.foto2 and not catalogo.foto3 %}active{% endif %}"
+            >
+              <img
+                src="{{ catalogo.foto4.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ catalogo.modelo }}"
+              />
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Controles del carousel en el modal -->
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#lightboxCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#lightboxCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+
+          <!-- Indicadores en el modal -->
+          <div class="carousel-indicators">
+            {% if catalogo.imagen_modelo %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="0"
+              class="active"
+            ></button>
+            {% endif %} {% if catalogo.foto2 %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="{% if catalogo.imagen_modelo %}1{% else %}0{% endif %}"
+            ></button>
+            {% endif %} {% if catalogo.foto3 %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="{% if catalogo.imagen_modelo and catalogo.foto2 %}2{% elif catalogo.imagen_modelo or catalogo.foto2 %}1{% else %}0{% endif %}"
+            ></button>
+            {% endif %} {% if catalogo.foto4 %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="{% if catalogo.imagen_modelo and catalogo.foto2 and catalogo.foto3 %}3{% elif catalogo.imagen_modelo and catalogo.foto2 or catalogo.imagen_modelo and catalogo.foto3 or catalogo.foto2 and catalogo.foto3 %}2{% elif catalogo.imagen_modelo or catalogo.foto2 or catalogo.foto3 %}1{% else %}0{% endif %}"
+            ></button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Estilos del carousel principal */
+  .carousel-image {
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .carousel-fade .carousel-item {
+    opacity: 0;
+    transition-duration: 0.6s;
+    transition-property: opacity;
+  }
+
+  .carousel-fade .carousel-item.active {
+    opacity: 1;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: rgba(183, 110, 121, 0.8);
+    border-radius: 50%;
+    padding: 20px;
+  }
+
+  .carousel-control-prev:hover .carousel-control-prev-icon,
+  .carousel-control-next:hover .carousel-control-next-icon {
+    background-color: rgba(183, 110, 121, 1);
+  }
+
+  .carousel-indicators button {
+    background-color: #b76e79;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .carousel-indicators button.active {
+    background-color: #d4a5ae;
+  }
+
+  /* Estilos del modal */
+  #lightboxModal .modal-dialog {
+    max-width: 95vw;
+  }
+
+  #lightboxModal .carousel-control-prev-icon,
+  #lightboxModal .carousel-control-next-icon {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 25px;
+  }
+
+  #lightboxModal .carousel-indicators button {
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  #lightboxModal .carousel-indicators button.active {
+    background-color: rgba(255, 255, 255, 1);
+  }
+</style>
+
+<script>
+  function openLightbox(slideIndex) {
+    var lightboxCarousel = new bootstrap.Carousel(
+      document.getElementById("lightboxCarousel")
+    );
+    lightboxCarousel.to(slideIndex);
+
+    var lightboxModal = new bootstrap.Modal(
+      document.getElementById("lightboxModal")
+    );
+    lightboxModal.show();
+
+    // Pausar el carousel principal cuando se abre el modal
+    var mainCarousel = bootstrap.Carousel.getInstance(
+      document.getElementById("catalogoCarousel")
+    );
+    if (mainCarousel) {
+      mainCarousel.pause();
+    }
+  }
+
+  // Reanudar el carousel principal cuando se cierra el modal
+  document
+    .getElementById("lightboxModal")
+    .addEventListener("hidden.bs.modal", function () {
+      var mainCarousel = bootstrap.Carousel.getInstance(
+        document.getElementById("catalogoCarousel")
+      );
+      if (mainCarousel) {
+        mainCarousel.cycle();
+      }
+    });
+</script>
+
 {% endblock %}

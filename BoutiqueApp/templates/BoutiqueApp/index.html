@@ -17,24 +17,32 @@
     <div class="row g-3 g-md-4">
       {% for catalogo in catalogos %}
       <div class="col-12 col-sm-6 col-md-4">
-        <div class="card shadow-sm border-0 h-100 catalogo fade-in">
-          <div class="img-container">
-            <img
-              src="{{ catalogo.imagen_modelo.url }}"
-              class="card-img-top img-fluid img-hover"
-              alt="{{ catalogo.modelo }}"
-              loading="lazy"
-            />
+        <a
+          href="{% url 'detalle_catalogo' catalogo.codigo %}"
+          class="text-decoration-none"
+        >
+          <div
+            class="card shadow-sm border-0 h-100 catalogo fade-in card-hover"
+          >
+            <div class="img-container">
+              <img
+                src="{{ catalogo.imagen_modelo.url }}"
+                class="card-img-top img-fluid img-hover"
+                alt="{{ catalogo.modelo }}"
+                loading="lazy"
+              />
+            </div>
+            <div class="card-body text-center">
+              <h5 class="card-title text-dark">{{ catalogo.modelo }}</h5>
+              <p class="text-muted mb-2">
+                <strong>Estilo:</strong> {{ catalogo.estilo }}
+              </p>
+              <p class="card-text text-secondary">{{ catalogo.descripcion }}</p>
+              <p class="fw-bold fs-5 text-pink">${{ catalogo.precio }}</p>
+              <span class="btn btn-sm btn-outline-pink">Ver Detalles</span>
+            </div>
           </div>
-          <div class="card-body text-center">
-            <h5 class="card-title">{{ catalogo.modelo }}</h5>
-            <p class="text-muted mb-2">
-              <strong>Estilo:</strong> {{ catalogo.estilo }}
-            </p>
-            <p class="card-text">{{ catalogo.descripcion }}</p>
-            <p class="fw-bold fs-5 text-pink">${{ catalogo.precio }}</p>
-          </div>
-        </div>
+        </a>
       </div>
       {% endfor %}
     </div>
@@ -70,41 +78,53 @@
     <div class="row g-3 g-md-4">
       {% for vestido in vestidos_alquiler %}
       <div class="col-12 col-sm-6 col-md-4">
-        <div class="card shadow-sm border-0 h-100 catalogo fade-in">
-          <div class="img-container">
-            {% if vestido.foto1 %}
-            <img
-              src="{{ vestido.foto1.url }}"
-              class="card-img-top img-fluid img-hover"
-              alt="{{ vestido.nombre_modelo }}"
-              loading="lazy"
-            />
-            {% else %}
-            <div
-              class="bg-light d-flex align-items-center justify-content-center"
-              style="height: 300px"
-            >
-              <i class="fas fa-image fa-3x text-muted"></i>
+        <a
+          href="{% url 'detalle_vestido' vestido.pk %}"
+          class="text-decoration-none"
+        >
+          <div
+            class="card shadow-sm border-0 h-100 catalogo fade-in card-hover"
+          >
+            <div class="img-container">
+              {% if vestido.foto1 %}
+              <img
+                src="{{ vestido.foto1.url }}"
+                class="card-img-top img-fluid img-hover"
+                alt="{{ vestido.nombre_modelo }}"
+                loading="lazy"
+              />
+              {% else %}
+              <div
+                class="bg-light d-flex align-items-center justify-content-center"
+                style="height: 300px"
+              >
+                <i class="fas fa-image fa-3x text-muted"></i>
+              </div>
+              {% endif %}
             </div>
-            {% endif %}
+            <div class="card-body text-center">
+              <h5 class="card-title text-dark">{{ vestido.nombre_modelo }}</h5>
+              <p class="text-muted mb-2">
+                <strong>Talla:</strong> {{ vestido.talla }} |
+                <strong>Color:</strong> {{ vestido.color }}
+              </p>
+              <p class="card-text text-secondary">
+                {{ vestido.descripcion|truncatewords:15 }}
+              </p>
+              <p class="fw-bold fs-5 text-pink">
+                Alquiler: ${{ vestido.precio_alquiler }}
+              </p>
+              {% if vestido.estado == 'Disponible' %}
+              <span class="badge bg-success mb-2">Disponible</span>
+              {% else %}
+              <span class="badge bg-warning text-dark mb-2">No Disponible</span>
+              {% endif %}
+              <div>
+                <span class="btn btn-sm btn-outline-pink">Ver Detalles</span>
+              </div>
+            </div>
           </div>
-          <div class="card-body text-center">
-            <h5 class="card-title">{{ vestido.nombre_modelo }}</h5>
-            <p class="text-muted mb-2">
-              <strong>Talla:</strong> {{ vestido.talla }} |
-              <strong>Color:</strong> {{ vestido.color }}
-            </p>
-            <p class="card-text">{{ vestido.descripcion|truncatewords:15 }}</p>
-            <p class="fw-bold fs-5 text-pink">
-              Alquiler: ${{ vestido.precio_alquiler }}
-            </p>
-            {% if vestido.estado == 'Disponible' %}
-            <span class="badge bg-success">Disponible</span>
-            {% else %}
-            <span class="badge bg-warning text-dark">No Disponible</span>
-            {% endif %}
-          </div>
-        </div>
+        </a>
       </div>
       {% endfor %}
     </div>
@@ -155,5 +175,29 @@
     </div>
   </div>
 </section>
+
+<style>
+  .card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(183, 110, 121, 0.3) !important;
+  }
+
+  .btn-outline-pink {
+    color: #b76e79;
+    border-color: #b76e79;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-pink:hover {
+    background-color: #b76e79;
+    color: white;
+    border-color: #b76e79;
+  }
+</style>
 
 {% endblock %}

@@ -137,8 +137,7 @@
         <strong
           ><span class="underline"
             >{{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido }}, C.I.
-            {{ alquiler.cliente.identificacion }}, residente en {{
-            alquiler.cliente.direccion }}</span
+            {{ alquiler.cliente.identificacion }}, residente en {{ alquiler.cliente.direccion }}</span
           ></strong
         >, quien para los mismos efectos, en adelante se le denominará
         <strong>"LA ARRENDATARIA"</strong>, con las siguientes cláusulas:
@@ -336,8 +335,7 @@
           <div class="campo-col">
             <strong>Nombre:</strong>
             <span class="underline"
-              >{{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido
-              }}</span
+              >{{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido }}</span
             >
           </div>
         </div>
@@ -349,8 +347,11 @@
           <div class="campo-col">
             <strong>Evento:</strong>
             <span class="underline"
-              >{% if alquiler.notas %} {{ alquiler.notas }} {% else %}
-              _________________ {% endif %}</span
+              >{% if alquiler.notas %}
+              {{ alquiler.notas }}
+              {% else %}
+              _________________ 
+              {% endif %}</span
             >
           </div>
         </div>
@@ -358,8 +359,7 @@
         <div class="campo">
           <strong>Vestido rentado:</strong>
           <span class="underline"
-            >{{ alquiler.vestido.nombre_modelo }} - Talla {{
-            alquiler.vestido.talla }}</span
+            >{{ alquiler.vestido.nombre_modelo }} - Talla {{ alquiler.vestido.talla }}</span
           >
         </div>
 
@@ -367,15 +367,13 @@
           <div class="campo-col">
             <strong>Anticipo:</strong>
             <span class="underline"
-              >{{ alquiler.tipo_moneda }} {{ alquiler.anticipo|floatformat:2
-              }}</span
+              >{{ alquiler.tipo_moneda }} {{ alquiler.anticipo|floatformat:2 }}</span
             >
           </div>
           <div class="campo-col">
             <strong>Pago Total:</strong>
             <span class="underline"
-              >{{ alquiler.tipo_moneda }} {{ alquiler.pago_total|floatformat:2
-              }}</span
+              >{{ alquiler.tipo_moneda }} {{ alquiler.pago_total|floatformat:2 }}</span
             >
           </div>
         </div>
@@ -384,15 +382,13 @@
           <div class="campo-col">
             <strong>Depósito de garantía:</strong>
             <span class="underline"
-              >{{ alquiler.tipo_moneda }} {{
-              alquiler.vestido.deposito_garantia|floatformat:2 }}</span
+              >{{ alquiler.tipo_moneda }} {{ alquiler.vestido.deposito_garantia|floatformat:2 }}</span
             >
           </div>
           <div class="campo-col">
             <strong>Saldo Pendiente:</strong>
             <span class="underline"
-              >{{ alquiler.tipo_moneda }} {{ saldo_pendiente|floatformat:2
-              }}</span
+              >{{ alquiler.tipo_moneda }} {{ saldo_pendiente|floatformat:2 }}</span
             >
           </div>
         </div>

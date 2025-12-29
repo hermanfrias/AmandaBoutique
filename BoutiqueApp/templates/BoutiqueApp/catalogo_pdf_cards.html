@@ -1,51 +1,73 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Catálogo Amanda Mateo Boutique PDF</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Catálogo Amanda Mateo Boutique PDF</title>
 
-<!-- 🎀 Tipografías románticas -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <!-- 🎀 Tipografías románticas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
 
+    <!-- 🎀 Estilos -->
+    <link
+      rel="stylesheet"
+      href="{% static 'BoutiqueApp/css/catalog_cards.css' %}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p>Catálogo Exclusivo</p>
+    </header>
 
-
-<!-- 🎀 Estilos -->
-<link rel="stylesheet" href="{% static 'BoutiqueApp/css/catalog_cards.css' %}">
-</head>
-<body>
-
-<header>
-    <h1>Amanda Mateo Boutique</h1>
-    <p>Catálogo Exclusivo</p>
-</header>
-
-<section class="container">
-    {% for item in catalogos %}
-    <div class="card">
-        <div class="image-box">
-            {% if item.imagen_modelo %}
-            <img src="{{ item.imagen_modelo.url }}">
-            {% else %}
-            <p class="no-img">Sin imagen</p>
-            {% endif %}
+    <section class="container">
+      {% for item in catalogos %}
+      <div class="card">
+        <div class="photos-grid">
+          {% if item.imagen_modelo %}
+          <div class="photo-item">
+            <img src="{{ item.imagen_modelo.url }}" alt="{{ item.modelo }}" />
+          </div>
+          {% endif %} {% if item.foto2 %}
+          <div class="photo-item">
+            <img src="{{ item.foto2.url }}" alt="{{ item.modelo }}" />
+          </div>
+          {% endif %} {% if item.foto3 %}
+          <div class="photo-item">
+            <img src="{{ item.foto3.url }}" alt="{{ item.modelo }}" />
+          </div>
+          {% endif %} {% if item.foto4 %}
+          <div class="photo-item">
+            <img src="{{ item.foto4.url }}" alt="{{ item.modelo }}" />
+          </div>
+          {% endif %}
+          {% if not item.imagen_modelo and not item.foto2 and not item.foto3 and not item.foto4 %}
+          <div class="photo-item">
+            <p class="no-img">Sin imágenes</p>
+          </div>
+          {% endif %}
         </div>
-        
+
         <h2>{{ item.modelo }}</h2>
         <p class="estilo">{{ item.estilo }}</p>
         <p class="descripcion">{{ item.descripcion }}</p>
 
         <p class="precio">${{ item.precio }}</p>
-    </div>
-    {% endfor %}
-</section>
+      </div>
+      {% endfor %}
+    </section>
 
-<footer>
-    <p>© {{ now|date:"Y" }} Amanda Mateo Boutique - Elegancia a tu medida</p>
-</footer>
-
-</body>
+    <footer>
+      <p>© {{ now|date:"Y" }} Amanda Mateo Boutique - Elegancia a tu medida</p>
+    </footer>
+  </body>
 </html>

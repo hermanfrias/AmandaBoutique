@@ -1,8 +1,5 @@
-{% extends "BoutiqueApp/base.html" %} 
-{% block title %}
-{{ titulo }} | Amanda Mateo Boutique 
-{% endblock %}
-{% block content %}
+{% extends "BoutiqueApp/base.html" %} {% block title %} {{ titulo }} | Amanda
+Mateo Boutique {% endblock %} {% block content %}
 <div class="container py-5">
   <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -134,6 +131,40 @@
           </div>
           {% endif %}
         </div>
+        <div class="col-12 col-md-6">
+          <label for="id_foto3" class="form-label fw-semibold"
+            >Foto 3 (Opcional)</label
+          >
+          {{ form.foto3 }} {% if form.foto3.errors %}
+          <div class="text-danger small">{{ form.foto3.errors }}</div>
+          {% endif %} {% if vestido.foto3 %}
+          <div class="mt-2">
+            <img
+              src="{{ vestido.foto3.url }}"
+              alt="Foto 3"
+              class="img-thumbnail"
+              style="max-width: 200px"
+            />
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="id_foto4" class="form-label fw-semibold"
+            >Foto 4 (Opcional)</label
+          >
+          {{ form.foto4 }} {% if form.foto4.errors %}
+          <div class="text-danger small">{{ form.foto4.errors }}</div>
+          {% endif %} {% if vestido.foto4 %}
+          <div class="mt-2">
+            <img
+              src="{{ vestido.foto4.url }}"
+              alt="Foto 4"
+              class="img-thumbnail"
+              style="max-width: 200px"
+            />
+          </div>
+          {% endif %}
+        </div>
 
         <!-- Información Adicional -->
         <div class="col-12 mt-4">
@@ -172,7 +203,7 @@
             class="form-label fw-semibold"
             >Fecha de Entrega de Tintorería</label
           >
-          {{ form.fecha_entrega_tintoreria }}
+          {{ form.fecha_entrega_tintoreria }} 
           {% if form.fecha_entrega_tintoreria.errors %}
           <div class="text-danger small">
             {{ form.fecha_entrega_tintoreria.errors }}

@@ -1,58 +1,40 @@
-{% extends "BoutiqueApp/base.html" %} {% block title %}Eliminar Vestido | Amanda
-Mateo Boutique{% endblock %} {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-      <div class="card shadow-lg">
-        <div class="card-header bg-danger text-white">
-          <h4 class="mb-0">
-            <i class="fas fa-exclamation-triangle me-2"></i>Confirmar
-            Eliminación
-          </h4>
-        </div>
-        <div class="card-body">
-          <p class="lead">
-            ¿Está seguro que desea eliminar el siguiente vestido?
-          </p>
-
-          <div class="alert alert-warning">
-            <strong
-              ><i class="fas fa-tshirt me-2"></i>{{ vestido.nombre_modelo
-              }}</strong
-            ><br />
-            <small
-              >Talla: {{ vestido.talla }} | Color: {{ vestido.color }}</small
-            >
-          </div>
-
-          {% if vestido.estado == 'Alquilado' %}
-          <div class="alert alert-danger">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <strong>Advertencia:</strong> Este vestido está actualmente
-            alquilado. Elimínelo solo si está seguro.
-          </div>
-          {% endif %}
-
-          <p class="text-muted small">
-            <i class="fas fa-info-circle me-1"></i>
-            Esta acción no se puede deshacer.
-          </p>
-
-          <form method="post" class="mt-4">
-            {% csrf_token %}
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-danger btn-lg">
-                <i class="fas fa-trash me-1"></i>Sí, Eliminar Vestido
-              </button>
-              <a
-                href="{% url 'detalle_vestido' vestido.pk %}"
-                class="btn btn-secondary btn-lg"
-              >
-                <i class="fas fa-times me-1"></i>Volver
-              </a>
-            </div>
-          </form>
-        </div>
+{% extends "BoutiqueApp/base.html" %}
+{% block title %}Eliminar Vestido | Amanda Mateo Boutique{% endblock %}
+{% block content %}
+<div class="container my-5">
+  <div
+    class="card shadow-lg mx-auto border-0 rounded-4"
+    style="max-width: 600px; background-color: #fff5fa"
+  >
+    <div
+      class="card-header text-center fw-bold text-pink fs-5"
+      style="background-color: #ffe6f2"
+    >
+      Confirmar Eliminación
+    </div>
+    <div class="card-body text-center">
+      <h5>¿Está seguro que desea eliminar el siguiente vestido?</h5>
+      <p class="mt-3">
+        <strong>{{ vestido.nombre_modelo }}</strong><br>
+        Talla: {{ vestido.talla }} | Color: {{ vestido.color }}
+      </p>
+      {% if vestido.estado == 'Alquilado' %}
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <strong>Advertencia:</strong> Este vestido está actualmente
+        alquilado. Elimínelo solo si está seguro.
+      </div>
+      {% endif %}
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-eliminar px-4 py-2">
+            Eliminar
+          </button>
+        </form>
+        <a href="{% url 'listar_vestidos' %}" class="btn btn-volver px-4 py-2"
+          >Volver</a
+        >
       </div>
     </div>
   </div>

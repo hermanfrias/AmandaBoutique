@@ -82,11 +82,34 @@
         transform: scale(1.01);
         box-shadow: 0 2px 8px rgba(183, 110, 121, 0.15);
       }
+      .btn-action-group {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        flex-wrap: nowrap;
+      }
+      .btn-action {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        min-width: 65px;
+      }
+
+      /* Responsividad para móviles */
       @media (max-width: 767px) {
         .table-alquileres th,
         .table-alquileres td {
           padding: 8px 4px;
           font-size: 0.85rem;
+        }
+        .btn-action-group {
+          flex-wrap: wrap;
+          gap: 3px;
+        }
+        .btn-action {
+          padding: 4px 8px;
+          font-size: 0.75rem;
+          min-width: 55px;
         }
       }
     </style>
@@ -139,9 +162,13 @@
           <td class="text-center">
             <div class="btn-action-group">
               <a href="{% url 'detalle_alquiler' alquiler.pk %}" class="btn btn-sm btn-ver btn-action">Ver</a>
+              {% if perms.Alquiler.change_alquiler %}
               <a href="{% url 'editar_alquiler' alquiler.pk %}" class="btn btn-sm btn-editar btn-action">Editar</a>
+              {% endif %}
               <a href="{% url 'contrato_pdf' alquiler.pk %}" class="btn btn-sm btn-pink btn-action" target="_blank">PDF</a>
+              {% if perms.Alquiler.delete_alquiler %}
               <a href="{% url 'eliminar_alquiler' alquiler.pk %}" class="btn btn-sm btn-eliminar btn-action">Eliminar</a>
+              {% endif %}
             </div>
           </td>
         </tr>

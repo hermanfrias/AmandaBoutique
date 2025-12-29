@@ -48,7 +48,6 @@ def listar_catalogo(request):
 
 # --- VER DETALLES DE LOS REGISTROS ---
 
-@login_required
 def detalle_catalogo(request, codigo):
     catalogo = Catalogo.objects.get(codigo=codigo)
     return render(request, 'BoutiqueApp/detalle_catalogo.html', {'catalogo': catalogo})

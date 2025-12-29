@@ -1,6 +1,6 @@
 {% extends "BoutiqueApp/base.html" %}
 {% load humanize %}
-{% block title%}Detalle Vestido | Amanda Mateo Boutique {% endblock %}
+{% block title %}Detalle Vestido | Amanda Mateo Boutique{% endblock %}
 {% block content %}
 <div class="container py-5">
   <!-- Encabezado -->
@@ -9,9 +9,11 @@
       <i class="fas fa-tshirt me-2"></i>Detalle del Vestido
     </h2>
     <div class="btn-group-catalogo">
+      {% if perms.Alquiler.change_vestido %}
       <a href="{% url 'editar_vestido' vestido.pk %}" class="btn btn-editar">
         <i class="fas fa-edit me-1"></i>Editar
       </a>
+      {% endif %}
       <a href="{% url 'listar_vestidos' %}" class="btn btn-volver">
         <i class="fas fa-arrow-left me-1"></i>Volver
       </a>
@@ -49,7 +51,7 @@
               <strong>Estado:</strong>
               <p class="mb-0">
                 <span
-                  class="badge {% if vestido.estado == 'Disponible' %}bg-success {% elif vestido.estado == 'Alquilado' %}bg-warning text-dark {% elif vestido.estado == 'Tintorería' %}bg-info {% elif vestido.estado == 'Arreglo' %}bg-secondary {% else %}bg-danger {% endif %}"
+                  class="badge {% if vestido.estado == 'Disponible' %} bg-success {% elif vestido.estado == 'Alquilado' %} bg-warning text-dark {% elif vestido.estado == 'Tintorería' %} bg-info {% elif vestido.estado == 'Arreglo' %} bg-secondary {% else %}bg-danger {% endif %}"
                 >
                   {{ vestido.estado }}
                 </span>
@@ -113,7 +115,8 @@
         </div>
       </div>
 
-      <!-- Historial de Alquileres -->
+      <!-- Historial de Alquileres - Solo para superusuarios o usuarios con permisos -->
+      {% if user.is_superuser or perms.Alquiler.view_alquiler %}
       {% if alquileres %}
       <div class="card shadow-sm">
         <div class="card-header bg-pink text-white">
@@ -148,32 +151,132 @@
           </div>
         </div>
       </div>
-      {% endif %}
+      {% endif %} {% endif %}
     </div>
 
-    <!-- Fotos -->
+    <!-- Fotos con Carousel -->
     <div class="col-12 col-lg-4">
       <div class="card shadow-sm mb-4">
         <div class="card-header bg-pink text-white">
           <h4 class="mb-0"><i class="fas fa-camera me-2"></i>Fotos</h4>
         </div>
-        <div class="card-body">
-          {% if vestido.foto1 %}
-          <div class="mb-3">
-            <img
-              src="{{ vestido.foto1.url }}"
-              alt="{{ vestido.nombre_modelo }}"
-              class="img-fluid rounded"
-            />
+        <div class="card-body p-2">
+          {% if vestido.foto1 or vestido.foto2 or vestido.foto3 or vestido.foto4 %}
+          <div
+            id="vestidoCarousel"
+            class="carousel slide carousel-fade"
+            data-bs-ride="carousel"
+            data-bs-wrap="true"
+          >
+            <!-- Slides -->
+            <div class="carousel-inner">
+              {% if vestido.foto1 %}
+              <div class="carousel-item active">
+                <img
+                  src="{{ vestido.foto1.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ vestido.nombre_modelo }}"
+                  style="height: 300px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox(0)"
+                />
+              </div>
+              {% endif %} {% if vestido.foto2 %}
+              <div
+                class="carousel-item {% if not vestido.foto1 %}active{% endif %}"
+              >
+                <img
+                  src="{{ vestido.foto2.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ vestido.nombre_modelo }}"
+                  style="height: 300px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox({% if vestido.foto1 %}1{% else %}0{% endif %})"
+                />
+              </div>
+              {% endif %} {% if vestido.foto3 %}
+              <div
+                class="carousel-item {% if not vestido.foto1 and not vestido.foto2 %}active{% endif %}"
+              >
+                <img
+                  src="{{ vestido.foto3.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ vestido.nombre_modelo }}"
+                  style="height: 300px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox({% if vestido.foto1 and vestido.foto2 %}2{% elif vestido.foto1 or vestido.foto2 %}1{% else %}0{% endif %})"
+                />
+              </div>
+              {% endif %} {% if vestido.foto4 %}
+              <div
+                class="carousel-item {% if not vestido.foto1 and not vestido.foto2 and not vestido.foto3 %}active{% endif %}"
+              >
+                <img
+                  src="{{ vestido.foto4.url }}"
+                  class="d-block w-100 carousel-image"
+                  alt="{{ vestido.nombre_modelo }}"
+                  style="height: 300px; object-fit: contain; cursor: pointer"
+                  onclick="openLightbox({% if vestido.foto1 and vestido.foto2 and vestido.foto3 %}3{% elif vestido.foto1 and vestido.foto2 or vestido.foto1 and vestido.foto3 or vestido.foto2 and vestido.foto3 %}2{% elif vestido.foto1 or vestido.foto2 or vestido.foto3 %}1{% else %}0{% endif %})"
+                />
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Controles -->
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#vestidoCarousel"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#vestidoCarousel"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Siguiente</span>
+            </button>
+
+            <!-- Indicadores -->
+            <div class="carousel-indicators">
+              {% if vestido.foto1 %}
+              <button
+                type="button"
+                data-bs-target="#vestidoCarousel"
+                data-bs-slide-to="0"
+                class="active"
+              ></button>
+              {% endif %} {% if vestido.foto2 %}
+              <button
+                type="button"
+                data-bs-target="#vestidoCarousel"
+                data-bs-slide-to="{% if vestido.foto1 %}1{% else %}0{% endif %}"
+              ></button>
+              {% endif %} {% if vestido.foto3 %}
+              <button
+                type="button"
+                data-bs-target="#vestidoCarousel"
+                data-bs-slide-to="{% if vestido.foto1 and vestido.foto2 %}2{% elif vestido.foto1 or vestido.foto2 %}1{% else %}0{% endif %}"
+              ></button>
+              {% endif %} {% if vestido.foto4 %}
+              <button
+                type="button"
+                data-bs-target="#vestidoCarousel"
+                data-bs-slide-to="{% if vestido.foto1 and vestido.foto2 and vestido.foto3 %}3{% elif vestido.foto1 and vestido.foto2 or vestido.foto1 and vestido.foto3 or vestido.foto2 and vestido.foto3 %}2{% elif vestido.foto1 or vestido.foto2 or vestido.foto3 %}1{% else %}0{% endif %}"
+              ></button>
+              {% endif %}
+            </div>
           </div>
-          {% endif %} {% if vestido.foto2 %}
-          <div>
-            <img
-              src="{{ vestido.foto2.url }}"
-              alt="{{ vestido.nombre_modelo }}"
-              class="img-fluid rounded"
-            />
-          </div>
+          {% else %}
+          <p class="text-muted text-center">Sin fotos disponibles</p>
           {% endif %}
         </div>
       </div>
@@ -181,9 +284,214 @@
   </div>
 </div>
 
+<!-- Modal Lightbox con Carousel -->
+<div id="lightboxModal" class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0">
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body p-0">
+        <div
+          id="lightboxCarousel"
+          class="carousel slide carousel-fade"
+          data-bs-ride="false"
+          data-bs-wrap="true"
+        >
+          <div class="carousel-inner">
+            {% if vestido.foto1 %}
+            <div class="carousel-item active">
+              <img
+                src="{{ vestido.foto1.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ vestido.nombre_modelo }}"
+              />
+            </div>
+            {% endif %} {% if vestido.foto2 %}
+            <div
+              class="carousel-item {% if not vestido.foto1 %}active{% endif %}"
+            >
+              <img
+                src="{{ vestido.foto2.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ vestido.nombre_modelo }}"
+              />
+            </div>
+            {% endif %} {% if vestido.foto3 %}
+            <div
+              class="carousel-item {% if not vestido.foto1 and not vestido.foto2 %}active{% endif %}"
+            >
+              <img
+                src="{{ vestido.foto3.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ vestido.nombre_modelo }}"
+              />
+            </div>
+            {% endif %} {% if vestido.foto4 %}
+            <div
+              class="carousel-item {% if not vestido.foto1 and not vestido.foto2 and not vestido.foto3 %}active{% endif %}"
+            >
+              <img
+                src="{{ vestido.foto4.url }}"
+                class="d-block w-100"
+                style="max-height: 80vh; object-fit: contain"
+                alt="{{ vestido.nombre_modelo }}"
+              />
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Controles del carousel en el modal -->
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#lightboxCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#lightboxCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+
+          <!-- Indicadores en el modal -->
+          <div class="carousel-indicators">
+            {% if vestido.foto1 %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="0"
+              class="active"
+            ></button>
+            {% endif %} {% if vestido.foto2 %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="{% if vestido.foto1 %}1{% else %}0{% endif %}"
+            ></button>
+            {% endif %} {% if vestido.foto3 %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="{% if vestido.foto1 and vestido.foto2 %}2{% elif vestido.foto1 or vestido.foto2 %}1{% else %}0{% endif %}"
+            ></button>
+            {% endif %} {% if vestido.foto4 %}
+            <button
+              type="button"
+              data-bs-target="#lightboxCarousel"
+              data-bs-slide-to="{% if vestido.foto1 and vestido.foto2 and vestido.foto3 %}3{% elif vestido.foto1 and vestido.foto2 or vestido.foto1 and vestido.foto3 or vestido.foto2 and vestido.foto3 %}2{% elif vestido.foto1 or vestido.foto2 or vestido.foto3 %}1{% else %}0{% endif %}"
+            ></button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
-  .bg-pink {
-    background-color: #b76e79 !important;
+  /* Estilos del carousel */
+  .carousel-image {
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .carousel-fade .carousel-item {
+    opacity: 0;
+    transition-duration: 0.6s;
+    transition-property: opacity;
+  }
+
+  .carousel-fade .carousel-item.active {
+    opacity: 1;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: rgba(183, 110, 121, 0.8);
+    border-radius: 50%;
+    padding: 15px;
+  }
+
+  .carousel-control-prev:hover .carousel-control-prev-icon,
+  .carousel-control-next:hover .carousel-control-next-icon {
+    background-color: rgba(183, 110, 121, 1);
+  }
+
+  .carousel-indicators button {
+    background-color: #b76e79;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .carousel-indicators button.active {
+    background-color: #d4a5ae;
+  }
+
+  /* Modal lightbox */
+  #lightboxModal .carousel-control-prev-icon,
+  #lightboxModal .carousel-control-next-icon {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 25px;
+  }
+
+  #lightboxModal .carousel-indicators button {
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  #lightboxModal .carousel-indicators button.active {
+    background-color: rgba(255, 255, 255, 1);
   }
 </style>
+
+<script>
+  function openLightbox(slideIndex) {
+    var lightboxCarousel = new bootstrap.Carousel(
+      document.getElementById("lightboxCarousel")
+    );
+    lightboxCarousel.to(slideIndex);
+
+    var lightboxModal = new bootstrap.Modal(
+      document.getElementById("lightboxModal")
+    );
+    lightboxModal.show();
+
+    // Pausar el carousel principal
+    var mainCarousel = bootstrap.Carousel.getInstance(
+      document.getElementById("vestidoCarousel")
+    );
+    if (mainCarousel) {
+      mainCarousel.pause();
+    }
+  }
+
+  // Reanudar carousel al cerrar modal
+  document
+    .getElementById("lightboxModal")
+    .addEventListener("hidden.bs.modal", function () {
+      var mainCarousel = bootstrap.Carousel.getInstance(
+        document.getElementById("vestidoCarousel")
+      );
+      if (mainCarousel) {
+        mainCarousel.cycle();
+      }
+    });
+</script>
+
 {% endblock %}

@@ -524,9 +524,32 @@ Para soporte o consultas, contactar al administrador del sistema.
 
 ---
 
-**Versión**: 3.2  
-**Última actualización**: 27 de diciembre de 2025 - Creación Rápida de Insumos desde Formulario de Compras  
+**Versión**: 3.3  
+**Última actualización**: 27-28 de diciembre de 2025 - Mejoras al Módulo de Alquiler  
 **Desarrollado con**: Django 5.1.4 + Bootstrap 5
+
+### Cambios en Versión 3.3 (27-28/12/2025)
+
+- ✅ **Módulo de Alquiler - Sistema de Pagos Mejorado**
+  - Nuevo campo `pago_final` para registrar liquidación
+  - `pago_total` calculado automáticamente (anticipo + pago_final)
+  - Cálculos automáticos de saldo pendiente
+  - Conversión automática de moneda (Bs ↔ USD)
+- ✅ **Depósito de Garantía en Vestidos**
+  - Campo `deposito_garantia` agregado al modelo Vestido
+  - Cada vestido puede tener su propio depósito configurable
+  - Visible en formularios, detalles y contrato PDF
+- ✅ **Actualización Automática de Estados**
+  - Vestidos cambian a "Alquilado" al crear alquiler
+  - Vestidos vuelven a "Disponible" al cancelar
+  - Vestidos van a "Tintorería" al devolver
+- ✅ **Contrato PDF Optimizado**
+  - Reducido de 3 a 2 páginas
+  - Organización en dos columnas
+  - Información del cliente agregada (C.I. y dirección)
+  - Cuadro de observaciones ampliado
+- ✅ **Filtrado Inteligente**
+  - Vestidos con estado "Dañado", "Vendido" o "Baja" no se muestran en página principal
 
 ### Cambios en Versión 2.9 (20/12/2025)
 

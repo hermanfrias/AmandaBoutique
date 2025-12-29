@@ -179,12 +179,34 @@ def editar_permisos_usuario(request, user_id):
     # Obtener permisos organizados por modelo
     permisos_por_modelo = {}
     modelos = [
+        # BoutiqueApp
         ('BoutiqueApp', 'catalogo', 'Catálogo'),
+        
+        # Alquiler
+        ('Alquiler', 'vestido', 'Vestidos'),
+        ('Alquiler', 'alquiler', 'Alquileres'),
+        ('Alquiler', 'cliente', 'Clientes Alquiler'),
+        
+        # Citas
         ('citas', 'cita', 'Citas'),
+        
+        # Clientes
         ('ClientesApp', 'clientes', 'Clientes'),
+        
+        # Proveedores
         ('ProveedoresApp', 'proveedores', 'Proveedores'),
+        
+        # Flujo
         ('flujo', 'movimientocaja', 'Movimientos de Caja'),
         ('flujo', 'cotizaciondolar', 'Cotización Dólar'),
+        
+        # Inventario
+        ('Inventario', 'insumo', 'Insumos'),
+        ('Inventario', 'comprainsumo', 'Compras de Insumos'),
+        ('Inventario', 'usoinsumo', 'Uso de Insumos'),
+        ('Inventario', 'activofijo', 'Activos Fijos'),
+        ('Inventario', 'mantenimientoactivo', 'Mantenimiento de Activos'),
+        ('Inventario', 'configuracioniva', 'Configuración IVA'),
     ]
     
     for app_label, model_name, display_name in modelos:

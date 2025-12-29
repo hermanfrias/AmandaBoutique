@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Catálogo de Alquiler - Amanda Mateo Boutique</title>
+
+    <!-- 🎀 Tipografías románticas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Playfair+Display:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- 🎀 Estilos -->
+    <link
+      rel="stylesheet"
+      href="{% static 'alquiler/css/catalogo_pdf.css' %}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Amanda Mateo Boutique</h1>
+      <p>Catálogo de Alquiler</p>
+    </header>
+
+    <section class="container">
+      {% for vestido in vestidos %}
+      <div class="card">
+        <div class="photos-grid">
+          {% if vestido.foto1 %}
+          <div class="photo-item">
+            <img
+              src="{{ vestido.foto1.url }}"
+              alt="{{ vestido.nombre_modelo }}"
+            />
+          </div>
+          {% endif %} {% if vestido.foto2 %}
+          <div class="photo-item">
+            <img
+              src="{{ vestido.foto2.url }}"
+              alt="{{ vestido.nombre_modelo }}"
+            />
+          </div>
+          {% endif %} {% if vestido.foto3 %}
+          <div class="photo-item">
+            <img
+              src="{{ vestido.foto3.url }}"
+              alt="{{ vestido.nombre_modelo }}"
+            />
+          </div>
+          {% endif %} {% if vestido.foto4 %}
+          <div class="photo-item">
+            <img
+              src="{{ vestido.foto4.url }}"
+              alt="{{ vestido.nombre_modelo }}"
+            />
+          </div>
+          {% endif %} {% if not vestido.foto1 and not vestido.foto2 and not vestido.foto3 and not vestido.foto4 %}
+          <div class="photo-item">
+            <p class="no-img">Sin imágenes</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <h2>{{ vestido.nombre_modelo }}</h2>
+        <p class="talla-color">
+          <strong>Talla:</strong> {{ vestido.talla }} |
+          <strong>Color:</strong> {{ vestido.color }}
+        </p>
+        <p class="descripcion">{{ vestido.descripcion|truncatewords:20 }}</p>
+
+        <p class="precio">${{ vestido.precio_alquiler|floatformat:2 }}</p>
+
+        {% if vestido.accesorios %}
+        <p class="accesorios">
+          <em>Incluye: {{ vestido.accesorios|truncatewords:10 }}</em>
+        </p>
+        {% endif %}
+      </div>
+      {% empty %}
+      <div class="no-items">
+        <p>No hay vestidos disponibles en este momento.</p>
+      </div>
+      {% endfor %}
+    </section>
+
+    <footer>
+      <p>© {{ now|date:"Y" }} Amanda Mateo Boutique - Elegancia a tu medida</p>
+    </footer>
+  </body>
+</html>

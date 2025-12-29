@@ -39,13 +39,26 @@ body {
   background-color: #fff7fb;
   color: #4a235a;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Asegurar que los contenedores permitan que los dropdowns se extiendan */
+.container,
+.navbar-collapse {
+  overflow: visible !important;
 }
 h1,
 h2,
 h3,
-h4,
+h4 {
+  color: #b76e79;
+}
+
 h5 {
   color: #b76e79;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
 }
 table thead th > a {
   text-decoration: none !important;
@@ -75,6 +88,15 @@ table thead th > a:hover {
 .nav-link:hover {
   color: #b76e79 !important;
 }
+
+/* Asegurar que los dropdowns del navbar no se corten */
+.navbar .dropdown-menu {
+  position: absolute !important;
+  max-height: 85vh !important;
+  overflow-y: auto !important;
+  z-index: 9999 !important;
+}
+
 .navbar .nav-item {
   display: flex;
   align-items: center;
@@ -373,6 +395,29 @@ footer a:hover {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(183, 110, 121, 0.2);
   min-width: 220px;
+  max-height: 90vh !important; /* Aumentado a 90% del viewport */
+  overflow-y: auto !important; /* Forzar scroll vertical */
+  position: absolute !important;
+  z-index: 9999 !important; /* Asegura que esté por encima de todo */
+}
+
+/* Estilo del scrollbar para el dropdown */
+.admin-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admin-dropdown::-webkit-scrollbar-track {
+  background: #ffe6f2;
+  border-radius: 10px;
+}
+
+.admin-dropdown::-webkit-scrollbar-thumb {
+  background: #b76e79;
+  border-radius: 10px;
+}
+
+.admin-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #8c4a56;
 }
 
 .admin-dropdown .dropdown-header {
@@ -403,6 +448,21 @@ footer a:hover {
 .admin-dropdown .dropdown-item:active {
   background-color: #ffd6ea;
   color: #8c4a56;
+}
+
+/* Asegurar que el contenedor del navbar permita overflow visible */
+.navbar-collapse {
+  overflow: visible !important;
+}
+
+.navbar .dropdown {
+  position: static !important;
+}
+
+@media (min-width: 992px) {
+  .navbar .dropdown {
+    position: relative !important;
+  }
 }
 
 /* ============================================

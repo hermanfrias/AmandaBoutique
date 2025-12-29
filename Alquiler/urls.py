@@ -19,4 +19,8 @@ urlpatterns = [
     
     # AJAX
     path('ajax/crear-cliente/', views.crear_cliente_rapido, name='crear_cliente_rapido'),
+    
+    # Catálogo PDF
+    path('catalogo/pdf/', views.catalogo_alquiler_pdf, name='catalogo_alquiler_pdf'),
 ]
+

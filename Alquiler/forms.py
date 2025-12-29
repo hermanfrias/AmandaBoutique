@@ -12,7 +12,7 @@ class VestidoForm(forms.ModelForm):
         fields = [
             'nombre_modelo', 'descripcion', 'talla', 'color',
             'precio_alquiler', 'valor_compra', 'deposito_garantia',
-            'estado', 'foto1', 'foto2', 'accesorios',
+            'estado', 'foto1', 'foto2', 'foto3', 'foto4', 'accesorios',
             'fecha_tintoreria', 'fecha_entrega_tintoreria'
         ]
         widgets = {
@@ -26,6 +26,8 @@ class VestidoForm(forms.ModelForm):
             'estado': forms.Select(attrs={'class': 'form-select'}),
             'foto1': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'foto2': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'foto3': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'foto4': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'accesorios': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'fecha_tintoreria': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'fecha_entrega_tintoreria': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),

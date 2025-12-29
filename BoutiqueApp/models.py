@@ -6,7 +6,10 @@ class Catalogo(models.Model):
     estilo = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=300)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    imagen_modelo = models.ImageField(upload_to='imagenes', null=True)
+    imagen_modelo = models.ImageField(upload_to='imagenes', null=True, verbose_name='Foto 1')
+    foto2 = models.ImageField(upload_to='imagenes', null=True, blank=True, verbose_name='Foto 2')
+    foto3 = models.ImageField(upload_to='imagenes', null=True, blank=True, verbose_name='Foto 3')
+    foto4 = models.ImageField(upload_to='imagenes', null=True, blank=True, verbose_name='Foto 4')
 
     def save(self, *args, **kwargs):
         if not self.codigo:  # Si no tiene código, lo generamos

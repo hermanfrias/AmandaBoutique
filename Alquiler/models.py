@@ -39,9 +39,12 @@ class Vestido(models.Model):
     # Fotos
     foto1 = models.ImageField(upload_to='vestidos/', verbose_name='Foto 1')
     foto2 = models.ImageField(upload_to='vestidos/', blank=True, null=True, verbose_name='Foto 2')
+    foto3 = models.ImageField(upload_to='vestidos/', blank=True, null=True, verbose_name='Foto 3')
+    foto4 = models.ImageField(upload_to='vestidos/', blank=True, null=True, verbose_name='Foto 4')
     
     # Información adicional
     accesorios = models.TextField(blank=True, null=True, verbose_name='Accesorios Incluidos')
+
     
     # Tintorería
     fecha_tintoreria = models.DateField(blank=True, null=True, verbose_name='Fecha de Envío a Tintorería')
