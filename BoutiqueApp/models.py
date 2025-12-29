@@ -46,3 +46,45 @@ class Catalogo(models.Model):
 
 
 
+
+# ============================================
+# SIGNALS PARA ELIMINAR FOTOS AUTOMÁTICAMENTE
+# ============================================
+
+import os
+from django.db.models.signals import post_delete, pre_save
+from django.dispatch import receiver
+
+@receiver(post_delete, sender=Catalogo)
+def auto_delete_catalogo_photos_on_delete(sender, instance, **kwargs):
+    '''Elimina las fotos del sistema de archivos cuando se elimina un Catalogo'''
+    for field_name in ['imagen_modelo', 'foto2', 'foto3', 'foto4']:
+        field = getattr(instance, field_name)
+        if field:
+            if os.path.isfile(field.path):
+                try:
+                    os.remove(field.path)
+                except Exception as e:
+                    print(f'Error al eliminar {field_name}: {e}')
+
+@receiver(pre_save, sender=Catalogo)
+def auto_delete_catalogo_photos_on_change(sender, instance, **kwargs):
+    '''Elimina la foto antigua cuando se reemplaza por una nueva'''
+    if not instance.pk:
+        return False
+
+    try:
+        old_instance = Catalogo.objects.get(pk=instance.pk)
+    except Catalogo.DoesNotExist:
+        return False
+
+    for field_name in ['imagen_modelo', 'foto2', 'foto3', 'foto4']:
+        old_field = getattr(old_instance, field_name)
+        new_field = getattr(instance, field_name)
+        
+        if old_field and old_field != new_field:
+            if os.path.isfile(old_field.path):
+                try:
+                    os.remove(old_field.path)
+                except Exception as e:
+                    print(f'Error al eliminar {field_name} antigua: {e}')

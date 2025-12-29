@@ -100,17 +100,34 @@ def detalle_vestido(request, pk):
 
 @login_required
 def eliminar_vestido(request, pk):
-    """Elimina un vestido"""
+    """Elimina un vestido si no tiene alquileres asociados"""
     vestido = get_object_or_404(Vestido, pk=pk)
     
+    # Verificar si el vestido tiene alquileres asociados
+    alquileres_count = vestido.alquileres.count()
+    
     if request.method == 'POST':
-        nombre = vestido.nombre_modelo
-        vestido.delete()
-        messages.success(request, f'Vestido "{nombre}" eliminado exitosamente.')
-        return redirect('listar_vestidos')
+        if alquileres_count > 0:
+            # No permitir eliminar si tiene alquileres
+            messages.error(
+                request, 
+                f'No se puede eliminar el vestido "{vestido.nombre_modelo}" porque tiene {alquileres_count} alquiler(es) asociado(s). '
+                f'Primero debe eliminar o reasignar los alquileres.'
+            )
+            return redirect('detalle_vestido', pk=vestido.pk)
+        
+        try:
+            nombre = vestido.nombre_modelo
+            vestido.delete()
+            messages.success(request, f'Vestido "{nombre}" eliminado exitosamente.')
+            return redirect('listar_vestidos')
+        except Exception as e:
+            messages.error(request, f'Error al eliminar el vestido: {str(e)}')
+            return redirect('detalle_vestido', pk=vestido.pk)
     
     context = {
         'vestido': vestido,
+        'alquileres_count': alquileres_count,
     }
     return render(request, 'alquiler/eliminar_vestido.html', context)
 
