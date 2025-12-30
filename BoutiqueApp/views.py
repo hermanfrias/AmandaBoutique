@@ -129,7 +129,7 @@ def catalogo_pdf_cards(request):
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = 'inline; filename="catalogo_tarjetas_amanda_boutique.pdf"'
 
-    css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/catalog_cards.css")
+    css_path = os.path.join(settings.STATICFILES_DIRS[0], "css/catalogo_pdf.css")
 
     HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(
         response,
@@ -169,7 +169,7 @@ def catalogo_alquiler_pdf_cards(request):
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = 'inline; filename="catalogo_alquiler_tarjetas_amanda_boutique.pdf"'
 
-    css_path = os.path.join(settings.STATICFILES_DIRS[0], "BoutiqueApp/css/catalog_cards.css")
+    css_path = os.path.join(settings.STATICFILES_DIRS[0], "css/catalogo_pdf.css")
 
     HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(
         response,

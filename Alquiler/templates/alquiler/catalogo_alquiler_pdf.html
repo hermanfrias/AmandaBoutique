@@ -18,10 +18,7 @@
     />
 
     <!-- 🎀 Estilos -->
-    <link
-      rel="stylesheet"
-      href="{% static 'alquiler/css/catalogo_pdf.css' %}"
-    />
+    <link rel="stylesheet" href="{% static 'css/catalogo_pdf.css' %}" />
   </head>
   <body>
     <header>
@@ -61,7 +58,8 @@
               alt="{{ vestido.nombre_modelo }}"
             />
           </div>
-          {% endif %} {% if not vestido.foto1 and not vestido.foto2 and not vestido.foto3 and not vestido.foto4 %}
+          {% endif %} {% if not vestido.foto1 and not vestido.foto2 and not
+          vestido.foto3 and not vestido.foto4 %}
           <div class="photo-item">
             <p class="no-img">Sin imágenes</p>
           </div>

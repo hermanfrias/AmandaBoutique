@@ -1,14 +1,7 @@
-{% extends 'BoutiqueApp/base.html' %} {% block title %}Eliminar Insumo - Amanda
-Mateo Boutique{% endblock %} {% block content %}
+{% extends 'BoutiqueApp/base.html' %} {% block title %}Eliminar Insumo - Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container my-5">
-  <div
-    class="card shadow-lg mx-auto border-0 rounded-4"
-    style="max-width: 600px; background-color: #fff5fa"
-  >
-    <div
-      class="card-header text-center fw-bold text-pink fs-5"
-      style="background-color: #ffe6f2"
-    >
+  <div class="card shadow-lg mx-auto card-auth card-auth-md">
+    <div class="card-header text-center bg-pink-lighter">
       Confirmar Eliminación
     </div>
     <div class="card-body text-center">
@@ -16,8 +9,7 @@ Mateo Boutique{% endblock %} {% block content %}
       <p class="mt-3">
         <strong>Código:</strong> {{ insumo.codigo }}<br />
         <strong>Descripción:</strong> {{ insumo.descripcion }}<br />
-        <strong>Existencia:</strong> {{ insumo.existencia }} {{
-        insumo.unidad_medida }}
+        <strong>Existencia:</strong> {{ insumo.existencia }} {{ insumo.unidad_medida }}
       </p>
       <p class="text-muted small">
         Esta acción no se puede deshacer. También se eliminarán todas las

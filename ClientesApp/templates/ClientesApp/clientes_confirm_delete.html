@@ -2,23 +2,11 @@
 Mateo Boutique{% endblock %} {% block content %}
 <div class="container py-5">
   <div
-    class="card shadow-lg mx-auto"
-    style="
-      max-width: 600px;
-      border: 2px solid #f8c8dc;
-      border-radius: 20px;
-      background-color: #fff5fa;
-    "
+    class="card shadow-lg mx-auto border-pink rounded-lg card-auth-md"
+    style="background-color: #fff5fa"
   >
     <div
-      class="card-header text-center"
-      style="
-        background-color: #f8c8dc;
-        color: #b76e79;
-        font-size: 1.5rem;
-        font-weight: bold;
-        border-radius: 18px 18px 0 0;
-      "
+      class="card-header text-center bg-pink-lighter text-primary-pink font-weight-bold rounded-top-18"
     >
       Confirmar Eliminación
     </div>
@@ -26,7 +14,7 @@ Mateo Boutique{% endblock %} {% block content %}
     <div class="card-body text-center px-4 py-4">
       <p class="fs-5 text-dark">
         ¿Estás seguro que deseas eliminar al cliente:<br />
-        <strong style="color: #b76e79"
+        <strong class="text-primary-pink"
           >{{ clientes.nombre }} ({{ clientes.identificacion }})</strong
         >?
       </p>

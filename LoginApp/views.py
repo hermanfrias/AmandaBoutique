@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from LoginApp.froms import FormularioCreacionUsuario, FormularioCambioUsuario
+from LoginApp.forms import FormularioCreacionUsuario, FormularioCambioUsuario
 
 def registrar_usuario(request):
     if request.method == 'POST':

@@ -3,7 +3,7 @@
   <h2 class="text-pink fw-bold mb-4 text-center">
     Editar Configuración de IVA
   </h2>
-  <form method="POST" class="mx-auto" style="max-width: 500px">
+  <form method="POST" class="mx-auto card-auth-sm">
     {% csrf_token %} {{ form.as_p }}
     <div class="text-center mt-4">
       <button type="submit" class="btn btn-pink btn-sm me-2">Guardar</button>

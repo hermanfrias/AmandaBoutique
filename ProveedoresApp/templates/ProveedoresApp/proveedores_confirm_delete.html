@@ -1,25 +1,16 @@
 {% extends "BoutiqueApp/base.html" %} {% block content %}
 <div class="container my-5">
-  <div
-    class="card shadow-lg p-4 mx-auto"
-    style="max-width: 600px; border: 2px solid #f8c8dc; border-radius: 15px"
-  >
+  <div class="card shadow-lg mx-auto border-pink rounded-lg card-auth-md">
     <div
-      class="card-header text-center"
-      style="
-        background-color: #f8c8dc;
-        color: #b76e79;
-        font-size: 1.5rem;
-        font-weight: bold;
-      "
+      class="card-header text-center bg-pink-lighter text-primary-pink text-2xl font-bold"
     >
       Confirmar Eliminación
     </div>
     <div class="card-body text-center">
-      <p style="font-size: 1.2rem; color: #555">
+      <p class="lead">
         ¿Estás seguro que deseas eliminar al proveedor:<br />
-        <strong style="color: #b76e79"
-          >{{ proveedores.nombre }} ({{ proveedores.codigo_proveedor }})</strong
+        <strong class="text-primary-pink"
+          >{{ object.nombre_empresa }} ({{ proveedores.codigo_proveedor }})</strong
         >?
       </p>
       <p class="text-muted">Esta acción no se puede deshacer.</p>

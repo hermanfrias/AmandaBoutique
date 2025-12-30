@@ -1,23 +1,17 @@
-{% extends "BoutiqueApp/base.html" %}
-{% block title %}Eliminar Alquiler | Amanda Mateo Boutique{% endblock %}
-{% block content %}
+{% extends "BoutiqueApp/base.html" %} {% block title %}Eliminar Alquiler |
+Amanda Mateo Boutique{% endblock %} {% block content %}
 <div class="container my-5">
-  <div
-    class="card shadow-lg mx-auto border-0 rounded-4"
-    style="max-width: 600px; background-color: #fff5fa"
-  >
-    <div
-      class="card-header text-center fw-bold text-pink fs-5"
-      style="background-color: #ffe6f2"
-    >
+  <div class="card shadow-lg mx-auto card-auth card-auth-md">
+    <div class="card-header text-center bg-pink-lighter">
       Confirmar Eliminación
     </div>
     <div class="card-body text-center">
       <h5>¿Está seguro que desea eliminar el siguiente alquiler?</h5>
       <p class="mt-3">
-        <strong>Alquiler #{{ alquiler.pk }}</strong><br>
-        <strong>Cliente:</strong> {{ alquiler.cliente.nombre }} {{ alquiler.cliente.apellido }}<br>
-        <strong>Vestido:</strong> {{ alquiler.vestido.nombre_modelo }}<br>
+        <strong>Alquiler #{{ alquiler.pk }}</strong><br />
+        <strong>Cliente:</strong> {{ alquiler.cliente.nombre }} {{
+        alquiler.cliente.apellido }}<br />
+        <strong>Vestido:</strong> {{ alquiler.vestido.nombre_modelo }}<br />
         <strong>Fecha Inicio:</strong> {{ alquiler.fecha_inicio|date:"d/m/Y" }}
       </p>
       {% if alquiler.estado_alquiler == 'Activo' %}

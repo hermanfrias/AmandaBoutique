@@ -1,10 +1,7 @@
 {% extends "BoutiqueApp/base.html" %} {% block content %}
 <div class="container my-5">
   <h2 class="mb-4 text-center text-pink fw-bold">Actualizar Catálogo</h2>
-  <div
-    class="card shadow-lg p-4 mx-auto border-0 rounded-4"
-    style="max-width: 700px; background-color: #fff5fa"
-  >
+  <div class="card shadow-lg mx-auto card-auth card-auth-lg">
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 

@@ -55,9 +55,7 @@ Activo{% endblock %} {% block content %}
             <tr>
               <th>Valor de Adquisición:</th>
               <td class="fw-bold">
-                {% if activo.moneda == 'Bs' %} Bs {{
-                activo.valor_adquisicion|floatformat:2 }} {% else %} ${{
-                activo.valor_adquisicion|floatformat:2 }} {% endif %}
+                {% if activo.moneda == 'Bs' %} Bs {{ activo.valor_adquisicion|floatformat:2 }} {% else %} ${{ activo.valor_adquisicion|floatformat:2 }} {% endif %}
               </td>
             </tr>
             <tr>

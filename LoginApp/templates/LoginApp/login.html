@@ -1,22 +1,15 @@
 {% extends "BoutiqueApp/base.html" %}
+{% load static %}
 {% block title %}Login | Amanda Mateo Boutique{% endblock %}
 {% block content %}
-<div class="container my-5" style="max-width: 500px;">
-  <div class="card shadow-sm p-4" style="background-color: #fff0f7; border-radius: 20px;">
-    <h2 class="text-center mb-4" style="color: #b76e79;">Iniciar Sesión</h2>
+<div class="container my-5 card-auth-sm">
+  <div class="card shadow-sm p-4 card-auth">
+    <h2 class="text-center mb-4 text-primary-pink">Iniciar Sesión</h2>
     <form method="POST">
       {% csrf_token %}
-      <div class="mb-3">
-        <label for="username" class="form-label">Nombre de usuario</label>
-        <input type="text" name="username" id="username" class="form-control" placeholder="Ingresa tu usuario" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Contraseña</label>
-        <input type="password" name="password" id="password" class="form-control" placeholder="Ingresa tu contraseña" required>
-      </div>
-      <button type="submit" class="btn btn-pink w-100">Entrar</button>
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-pink w-100">Iniciar Sesión</button>
     </form>
-    <div class="text-center mt-3">
       <p>¿No tienes cuenta? <a href="{% url 'registrar' %}" style="color: #b76e79;">Regístrate aquí</a></p>
     </div>
   </div>

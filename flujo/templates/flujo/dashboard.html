@@ -43,30 +43,30 @@
     </form>
 
     <div class="row mb-4">
-        <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Total Ingresos USD</h6><h5>${{ total_ingresos_usd|localize }}</h5><small>{{ cant_ingresos }} transacciones</small></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Total Gastos USD</h6><h5>${{ total_gastos_usd|localize }}</h5><small>{{ cant_gastos }} transacciones</small></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#fdebf2;"><h6>Saldo USD</h6><h5>${{ saldo_usd|localize }}</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:{% if rentabilidad > 0 %}#d4edda{% else %}#f8d7da{% endif %};"><h6>Rentabilidad</h6><h5>{{ rentabilidad }}%</h5></div></div>
+        <div class="col"><div class="card metric-card metric-card-pink"><h6>Total Ingresos USD</h6><h5>${{ total_ingresos_usd|localize }}</h5><small>{{ cant_ingresos }} transacciones</small></div></div>
+        <div class="col"><div class="card metric-card metric-card-pink"><h6>Total Egresos USD</h6><h5>${{ total_gastos_usd|localize }}</h5><small>{{ cant_gastos }} transacciones</small></div></div>
+        <div class="col"><div class="card metric-card metric-card-pink"><h6>Saldo USD</h6><h5>${{ saldo_usd|localize }}</h5></div></div>
+        <div class="col"><div class="card metric-card {% if rentabilidad > 0 %}metric-card-success{% else %}metric-card-danger{% endif %}"><h6>Rentabilidad</h6><h5>{{ rentabilidad }}%</h5></div></div>
     </div>
     <hr>
 
     <!-- Resumen Anual -->
     <h3 class="text-pink fw-bold mb-4 text-center">Resumen Anual ({{ anio_filtro }})</h3>
     <div class="row mb-4">
-        <div class="col"><div class="card p-2 text-center" style="background:#e3f2fd;"><h6>Ingresos Anuales (USD)</h6><h5>${{ total_ingresos_usd_anual|localize }}</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#e3f2fd;"><h6>Gastos Anuales (USD)</h6><h5>${{ total_gastos_usd_anual|localize }}</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#e3f2fd;"><h6>Saldo Anual (USD)</h6><h5>${{ saldo_usd_anual|localize }}</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:{% if rentabilidad_anual > 0 %}#d4edda{% else %}#f8d7da{% endif %};"><h6>Rentabilidad Anual</h6><h5>{{ rentabilidad_anual }}%</h5></div></div>
+        <div class="col"><div class="card metric-card metric-card-blue"><h6>Ingresos Anuales (USD)</h6><h5>${{ total_ingresos_usd_anual|localize }}</h5></div></div>
+        <div class="col"><div class="card metric-card metric-card-blue"><h6>Egresos Anuales (USD)</h6><h5>${{ total_gastos_usd_anual|localize }}</h5></div></div>
+        <div class="col"><div class="card metric-card metric-card-blue"><h6>Saldo Anual (USD)</h6><h5>${{ saldo_usd_anual|localize }}</h5></div></div>
+        <div class="col"><div class="card metric-card {% if rentabilidad_anual > 0 %}metric-card-success{% else %}metric-card-danger{% endif %}"><h6>Rentabilidad Anual</h6><h5>{{ rentabilidad_anual }}%</h5></div></div>
     </div>
     <hr>
 
     <!-- Resumen Acumulativo Total -->
     <h3 class="text-pink fw-bold mb-4 text-center">Resumen Acumulativo Total</h3>
     <div class="row mb-4">
-        <div class="col"><div class="card p-2 text-center" style="background:#fff3cd;"><h6>Ingresos Totales (USD)</h6><h5>${{ total_ingresos_usd_total|localize }}</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#fff3cd;"><h6>Gastos Totales (USD)</h6><h5>${{ total_gastos_usd_total|localize }}</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:#fff3cd;"><h6>Saldo Total (USD)</h6><h5>${{ saldo_usd_total|localize }}</h5></div></div>
-        <div class="col"><div class="card p-2 text-center" style="background:{% if rentabilidad_total > 0 %}#d4edda{% else %}#f8d7da{% endif %};"><h6>Rentabilidad Total</h6><h5>{{ rentabilidad_total }}%</h5></div></div>
+        <div class="col"><div class="card metric-card metric-card-yellow"><h6>Ingresos Totales (USD)</h6><h5>${{ total_ingresos_usd_total|localize }}</h5></div></div>
+        <div class="col"><div class="card metric-card metric-card-yellow"><h6>Egresos Totales (USD)</h6><h5>${{ total_gastos_usd_total|localize }}</h5></div></div>
+        <div class="col"><div class="card metric-card metric-card-yellow"><h6>Saldo Total (USD)</h6><h5>${{ saldo_usd_total|localize }}</h5></div></div>
+        <div class="col"><div class="card metric-card {% if rentabilidad_total > 0 %}metric-card-success{% else %}metric-card-danger{% endif %}"><h6>Rentabilidad Total</h6><h5>{{ rentabilidad_total }}%</h5></div></div>
     </div>
     <hr>
 
@@ -94,7 +94,7 @@
                     borderWidth: 1
                 },
                 {
-                    label: 'Gastos (USD)',
+                    label: 'Egresos (USD)',
                     data: {{ gastos_mes|safe }},
                     backgroundColor: 'rgba(255, 99, 132, 0.6)',
                     borderColor: 'rgba(255, 99, 132, 1)',

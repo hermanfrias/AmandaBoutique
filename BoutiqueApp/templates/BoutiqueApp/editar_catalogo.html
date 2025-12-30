@@ -1,15 +1,7 @@
 {% extends "BoutiqueApp/base.html" %} {% block content %}
 <div class="container my-5">
-  <div
-    class="card shadow-lg mx-auto border-0 rounded-4"
-    style="max-width: 700px; background-color: #fff5fa"
-  >
-    <div
-      class="card-header text-center fw-bold text-pink fs-4"
-      style="background-color: #ffe6f2"
-    >
-      Editar Catálogo
-    </div>
+  <div class="card shadow-lg mx-auto card-auth card-auth-lg">
+    <div class="card-header text-center bg-pink-lighter">Editar Catálogo</div>
     <div class="card-body p-4">
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}

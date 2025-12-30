@@ -31,12 +31,13 @@
       crossorigin="anonymous"
     />
     <!-- Estilos personalizados unificados -->
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}" />
     <!-- Estilos estándar para tablas y componentes -->
     <link
       rel="stylesheet"
       href="{% static 'BoutiqueApp/css/boutique_standard.css' %}"
     />
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/utilidades.css' %}" />
     <!-- Utilidades responsivas -->
     <link rel="stylesheet" href="{% static 'css/responsive-utilities.css' %}" />
     {% block extra_css %}{% endblock %}
@@ -86,7 +87,7 @@
               >
                 <li class="dropdown-header">Panel de Administración</li>
                 <li><hr class="dropdown-divider" /></li>
-                
+
                 <!-- Elementos sin agrupar -->
                 <li>
                   <a href="{% url 'listar_citas' %}" class="dropdown-item">
@@ -108,9 +109,9 @@
                     <i class="fas fa-truck me-2"></i>Proveedores
                   </a>
                 </li>
-                
+
                 <li><hr class="dropdown-divider" /></li>
-                
+
                 <!-- Submenú Alquiler -->
                 <li class="dropdown-submenu">
                   <a class="dropdown-item dropdown-toggle" href="#">
@@ -118,18 +119,24 @@
                   </a>
                   <ul class="dropdown-menu">
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_alquileres' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_alquileres' %}"
+                      >
                         Alquileres
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_vestidos' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_vestidos' %}"
+                      >
                         Vestidos
                       </a>
                     </li>
                   </ul>
                 </li>
-                
+
                 <!-- Submenú Inventario -->
                 <li class="dropdown-submenu">
                   <a class="dropdown-item dropdown-toggle" href="#">
@@ -137,12 +144,18 @@
                   </a>
                   <ul class="dropdown-menu">
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_insumos' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_insumos' %}"
+                      >
                         Insumos
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_compras' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_compras' %}"
+                      >
                         Compras de Insumos
                       </a>
                     </li>
@@ -152,13 +165,16 @@
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_activos' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_activos' %}"
+                      >
                         Activos Fijos
                       </a>
                     </li>
                   </ul>
                 </li>
-                
+
                 <!-- Submenú Finanzas -->
                 <li class="dropdown-submenu">
                   <a class="dropdown-item dropdown-toggle" href="#">
@@ -166,30 +182,42 @@
                   </a>
                   <ul class="dropdown-menu">
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_movimientos' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_movimientos' %}"
+                      >
                         Flujo de Caja
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_cotizaciones' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_cotizaciones' %}"
+                      >
                         Cotización
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{% url 'listar_configuraciones_iva' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'listar_configuraciones_iva' %}"
+                      >
                         Configuración IVA
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{% url 'dashboard_flujo' %}">
+                      <a
+                        class="dropdown-item"
+                        href="{% url 'dashboard_flujo' %}"
+                      >
                         Resumen
                       </a>
                     </li>
                   </ul>
                 </li>
-                
+
                 <li><hr class="dropdown-divider" /></li>
-                
+
                 <!-- Submenú Administración -->
                 <li class="dropdown-submenu">
                   <a class="dropdown-item dropdown-toggle" href="#">
@@ -203,7 +231,10 @@
                     </li>
                     {% if user.is_superuser %}
                     <li>
-                      <a href="{% url 'gestionar_permisos' %}" class="dropdown-item">
+                      <a
+                        href="{% url 'gestionar_permisos' %}"
+                        class="dropdown-item"
+                      >
                         <i class="bi bi-shield-lock me-2"></i>Gestionar Usuarios
                       </a>
                     </li>
@@ -244,43 +275,45 @@
       </p>
       <p><a href="{% url 'index' %}">Volver al Inicio</a></p>
     </footer>
-    
+
     <script>
       // Funcionalidad para submenús anidados
-      document.addEventListener('DOMContentLoaded', function() {
-        const dropdownSubmenus = document.querySelectorAll('.dropdown-submenu > .dropdown-toggle');
-        
-        dropdownSubmenus.forEach(function(toggle) {
+      document.addEventListener("DOMContentLoaded", function () {
+        const dropdownSubmenus = document.querySelectorAll(
+          ".dropdown-submenu > .dropdown-toggle"
+        );
+
+        dropdownSubmenus.forEach(function (toggle) {
           // Prevenir que el clic cierre el menú principal
-          toggle.addEventListener('click', function(e) {
+          toggle.addEventListener("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
-            
-            const parent = this.closest('.dropdown-submenu');
-            const submenu = parent.querySelector('.dropdown-menu');
-            
+
+            const parent = this.closest(".dropdown-submenu");
+            const submenu = parent.querySelector(".dropdown-menu");
+
             // En móviles (< 992px), toggle de la clase show
             if (window.innerWidth < 992) {
-              parent.classList.toggle('show');
+              parent.classList.toggle("show");
             } else {
               // En desktop, también permitir click además de hover
-              const isVisible = submenu.style.display === 'block';
-              submenu.style.display = isVisible ? 'none' : 'block';
+              const isVisible = submenu.style.display === "block";
+              submenu.style.display = isVisible ? "none" : "block";
             }
           });
-          
+
           // Prevenir que los clicks dentro del submenú cierren el menú principal
-          const parent = toggle.closest('.dropdown-submenu');
-          const submenu = parent.querySelector('.dropdown-menu');
+          const parent = toggle.closest(".dropdown-submenu");
+          const submenu = parent.querySelector(".dropdown-menu");
           if (submenu) {
-            submenu.addEventListener('click', function(e) {
+            submenu.addEventListener("click", function (e) {
               e.stopPropagation();
             });
           }
         });
       });
     </script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
   </body>

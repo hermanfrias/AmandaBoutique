@@ -22,8 +22,7 @@
             {% csrf_token %} {% if activo %}
             <div class="alert alert-info">
               <i class="fas fa-info-circle me-2"></i>
-              <strong>Número de Inventario:</strong> {{ activo.numero_inventario
-              }} (generado automáticamente)
+              <strong>Número de Inventario:</strong> {{ activo.numero_inventario }} (generado automáticamente)
             </div>
             {% else %}
             <div class="alert alert-info">

@@ -1,0 +1,70 @@
+/* ============================================
+   UTILIDADES DE COLOR - TEMA AMANDA BOUTIQUE
+   ============================================ */
+
+/* Textos */
+.text-primary-pink { color: #b76e79 !important; }
+.text-primary-pink-bold { 
+  color: #b76e79 !important; 
+  font-weight: bold !important; 
+}
+
+/* Fondos */
+.bg-pink-light { background-color: #fff0f7 !important; }
+.bg-pink-lighter { background-color: #ffe6f2 !important; }
+.bg-pink-soft { background-color: #f8c8dc !important; }
+.bg-pink-pale { background-color: #fdebf2 !important; }
+.bg-blue-light { background-color: #e3f2fd !important; }
+.bg-yellow-light { background-color: #fff3cd !important; }
+.bg-success-light { background-color: #d4edda !important; }
+.bg-danger-light { background-color: #f8d7da !important; }
+
+/* ============================================
+   CARDS Y CONTAINERS
+   ============================================ */
+
+.card-auth {
+  background-color: #fff0f7;
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.card-auth-sm { max-width: 500px; margin: 0 auto; }
+.card-auth-md { max-width: 600px; margin: 0 auto; }
+.card-auth-lg { max-width: 700px; margin: 0 auto; }
+
+.border-pink { border: 2px solid #f8c8dc !important; }
+.border-pink-light { border: 2px solid #ffe6f2 !important; }
+
+/* ============================================
+   DASHBOARD METRICS
+   ============================================ */
+
+.metric-card {
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.metric-card-pink { background: #fdebf2; }
+.metric-card-blue { background: #e3f2fd; }
+.metric-card-yellow { background: #fff3cd; }
+.metric-card-success { background: #d4edda; }
+.metric-card-danger { background: #f8d7da; }
+
+/* ============================================
+   UTILIDADES ADICIONALES
+   ============================================ */
+
+.rounded-xl { border-radius: 20px !important; }
+.rounded-lg { border-radius: 15px !important; }
+
+.link-pink {
+  color: #b76e79;
+  text-decoration: none;
+}
+
+.link-pink:hover {
+  color: #8c4a56;
+  text-decoration: underline;
+}

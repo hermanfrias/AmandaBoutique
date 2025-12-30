@@ -243,12 +243,12 @@ def dashboard_flujo(request):
         
         # Totales USD (Mes)
         total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
-        total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd = movimientos.filter(tipo='Egresos').aggregate(total=Sum('monto_usd'))['total'] or 0
         saldo_usd = total_ingresos_usd - total_gastos_usd
         
         # Cantidades (Mes)
         cant_ingresos = movimientos.filter(tipo='Ingreso').count()
-        cant_gastos = movimientos.filter(tipo='Gasto').count()
+        cant_gastos = movimientos.filter(tipo='Egresos').count()
         
         # Rentabilidad (Mes)
         rentabilidad = 0
@@ -276,7 +276,7 @@ def dashboard_flujo(request):
         # --- RESUMEN ANUAL ---
         movimientos_anual = MovimientoCaja.objects.filter(fecha__year=anio_filtro)
         total_ingresos_usd_anual = movimientos_anual.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
-        total_gastos_usd_anual = movimientos_anual.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd_anual = movimientos_anual.filter(tipo='Egresos').aggregate(total=Sum('monto_usd'))['total'] or 0
         saldo_usd_anual = total_ingresos_usd_anual - total_gastos_usd_anual
         
         rentabilidad_anual = 0
@@ -286,7 +286,7 @@ def dashboard_flujo(request):
         # --- RESUMEN ACUMULATIVO TOTAL ---
         movimientos_total = MovimientoCaja.objects.all()
         total_ingresos_usd_total = movimientos_total.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
-        total_gastos_usd_total = movimientos_total.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd_total = movimientos_total.filter(tipo='Egresos').aggregate(total=Sum('monto_usd'))['total'] or 0
         saldo_usd_total = total_ingresos_usd_total - total_gastos_usd_total
         
         rentabilidad_total = 0
@@ -306,7 +306,7 @@ def dashboard_flujo(request):
             mes=q['mes'].strftime('%B')
             meses.append(mes)
             ingresos_mes.append(round(movimientos_anio.filter(tipo='Ingreso',fecha__month=q['mes'].month).aggregate(total=Sum('monto_usd'))['total'] or 0,2))
-            gastos_mes.append(round(movimientos_anio.filter(tipo='Gasto',fecha__month=q['mes'].month).aggregate(total=Sum('monto_usd'))['total'] or 0,2))
+            gastos_mes.append(round(movimientos_anio.filter(tipo='Egresos',fecha__month=q['mes'].month).aggregate(total=Sum('monto_usd'))['total'] or 0,2))
 
         # Serializar para JavaScript
         meses_json = json.dumps(meses)
@@ -400,7 +400,7 @@ def movimientos_pdf(request):
         
         # Calcular totales por tipo (Ingreso/Gasto)
         total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
-        total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+        total_gastos_usd = movimientos.filter(tipo='Egresos').aggregate(total=Sum('monto_usd'))['total'] or 0
         saldo_usd = total_ingresos_usd - total_gastos_usd
         
         # Calcular totales separados por moneda
@@ -487,7 +487,7 @@ def movimientos_excel(request):
 
     # Calcular totales
     total_ingresos_usd = movimientos.filter(tipo='Ingreso').aggregate(total=Sum('monto_usd'))['total'] or 0
-    total_gastos_usd = movimientos.filter(tipo='Gasto').aggregate(total=Sum('monto_usd'))['total'] or 0
+    total_gastos_usd = movimientos.filter(tipo='Egresos').aggregate(total=Sum('monto_usd'))['total'] or 0
     saldo_usd = total_ingresos_usd - total_gastos_usd
 
     # Crear workbook
@@ -547,7 +547,7 @@ def movimientos_excel(request):
     ws.cell(row=row, column=1, value="Total Ingresos USD:")
     ws.cell(row=row, column=2, value=f"${round(total_ingresos_usd, 2)}")
     row += 1
-    ws.cell(row=row, column=1, value="Total Gastos USD:")
+    ws.cell(row=row, column=1, value="Total Egresos USD:")
     ws.cell(row=row, column=2, value=f"${round(total_gastos_usd, 2)}")
     row += 1
     ws.cell(row=row, column=1, value="Saldo USD:").font = Font(bold=True)

@@ -11,10 +11,7 @@
   </div>
 
   <!-- Formulario -->
-  <div
-    class="card shadow-sm form-card-standard mx-auto"
-    style="max-width: 600px"
-  >
+  <div class="card shadow-sm form-card-standard mx-auto card-auth-md">
     <div class="card-body">
       <form method="POST">
         {% csrf_token %} {{ form.as_p }}

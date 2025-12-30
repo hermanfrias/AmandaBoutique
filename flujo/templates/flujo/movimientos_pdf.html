@@ -55,25 +55,18 @@
     <header>
       <h1>Amanda Mateo Boutique</h1>
       <p class="subtitle">
-        Reporte de Movimientos de Caja {% if tipo_filtro and tipo_filtro != 'Todos' %}
-        <br />Tipo: {{ tipo_filtro }}
-        {% endif %}
-        {% if tipo_movimiento_filtro and tipo_movimiento_filtro != 'Todos' %}
-          <br />Tipo Movimiento: {{ tipo_movimiento_filtro }}
-        {% endif %}
-        {% if metodo_pago_filtro and metodo_pago_filtro != 'Todos' %}
-          <br />Método Pago: {{ metodo_pago_filtro }}
-        {% endif %}
-        {% if moneda_filtro and moneda_filtro != 'Todos' %}
-          <br />Moneda: {{ moneda_filtro }}
-        {% endif %}
-        {% if fecha_inicio and fecha_fin %}
-          <br />Del {{ fecha_inicio|date:"d/m/Y" }} al {{ fecha_fin|date:"d/m/Y" }}
-        {% elif fecha_inicio %}
-          <br />Desde {{ fecha_inicio|date:"d/m/Y" }}
-        {% elif fecha_fin %}
-        <br />Hasta {{ fecha_fin|date:"d/m/Y" }}
-        {% endif %}
+        Reporte de Movimientos de Caja {% if tipo_filtro and tipo_filtro !=
+        'Todos' %}
+        <br />Tipo: {{ tipo_filtro }} {% endif %} {% if tipo_movimiento_filtro
+        and tipo_movimiento_filtro != 'Todos' %} <br />Tipo Movimiento: {{
+        tipo_movimiento_filtro }} {% endif %} {% if metodo_pago_filtro and
+        metodo_pago_filtro != 'Todos' %} <br />Método Pago: {{
+        metodo_pago_filtro }} {% endif %} {% if moneda_filtro and moneda_filtro
+        != 'Todos' %} <br />Moneda: {{ moneda_filtro }} {% endif %} {% if
+        fecha_inicio and fecha_fin %} <br />Del {{ fecha_inicio|date:"d/m/Y" }}
+        al {{ fecha_fin|date:"d/m/Y" }} {% elif fecha_inicio %} <br />Desde {{
+        fecha_inicio|date:"d/m/Y" }} {% elif fecha_fin %} <br />Hasta {{
+        fecha_fin|date:"d/m/Y" }} {% endif %}
       </p>
     </header>
 
@@ -112,7 +105,7 @@
 
     <div class="totales">
       <p class="ingreso">Total Ingresos (USD): ${{ total_ingresos_usd }}</p>
-      <p class="gasto">Total Gastos (USD): ${{ total_gastos_usd }}</p>
+      <p class="gasto">Total Egresos (USD): ${{ total_gastos_usd }}</p>
       <p style="font-size: 16px">Saldo (USD): ${{ saldo_usd }}</p>
 
       <hr style="margin: 20px 0; border-top: 2px solid #ddd" />

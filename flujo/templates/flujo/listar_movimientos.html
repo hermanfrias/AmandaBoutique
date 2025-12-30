@@ -65,7 +65,7 @@
           <select class="form-select" id="tipo" name="tipo">
             <option value="Todos" {% if tipo_filtro == 'Todos' %}selected{% endif %}>Todos</option>
             <option value="Ingreso" {% if tipo_filtro == 'Ingreso' %}selected{% endif %}>Ingreso</option>
-            <option value="Gasto" {% if tipo_filtro == 'Gasto' %}selected{% endif %}>Gasto</option>
+            <option value="Egresos" {% if tipo_filtro == 'Egresos' %}selected{% endif %}>Egresos</option>
           </select>
         </div>
         <div class="col-12 col-sm-6 col-md-2">
@@ -113,7 +113,7 @@
     </div>
   </div>
   
-  <div class="table-responsive shadow-lg rounded" style="border-radius: 15px;">
+  <div class="table-responsive shadow-lg rounded rounded-lg">
     <style>
       .table-movimientos {
         font-size: 0.9rem;
@@ -175,7 +175,7 @@
         font-weight: 500;
         box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
       }
-      .badge-gasto {
+      .badge-egreso {
         background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
         color: white;
         padding: 6px 12px;
@@ -260,7 +260,7 @@
             {% if m.tipo == "Ingreso" %}
             <span class="badge-ingreso">{{ m.tipo }}</span>
             {% else %}
-            <span class="badge-gasto">{{ m.tipo }}</span>
+            <span class="badge-egreso">{{ m.tipo }}</span>
             {% endif %}
           </td>
           <td class="col-tipo-mov">{{ m.tipo_movimiento|default:"-" }}</td>

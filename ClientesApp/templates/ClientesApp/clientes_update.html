@@ -2,10 +2,7 @@
 Mateo Boutique{% endblock %} {% block content %}
 <div class="container py-5">
   <h2 class="text-center fw-bold text-pink mb-4">Actualizar Cliente</h2>
-  <div
-    class="card shadow-lg mx-auto p-4 rounded-4"
-    style="max-width: 100%; background-color: #fff5fa"
-  >
+  <div class="card shadow-lg mx-auto card-auth">
     <form method="POST" novalidate class="row g-3">
       {% csrf_token %} {{ form.non_field_errors }}
 

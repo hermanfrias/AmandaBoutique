@@ -59,7 +59,7 @@ class ConfiguracionIVA(models.Model):
 
 class MovimientoCaja(models.Model):
     MONEDAS = [('Bs','Bolívares'),('$','Dólares')]
-    TIPO = [('Ingreso','Ingreso'),('Gasto','Gasto')]
+    TIPO = [('Ingreso','Ingreso'),('Egresos','Egresos')]
     TIPO_MOVIMIENTO = [
         ('Venta', 'Venta'),
         ('Compra de Insumos', 'Compra de Insumos'),
