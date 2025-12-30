@@ -208,15 +208,14 @@ class Alquiler(models.Model):
         return total_a_pagar - self.pago_total
     
     def marcar_como_devuelto(self, fecha_devolucion=None):
-        """Marca el alquiler como completado y libera el vestido"""
+        """Marca el alquiler como devuelto y envía el vestido a tintorería"""
         from datetime import date
         
         self.fecha_devolucion_real = fecha_devolucion or date.today()
-        self.estado_alquiler = 'Completado'
+        self.estado_alquiler = 'Devuelto'
         
-        # Liberar el vestido
-        self.vestido.estado = 'Disponible'
-        self.vestido.save()
+        # El vestido va a tintorería automáticamente (manejado en el método save())
+        
         
         self.save()
     

@@ -259,7 +259,7 @@
             <strong>Estado del Alquiler:</strong>
             <p class="mb-0">
               <span
-                class="badge {% if alquiler.estado_alquiler == 'Activo' %} bg-primary {% elif alquiler.estado_alquiler == 'Completado' %} bg-success {% elif alquiler.estado_alquiler == 'Retrasado' %} bg-danger {% else %} bg-secondary {% endif %} fs-6"
+                class="badge {% if alquiler.estado_alquiler == 'Activo' %} bg-primary {% elif alquiler.estado_alquiler == 'Devuelto' %} bg-success {% elif alquiler.estado_alquiler == 'Retrasado' %} bg-danger {% elif alquiler.estado_alquiler == 'Cancelado' %} bg-warning {% else %} bg-secondary {% endif %} fs-6"
               >
                 {{ alquiler.estado_alquiler }}
               </span>

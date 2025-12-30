@@ -92,8 +92,6 @@ table thead th > a:hover {
 /* Asegurar que los dropdowns del navbar no se corten */
 .navbar .dropdown-menu {
   position: absolute !important;
-  max-height: 85vh !important;
-  overflow-y: auto !important;
   z-index: 9999 !important;
 }
 
@@ -395,29 +393,10 @@ footer a:hover {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(183, 110, 121, 0.2);
   min-width: 220px;
-  max-height: 90vh !important; /* Aumentado a 90% del viewport */
-  overflow-y: auto !important; /* Forzar scroll vertical */
+  max-height: 90vh !important;
+  overflow: visible !important; /* Cambiado de overflow-y: auto para permitir submenús laterales */
   position: absolute !important;
-  z-index: 9999 !important; /* Asegura que esté por encima de todo */
-}
-
-/* Estilo del scrollbar para el dropdown */
-.admin-dropdown::-webkit-scrollbar {
-  width: 8px;
-}
-
-.admin-dropdown::-webkit-scrollbar-track {
-  background: #ffe6f2;
-  border-radius: 10px;
-}
-
-.admin-dropdown::-webkit-scrollbar-thumb {
-  background: #b76e79;
-  border-radius: 10px;
-}
-
-.admin-dropdown::-webkit-scrollbar-thumb:hover {
-  background: #8c4a56;
+  z-index: 9999 !important;
 }
 
 .admin-dropdown .dropdown-header {
@@ -1001,5 +980,93 @@ textarea:focus {
   .card {
     border: 1px solid #ddd;
     page-break-inside: avoid;
+  }
+}
+
+/* ============================================
+   SUBMENÚS ANIDADOS EN DROPDOWN ADMIN
+   ============================================ */
+
+/* Submenú anidado */
+.dropdown-submenu {
+  position: relative;
+}
+
+/* Posicionamiento del submenú */
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+  margin-left: 0;
+  border-radius: 12px;
+  background-color: #ffe6f2;
+  border: 2px solid #f5d0e0;
+  box-shadow: 0 4px 12px rgba(183, 110, 121, 0.2);
+}
+
+/* Flecha indicadora de submenú */
+.dropdown-submenu > .dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid transparent;
+  border-right: 0;
+  border-bottom: 0.3em solid transparent;
+  border-left: 0.3em solid;
+  float: right;
+  margin-top: 0.5em;
+}
+
+/* Hover para mostrar submenú en desktop */
+@media (min-width: 992px) {
+  .dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+  }
+}
+
+/* Estilos para items de submenú */
+.dropdown-submenu .dropdown-item {
+  padding-left: 2rem;
+  color: #7b3f61;
+  transition: all 0.3s ease;
+}
+
+.dropdown-submenu .dropdown-item:hover {
+  background-color: #ffd6ea;
+  color: #b76e79;
+  transform: translateX(5px);
+}
+
+/* Responsive: en móviles, submenús se muestran inline */
+@media (max-width: 991.98px) {
+  .dropdown-submenu > .dropdown-menu {
+    position: static !important;
+    float: none;
+    width: auto;
+    margin-top: 0;
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    display: none;
+  }
+
+  /* Mostrar submenú cuando el padre tiene clase show */
+  .dropdown-submenu.show > .dropdown-menu {
+    display: block !important;
+  }
+
+  .dropdown-submenu > .dropdown-toggle::after {
+    transform: rotate(-90deg);
+  }
+
+  .dropdown-submenu .dropdown-item {
+    padding-left: 3rem;
+    font-size: 0.9rem;
+  }
+
+  /* Hacer clickeable el toggle en móvil */
+  .dropdown-submenu > .dropdown-toggle {
+    cursor: pointer;
   }
 }

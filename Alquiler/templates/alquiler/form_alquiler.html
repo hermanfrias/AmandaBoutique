@@ -26,7 +26,14 @@ Mateo Boutique{% endblock %} {% block content %}
         <div class="col-12 col-md-6">
           <label for="id_cliente" class="form-label fw-semibold">Cliente</label>
           <div class="input-group">
-            {{ form.cliente }}
+            <select name="cliente" id="id_cliente" class="form-select cliente-select" required>
+              <option value="">---------</option>
+              {% for cliente in form.fields.cliente.queryset %}
+              <option value="{{ cliente.id }}" {% if form.instance.cliente_id == cliente.id %}selected{% endif %}>
+                {{ cliente.apellido }}, {{ cliente.nombre }} - {{ cliente.identificacion }}
+              </option>
+              {% endfor %}
+            </select>
             <button
               type="button"
               class="btn btn-pink"
@@ -42,7 +49,15 @@ Mateo Boutique{% endblock %} {% block content %}
         </div>
         <div class="col-12 col-md-6">
           <label for="id_vestido" class="form-label fw-semibold">Vestido</label>
-          {{ form.vestido }} {% if form.vestido.errors %}
+          <select name="vestido" id="id_vestido" class="form-select vestido-select" required>
+            <option value="">---------</option>
+            {% for vestido in form.fields.vestido.queryset %}
+            <option value="{{ vestido.id }}" {% if form.instance.vestido_id == vestido.id %}selected{% endif %}>
+              {{ vestido.nombre_modelo }} - Talla: {{ vestido.talla }} - Color: {{ vestido.color }}
+            </option>
+            {% endfor %}
+          </select>
+          {% if form.vestido.errors %}
           <div class="text-danger small">{{ form.vestido.errors }}</div>
           {% endif %}
         </div>
@@ -319,9 +334,57 @@ Mateo Boutique{% endblock %} {% block content %}
   </div>
 </div>
 
+<!-- jQuery (requerido para Select2) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Select2 CSS -->
+<link
+  href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+  rel="stylesheet"
+/>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
   // Calcular saldo pendiente y pago total automáticamente
   document.addEventListener("DOMContentLoaded", function () {
+    // Inicializar Select2 para campo de cliente
+    $(".cliente-select").select2({
+      theme: "bootstrap-5",
+      placeholder: "Buscar cliente por nombre, apellido o identificación...",
+      allowClear: true,
+      width: "100%",
+      language: {
+        noResults: function () {
+          return "No se encontraron resultados";
+        },
+        searching: function () {
+          return "Buscando...";
+        },
+      },
+    });
+
+    // Inicializar Select2 para campo de vestido
+    $(".vestido-select").select2({
+      theme: "bootstrap-5",
+      placeholder: "Buscar vestido por nombre, talla o color...",
+      allowClear: true,
+      width: "100%",
+      language: {
+        noResults: function () {
+          return "No se encontraron resultados";
+        },
+        searching: function () {
+          return "Buscando...";
+        },
+      },
+    });
+
     const anticipoInput = document.getElementById("id_anticipo");
     const pagoFinalInput = document.getElementById("id_pago_final");
     const montoFinalInput = document.getElementById("id_monto_final");
@@ -371,15 +434,15 @@ Mateo Boutique{% endblock %} {% block content %}
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            // Agregar el nuevo cliente al select
-            const selectCliente = document.getElementById("id_cliente");
-            const option = new Option(
+            // Agregar el nuevo cliente al select con Select2
+            const selectCliente = $("#id_cliente");
+            const newOption = new Option(
               data.cliente_nombre,
               data.cliente_id,
               true,
               true
             );
-            selectCliente.add(option);
+            selectCliente.append(newOption).trigger('change');
 
             // Cerrar modal
             const modal = bootstrap.Modal.getInstance(
